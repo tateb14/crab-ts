@@ -1,0 +1,28 @@
+{
+  "name": "crab",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bot/bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Designybot/crab.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Designybot/crab/issues"
+  },
+  "homepage": "https://github.com/Designybot/crab#readme",
+  "dependencies": {
+    "discord.js": "^14.18.0",
+    "dotenv": "^16.4.7",
+    "path": "^0.12.7"
+  }
+}
