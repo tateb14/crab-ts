@@ -23,6 +23,7 @@
   "dependencies": {
     "discord.js": "^14.18.0",
     "dotenv": "^16.4.7",
+    "mongoose": "^8.12.1",
     "path": "^0.12.7"
   }
 }

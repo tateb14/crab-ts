@@ -15,7 +15,7 @@ module.exports = async (client) => {
             const FilePath = path.join(SlashCommandPath, File);
             const Command = require(FilePath);
 
-            if ('data' in Command && 'response' in Command) {
+            if ('data' in Command && 'execute' in Command) {
                 const commandData = Command.data.toJSON()
                 client.slashCommands.set(commandData.name, Command);
                 Commands.push(commandData);

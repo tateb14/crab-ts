@@ -10,9 +10,9 @@ module.exports = (client) => {
         const EventModule = require(FilePath);
         try {
             if (File.once) {
-                client.once(EventModule.event, (...args) => EventModule.response(client, ...args));
+                client.once(EventModule.event, (...args) => EventModule.execute(client, ...args));
             } else {
-                client.on(EventModule.event, (...args) => EventModule.response(client, ...args));
+                client.on(EventModule.event, (...args) => EventModule.execute(client, ...args));
             }
         } catch (error) {
             console.error('🍹 Event Handler: There was an error:', error)

@@ -2,40 +2,47 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = (client) => {
-    client.on('interactionCreate', (interaction) => {
-        if (interaction.isAnySelectMenu()) {
-            const SelectMenuFolder = fs.readdirSync('../Components/SelectMenus').filter(component => component.endsWith(".js"));
+    const selectMenuPath = path.join(__dirname, '..', 'Components', 'SelectMenus');
+    const SelectMenusFolder = fs.readdirSync(selectMenuPath).filter(command => command.endsWith(".js"));
+    const buttonPath = path.join(__dirname, '..', 'Components', 'Buttons');
+    const ButtonsFolder = fs.readdirSync(buttonPath).filter(command => command.endsWith(".js"));
+    const userButtonPath = path.join(__dirname, '..', 'Components', 'UserSpecificButtons');
+    const UserButtonFolder = fs.readdirSync(userButtonPath).filter(command => command.endsWith(".js"));
+    const modalPath = path.join(__dirname, '..', 'Components', 'Modals');
+    const ModalsFolder = fs.readdirSync(modalPath).filter(command => command.endsWith(".js"));
+    
+    client.buttons = new Map();
+    client.userButtons = new Map()
+    client.selectMenus = new Map();
+    client.modals = new Map();
+    try {
+        for (const File of SelectMenusFolder) {
+            const SelectMenuFilePath = path.join(__dirname, '../Components/SelectMenus', File);
+            const SelectMenuFile = require(SelectMenuFilePath);
+            client.selectMenus.set(SelectMenuFile.customId, SelectMenuFile);
+        };
+    
+        for (const File of ButtonsFolder) {
+            const ButtonsFilePath = path.join(__dirname, '../Components/Buttons', File);
+            const ButtonsFile = require(ButtonsFilePath);
+    
+            client.buttons.set(ButtonsFile.customId, ButtonsFile);
+        };
+            
+        for (const File of ModalsFolder) {
+            const ModalsFilePath = path.join(__dirname, '../Components/Modals', File);
+            const ModalsFile = require(ModalsFilePath);
+    
+            client.modals.set(ModalsFile.customId, ModalsFile);
+        };
+        
+        for (const File of UserButtonFolder) {
+          const UserButtonsFilePath = path.join(__dirname, '../Components/UserSpecificButtons', File);
+          const UserButtonsFile = require(UserButtonsFilePath);
 
-            for (const File of SelectMenuFolder) {
-                const SelectMenuFilePath = path.join(__dirname, '../Components/SelectMenus', File);
-                const SelectMenuModule = require(SelectMenuFilePath);
-
-                if (SelectMenuModule.customId === interaction.customId) {
-                    SelectMenuModule.response(interaction);
-                }
-            }
+          client.userButtons.set(UserButtonsFile.customIdPrefix, UserButtonsFile)
         }
-        if (interaction.isButton()){
-            const ButtonFolder = fs.readdirSync('../Components/Buttons').filter(component => component.endsWith(".js"));;
-            for (const File of ButtonFolder) {
-                const ButtonFilePath = path.join(__dirname, '../Components/Buttons', File);
-                const ButtonModule = require(ButtonFilePath);
-
-                if (ButtonModule.customId === interaction.customId) {
-                    ButtonModule.response(interaction);
-                }
-            }
-        }
-        if (interaction.isModalSubmit()) {
-            const ModalFolder = fs.readdirSync('../Components/Modals').filter(component => component.endsWith(".js"));
-            for (const File of ModalFolder) {
-                const ModalFilePath = path.join(__dirname, '../Components/Modals', File);
-                const ModalModule = require(ModalFilePath);
-
-                if (ModalModule.customId === interaction.customId) {
-                    ModalModule.response(interaction);
-                }
-            }
-        }
-    })
-}
+    } catch (error) {
+        console.log(`There was an error while running the Component Handler.\nError: ${error}`);
+    };
+};
