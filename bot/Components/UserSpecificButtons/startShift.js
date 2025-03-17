@@ -1,19 +1,22 @@
 const { EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, MessageFlags, ButtonBuilder, ButtonStyle } = require('discord.js')
 const CrabConfig = require('../../schemas/CrabConfig')
-
+const UserShift = require("../../schemas/UserShift")
+const humanizeDuration = require('humanize-duration')
 module.exports = {
   customIdPrefix: `crab-buttons_start-shift`,
   execute: async (interaction) => {
-    const startTime = Date.now()
-    console.log(interaction.message)
-    let embed = interaction.message.embeds[0]
-    embed = EmbedBuilder.from(embed)
-    const discordStartTime = Math.floor((Date.now()) / 1000);
     const userId = interaction.customId.split(":")[1]
     if (interaction.user.id !== userId) {
       await interaction.update({})
       await interaction.followUp({ content: 'You **cannot** interact with this button.', flags: MessageFlags.Ephemeral })
     } else {
+      const totalShiftTime = UserShift.shift_Total
+      const shiftStatus = UserShift.shift_Status;
+      const totalTimeOnline = humanizeDuration(totalShiftTime, {
+        round: true,
+      })
+      const startTime = Date.now()
+      const discordStartTime = Math.floor((Date.now()) / 1000);
       const startedEmbed = new EmbedBuilder()
       .setColor(0x2A9D8F)
       .setTitle('Shift Management')
@@ -25,7 +28,7 @@ module.exports = {
         },
         {
           name: 'Time Online',
-          value: `TBWO`
+          value: `${totalTimeOnline}`
         },
         {
           name: 'Shift Started',
@@ -39,12 +42,20 @@ module.exports = {
       const BreakButton = new ButtonBuilder()
       .setCustomId(`crab-buttons_shift-break:${interaction.user.id}`)
       .setLabel('Toggle Break')
+      .setEmoji('<:crab_clock_pause:1350701435116847216>')
       .setStyle(ButtonStyle.Secondary)
       const EndButton = new ButtonBuilder()
       .setCustomId(`crab-buttons_shift-end:${interaction.user.id}`)
       .setLabel('End Shift')
+      .setEmoji('<:crab_clock_stop:1350701433980325979>')
       .setStyle(ButtonStyle.Danger)
       const newRow = new ActionRowBuilder().addComponents(startButton, BreakButton, EndButton)
+
+      await UserShift.findOneAndUpdate(
+        { guildId: interaction.guild.id, shift_User: interaction.user.id },
+        { $set: { shift_start: startTime, shift_OnDuty: true } },
+        { upsert: true, new: true }
+      )
     interaction.update({ embeds: [startedEmbed], components: [newRow] })
 }
   }

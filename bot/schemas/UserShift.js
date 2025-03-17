@@ -9,28 +9,32 @@ const userShift = new Schema({
     type: String,
     required: false,
   },
-  shift_Status: {
-    type: String,
+  shift_OnDuty: {
+    type: Boolean,
+    required: false,
+  },
+  shift_OnBreak: {
+    type: Boolean,
     required: false,
   },
   shift_Total: {
-    type: String,
+    type: Number,
     required: false,
   },
   shift_start: {
-    type: String,
+    type: Number,
     required: false,
   },
   shift_startBreak: {
-    type: String,
+    type: Number,
     required: false,
   },
   shift_endBreak: {
-    type: String,
+    type: Number,
     required: false,
   },
   shift_TotalBreakTime: {
-    type: String,
+    type: Number,
     required: false,
   },
   guildId: {

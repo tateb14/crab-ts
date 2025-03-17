@@ -17,10 +17,7 @@ module.exports = {
           };
       } else if (interaction.isButton()) {
         try {
-          console.log(client)
           const Button = client.buttons.get(interaction.customId);
-          
-          // Check for user-specific buttons using startsWith
           const UserButton = [...client.userButtons.values()].find(b => interaction.customId.startsWith(b.customIdPrefix));
 
           if (!Button && !UserButton) {
