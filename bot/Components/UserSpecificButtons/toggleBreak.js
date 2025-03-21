@@ -82,7 +82,6 @@ module.exports = {
       )
       const startTime = UserShift.shift_startBreak
       const totalBreakTime = endTime - startTime
-      console.log(totalBreakTime)
       await UserShift.updateOne({ shift_endBreak: endTime }, { upsert: true, new: true })
       await UserShift.updateOne({ $inc: { shift_TotalBreakTime: +totalBreakTime } }, { upsert: true, new: true })
       await UserShift.updateOne({ shift_OnBreak: false}, { upsert: true, new: true })

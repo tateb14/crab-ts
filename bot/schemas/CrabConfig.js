@@ -25,6 +25,10 @@ const CrabConfig = new Schema({
     type: String,
     required: false,
   },
+  perms_SupervisorRole: {
+    type: String,
+    required: false,
+  },
   perms_HiCommRole: {
     type: String,
     required: false,

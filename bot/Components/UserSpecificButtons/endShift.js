@@ -4,7 +4,7 @@ const CrabShifts = require('../../schemas/UserShift')
 const humanizeDuration = require('humanize-duration')
 module.exports = {
   customIdPrefix: 'crab-buttons_shift-end',
-  execute: async (interaction) => {
+  execute: async (interaction, client) => {
     const userId = interaction.customId.split(":")[1]
     if (interaction.user.id !== userId) {
       await interaction.update({})
@@ -49,7 +49,6 @@ module.exports = {
           const startButton = row.components[0]
           startButton.setDisabled(false)
           const newRow = new ActionRowBuilder().addComponents(startButton)
-          if (client.guild.roles.highest.rawPosistion) 
           interaction.update({ embeds: [endEmbed], components: [newRow] })
   }}
 }

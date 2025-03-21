@@ -49,7 +49,8 @@ module.exports = {
           guildId: interaction.guild.id,
           shift_User: interaction.user.id,
           shift_Type: shiftType,
-          shift_Status: 'Off Duty',
+          shift_OnDuty: false,
+          shift_OnBreak: false,
           shift_Total: 0,
           shift_TotalBreakTime: 0,
         })
@@ -59,7 +60,6 @@ module.exports = {
 
       if (departmentTypes.includes(shiftType) || shiftType === 'default') {
         const totalShiftTime = UserShift.shift_Total
-        const shiftStatus = UserShift.shift_Status;
         const totalTimeOnline = humanizeDuration(totalShiftTime, {
           round: true,
         })
@@ -88,11 +88,72 @@ module.exports = {
         interaction.reply({ content: "This shift type is **disabled** in this department. Please select another shift type or contact your department administrator.", flags: MessageFlags.Ephemeral })
       }
     } else if (subcommand === 'active') {
+      const OnlinePersonnel = await UserShift.find({ guildId: interaction.guild.id, shift_OnDuty: true })
+      const OnlineUser = await UserShift.find({ guildId: interaction.guild.id, shift_OnDuty: true, shift_OnBreak: false })
+      const BreakUser = await UserShift.find({ guildId: interaction.guild.id, shift_OnBreak: true })
+      console.log(BreakUser)
+      if (!OnlinePersonnel || OnlinePersonnel.length === 0) {
+        const embed = new EmbedBuilder()
+        .setTitle(`Displaying ${OnlineUser.length + BreakUser.length} Active Personnel`)
+        .setColor(0x2A9D8F)
+        .setDescription("Currently no active personnel were found.")
+
+        return interaction.reply({ embeds: [embed] })
+      } else {
       const embed = new EmbedBuilder()
-      .setTitle("Active Shifts")
+      .setTitle(`Displaying ${OnlineUser.length + BreakUser.length} Active Personnel`)
       .setColor(0x2A9D8F)
-      
+      let OnlineUsers = []
+      console.log(OnlineUsers)
+      let BreakUsers = []
+      console.log(BreakUsers)
+      for (const User of OnlineUser) {
+        OnlineUsers.push(`<@${User.shift_User}>\n`)
+        console.log(OnlineUsers)
+      }
+      for (const User of BreakUser) {
+        BreakUsers.push(`<@${User.shift_User}>\n`)
+        console.log(BreakUsers)
+      }
+      embed.addFields(
+        {
+          name: "Current On Duty Personnel",
+          value: `${OnlineUsers}`
+        }
+      )
+      if (OnlineUsers.length < 1) {
+        embed.addFields(
+          {
+            name: "Currently On Duty Personnel",
+            value: "No one is one duty!"
+          }
+        )
+      } else {
+        embed.addFields(
+          {
+            name: "Currently On Break Personnel",
+            value: `${OnlineUsers}`
+          }
+        )
+      }
+      if (BreakUsers.length === 0 ) {
+        embed.addFields(
+          {
+            name: "Currently On Break Personnel",
+            value: "No one is one break!"
+          }
+        )
+      } else {
+        embed.addFields(
+          {
+            name: "Currently On Break Personnel",
+            value: `${BreakUsers}`
+          }
+        )
+      }
+      interaction.reply({ embeds: [embed] })
     }
+  }
   }
 }
 
