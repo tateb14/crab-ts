@@ -56,10 +56,9 @@ module.exports = {
         })
         await newShiftUser.save()
       }
-      const totalTime = userInfo.shift_Total
 
       if (departmentTypes.includes(shiftType) || shiftType === 'default') {
-        const totalShiftTime = UserShift.shift_Total
+        const totalShiftTime = UserShift.shift_Total || 0
         const totalTimeOnline = humanizeDuration(totalShiftTime, {
           round: true,
         })

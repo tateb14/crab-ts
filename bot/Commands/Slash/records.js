@@ -5,6 +5,7 @@ const {
   ButtonBuilder,
   ButtonStyle,
   ActionRowBuilder,
+  inlineCode,
 } = require("discord.js");
 const CrabConfig = require("../../schemas/CrabConfig");
 const CrabRecord = require("../../schemas/GuildRecord");
@@ -343,6 +344,27 @@ module.exports = {
           flags: MessageFlags.Ephemeral,
         });
       }
+      if (interaction.member.roles.cache.has(hiCommRole) || interaction.member.roles.cache.has(aaRole)) {
+        if (subcommand === 'void') {
+          const recordId = interaction.options.getString("record-id")
+          const record = await CrabRecord.findOneAndDelete({ id: recordId })
+          try {
+            if (record) {
+              interaction.reply(`The record has been found and deleted.\n-# Record ID: ${iutg(recordId)}`)
+            } else {
+              interaction.reply({ content: "No record with that ID was found. " })
+            }
+          } catch (error) {
+            console.error(error)
+          }
+        }
+      } else {
+        interaction.reply({
+          content: "**Insufficient** permissions.",
+          flags: MessageFlags.Ephemeral,
+        });
+      }
+
     }
   },
 };

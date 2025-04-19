@@ -17,9 +17,9 @@ module.exports = {
     const endTime = Date.now()
     const startTime = UserShift.shift_start
     const totalNBTime = endTime - startTime
-    const totalShiftBreakTime = UserShift.shift_endBreak - UserShift.shift_startBreak
+    const totalShiftBreakTime = UserShift.shift_endBreak - UserShift.shift_startBreak || 0
     const totalTime = totalNBTime - totalShiftBreakTime
-    await UserShift.updateOne({ $inc: { shift_Total: +totalTime } }, { upsert: true, new: true })
+    await UserShift.updateOne({ $inc: { shift_total: +totalTime } }, { upsert: true, new: true })
     await UserShift.updateOne({ shift_OnDuty: false }, { upsert: true, new: true })
     await UserShift.updateOne({ shift_endBreak: null }, { upsert: true, new: true })
     await UserShift.updateOne({ shift_startBreak: null }, { upsert: true, new: true })
