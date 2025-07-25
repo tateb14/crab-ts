@@ -1,4 +1,4 @@
-const { ActionRowBuilder, EmbedBuilder } = require('discord.js')
+const { ActionRowBuilder, EmbedBuilder, MessageFlags } = require('discord.js')
 const CrabConfig = require('../../schemas/CrabConfig')
 const CrabShifts = require('../../schemas/UserShift')
 const humanizeDuration = require('humanize-duration')
@@ -6,30 +6,44 @@ module.exports = {
   customIdPrefix: 'crab-buttons_shift-end',
   execute: async (interaction, client) => {
     const userId = interaction.customId.split(":")[1]
+    const guildConfig = await CrabConfig.findOne({ guildId: interaction.guild.id })
+    const OnDutyRole = guildConfig.shift_OnDuty
+    const OnBreakRole = guildConfig.shift_OnBreak
     if (interaction.user.id !== userId) {
       await interaction.update({})
       await interaction.followUp({ content: 'You **cannot** interact with this button.', flags: MessageFlags.Ephemeral })
     } else {
-    const UserShift = await CrabShifts.findOne({
-      guildId: interaction.guild.id,
-      shift_User: interaction.user.id,
-    });
-    const endTime = Date.now()
-    const startTime = UserShift.shift_start
-    const totalNBTime = endTime - startTime
-    const totalShiftBreakTime = UserShift.shift_endBreak - UserShift.shift_startBreak || 0
-    const totalTime = totalNBTime - totalShiftBreakTime
-    await UserShift.updateOne({ $inc: { shift_total: +totalTime } }, { upsert: true, new: true })
-    await UserShift.updateOne({ shift_OnDuty: false }, { upsert: true, new: true })
-    await UserShift.updateOne({ shift_endBreak: null }, { upsert: true, new: true })
-    await UserShift.updateOne({ shift_startBreak: null }, { upsert: true, new: true })
-    await UserShift.updateOne({ shift_start: null }, { upsert: true, new: true })
-    const totalShiftTime = UserShift.shift_Total
-    const totalTimeOnline = humanizeDuration(totalShiftTime, {
-      round: true,
-    })
+      const UserShift = await CrabShifts.findOne({
+        guildId: interaction.guild.id,
+        shift_User: interaction.user.id,
+      });
+      
+      const endTime = Date.now();
+      const startTime = UserShift.shift_start || endTime;
+      const totalNBTime = endTime - startTime;
+      const totalShiftBreakTime = (UserShift.shift_endBreak || endTime) - (UserShift.shift_startBreak || endTime);
+      const totalTime = totalNBTime - totalShiftBreakTime;
+      
+      const updatedShift = await CrabShifts.findOneAndUpdate(
+        { guildId: interaction.guild.id, shift_User: interaction.user.id },
+        {
+          $inc: { shift_Total: totalTime },
+          $set: {
+            shift_OnDuty: false,
+            shift_OnBreak: false,
+            shift_endBreak: null,
+            shift_startBreak: null,
+            shift_start: null,
+          },
+        },
+        { new: true }
+      );
+      
+      const totalTimeOnline = humanizeDuration(updatedShift.shift_Total || 0, {
+        round: true,
+      });    
     const endEmbed = new EmbedBuilder()
-          .setColor(0xFF6B35)
+          .setColor(0x572626)
           .setTitle("Shift Management")
           .setDescription(
             `${interaction.user}, you can manage your shift below.`
@@ -49,6 +63,16 @@ module.exports = {
           const startButton = row.components[0]
           startButton.setDisabled(false)
           const newRow = new ActionRowBuilder().addComponents(startButton)
+          if (interaction.guild.roles.cache.has(OnDutyRole) && interaction.guild.roles.cache.has(OnBreakRole)) {
+            try {
+              if (interaction.member.roles.cache.has(OnDutyRole) || interaction.member.roles.cache.has(OnBreakRole)){
+              interaction.member.roles.remove(OnDutyRole)
+              interaction.member.roles.remove(OnBreakRole)
+              }
+            } catch (error) {
+              console.error(error)
+            }
+          }
           interaction.update({ embeds: [endEmbed], components: [newRow] })
   }}
 }

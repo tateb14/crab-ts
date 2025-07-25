@@ -21,7 +21,7 @@ const GuildRecord = new Schema({
     type: String,
     required: false
   },
-  approvedBy: {
+  reviewedBy: {
     type: String,
     required: false
   },
@@ -30,6 +30,10 @@ const GuildRecord = new Schema({
     required: false
   },
   dateIssued: {
+    type: String,
+    required: false
+  },
+  messageId: {
     type: String,
     required: false
   },

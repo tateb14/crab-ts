@@ -155,7 +155,7 @@ module.exports = {
                 name: `Record created by @${interaction.user.username}`,
                 iconURL: interaction.user.displayAvatarURL(),
               })
-              .setColor(0xff3b3f)
+              .setColor(0xE9C46A)
               .setDescription(
                 `A new record has been created, you can view the details below.`
               )
@@ -173,17 +173,6 @@ module.exports = {
                 { name: "Suspect Charges:", value: `${charges}`, inline: false }
               )
               .setFooter({ text: `Record ID: ${recordId} || Powered by Crab` });
-
-            const newRecord = new CrabRecord({
-              guildId: guildId,
-              suspectFlags: `Armed? **${armed}**, Dangerous? **${dangerous}**, Mentally Ill? **${mentallyIll}**`,
-              suspectUsername: suspectUsername,
-              charges: charges,
-              issuedBy: interaction.user.id,
-              recordType: recordType,
-              dateIssued: Date.now(),
-              id: `${recordId}`,
-            });
             const ApproveButton = new ButtonBuilder()
               .setCustomId("crab-button_record-approve")
               .setLabel("Approve Record")
@@ -202,8 +191,7 @@ module.exports = {
               recordChannel
             );
             if (channel) {
-              await newRecord.save();
-              await channel.send({
+              const messageId = await channel.send({
                 embeds: [embed],
                 components: [row],
                 content: `<@&${supervisorRole}>, a new record has been submitted.`,
@@ -213,6 +201,19 @@ module.exports = {
                   "**Successfully** sent your record and it is pending approval. You will be messaged when it is approved or denied.",
                 flags: MessageFlags.Ephemeral,
               });
+              const newRecord = new CrabRecord({
+                guildId: guildId,
+                suspectFlags: `Armed? **${armed}**, Dangerous? **${dangerous}**, Mentally Ill? **${mentallyIll}**`,
+                suspectUsername: suspectUsername,
+                charges: charges,
+                issuedBy: interaction.user.id,
+                recordType: recordType,
+                reviewedBy: null,
+                dateIssued: Date.now(),
+                messageId: messageId.id,
+                id: `${recordId}`,
+              });
+              await newRecord.save();
             } else {
               interaction.reply({
                 content:
@@ -226,7 +227,7 @@ module.exports = {
                 name: `Record created by @${interaction.user.username}`,
                 iconURL: interaction.user.displayAvatarURL(),
               })
-              .setColor(0xff3b3f)
+              .setColor(0xE9C46A)
               .setDescription(
                 `A new record has been created, you can view the details below.`
               )
@@ -252,6 +253,7 @@ module.exports = {
               charges: charges,
               issuedBy: interaction.user.id,
               recordType: recordType,
+              messageId: interaction.message.id,
               id: `${recordId}`,
             });
 
@@ -305,9 +307,10 @@ module.exports = {
           } else { 
             let Embeds = []
             for (const record of SuspectResults) {
-              const issuedDate = Math.floor(record.dateIssued / 1000);   
+              const issuedDate = Math.floor(record.dateIssued / 1000);  
+              const reviewedBy = record.reviewedBy || 'Not yet reviewed.' 
               const recordEmbed = new EmbedBuilder()
-                .setColor(0xf4a261)
+                .setColor(0xE9C46A)
                 .setTitle(`Record Search Results`)
                 .setDescription(`A record created by <@${record.issuedBy}>, the suspect's username is **${record.suspectUsername}**. You can find details below.`)
                 .addFields(
@@ -330,7 +333,12 @@ module.exports = {
                     name: "Date Issued",
                     value: `<t:${issuedDate}:D>`,
                     inline: true,
-                  }
+                  },
+                  {
+                    name: "Reviewed By:",
+                    value: `${reviewedBy}`,
+                    inline: true,
+                  },
                 )
                 .setFooter({ text: `Record ID: ${record.id} || Powered by Crab` })
              Embeds.push(recordEmbed)
@@ -350,9 +358,9 @@ module.exports = {
           const record = await CrabRecord.findOneAndDelete({ id: recordId })
           try {
             if (record) {
-              interaction.reply(`The record has been found and deleted.\n-# Record ID: ${iutg(recordId)}`)
+              interaction.reply({ content: `The record has been found and deleted.\n-# Record ID: ${inlineCode(recordId)}`, flags: MessageFlags.Ephemeral })
             } else {
-              interaction.reply({ content: "No record with that ID was found. " })
+              interaction.reply({ content: "No record with that ID was found. ", flags: MessageFlags.Ephemeral })
             }
           } catch (error) {
             console.error(error)

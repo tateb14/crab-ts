@@ -45,7 +45,7 @@ const CrabConfig = new Schema({
     type: String,
     required: false,
   },
-  infract_Logs: {
+  punish_Logs: {
     type: String,
     required: false,
   },
@@ -53,7 +53,7 @@ const CrabConfig = new Schema({
     type: String,
     required: false,
   },
-  demote_Logs: {
+  crab_AppealLink: {
     type: String,
     required: false,
   },

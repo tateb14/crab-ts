@@ -1,16 +1,20 @@
-const { EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, MessageFlags, ButtonBuilder, ButtonStyle } = require('discord.js')
+const { EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, MessageFlags, ButtonBuilder, ButtonStyle, User } = require('discord.js')
 const CrabConfig = require('../../schemas/CrabConfig')
 const UserShift = require("../../schemas/UserShift")
+const ShiftLog = require("../../schemas/ShiftLog")
 const humanizeDuration = require('humanize-duration')
 module.exports = {
   customIdPrefix: `crab-buttons_start-shift`,
   execute: async (interaction) => {
     const userId = interaction.customId.split(":")[1]
+    const guildConfig = await CrabConfig.findOne({ guildId: interaction.guild.id })
+    const OnDutyRole = guildConfig.shift_OnDuty
     if (interaction.user.id !== userId) {
       await interaction.update({})
       await interaction.followUp({ content: 'You **cannot** interact with this button.', flags: MessageFlags.Ephemeral })
     } else {
-      const totalShiftTime = UserShift.shift_Total
+      const userInfo = UserShift.findOne({ guildId: interaction.guild.id, shift_User: userId })
+      const totalShiftTime = userInfo.shift_Total;
       const shiftStatus = UserShift.shift_Status;
       const totalTimeOnline = humanizeDuration(totalShiftTime, {
         round: true,
@@ -27,7 +31,7 @@ module.exports = {
           value: `<:crab_online:1350630807022207017> On Duty`
         },
         {
-          name: 'Time Online',
+          name: 'Current Shift Time Online',
           value: `${totalTimeOnline}`
         },
         {
@@ -50,7 +54,15 @@ module.exports = {
       .setEmoji('<:crab_clock_stop:1350701433980325979>')
       .setStyle(ButtonStyle.Danger)
       const newRow = new ActionRowBuilder().addComponents(startButton, BreakButton, EndButton)
-
+      if (interaction.guild.roles.cache.has(OnDutyRole)) {
+        try {
+          if (!interaction.member.roles.cache.has(OnDutyRole)){
+          interaction.member.roles.add(OnDutyRole)
+          }
+        } catch (error) {
+          console.error(error)
+        }
+      }
       await UserShift.findOneAndUpdate(
         { guildId: interaction.guild.id, shift_User: interaction.user.id },
         { $set: { shift_start: startTime, shift_OnDuty: true } },
