@@ -74,6 +74,9 @@ const roleBadges = [
     const guildMember = await interaction.guild.members.fetch(targetUserId);
     const joinTimestamp = guildMember.joinedTimestamp;
     const badgeLines = [foundBadge?.badge, userBadges, badgeDisplay].filter(Boolean);
+    const memberRoles = guildMember.roles.cache
+    const everyoneRole = interaction.guild.roles.everyone;
+    const roles = memberRoles.map(role => role).filter(role => role.id !== everyoneRole.id).sort((a, b) => b.position - a.position);
     const embed = new EmbedBuilder()
     .setAuthor({ name: `@${user.username}`, iconURL: user.displayAvatarURL() })
     .setColor(0x6A994E)
@@ -84,8 +87,12 @@ const roleBadges = [
         value: `>>> ${user}\nUser ID: ${user.id}\nJoined Discord: <t:${Math.floor(user.createdAt / 1000)}:F>\nJoined Server: <t:${Math.floor(joinTimestamp / 1000)}:F>`
       },
       {
-        name: `Badges:`,
+        name: `Badges [${badgeLines.length}]:`,
         value: `>>> ${badgeLines.join("\n")}`
+      },
+      {
+        name: `Roles [${roles.length}]:`,
+        value: `>>> ${roles.join(", ")}`
       },
     )
     
