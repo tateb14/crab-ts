@@ -1,6 +1,9 @@
 const { ActionRowBuilder, EmbedBuilder, MessageFlags, ModalBuilder, TextInputBuilder, TextInputStyle, Message } = require('discord.js')
 const CrabUserFlags = require("../../schemas/CrabUserFlags")
+<<<<<<< Updated upstream
 console.log("hi")
+=======
+>>>>>>> Stashed changes
 module.exports = {
   customIdPrefix: 'crab-sm_flags',
   execute: async (interaction, client) => {
