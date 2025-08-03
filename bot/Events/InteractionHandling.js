@@ -1,8 +1,20 @@
+const CrabGuildExclusion = require("../schemas/CrabGuildExclusion")
+const CrabUserExclusion = require("../schemas/CrabUserExclusion")
 module.exports = {
   event: 'interactionCreate',
   once: false,
   execute: async (client, interaction) => {
-
+    const UserExcluded = await CrabUserExclusion.findOne({ crab_UserID: interaction.user.id })
+    const GuildExluded = await CrabGuildExclusion.findOne({ crab_guildId: interaction.guild.id })
+    if (GuildExluded) {
+      interaction.reply("<:crab_shield:1349197477198168249> This guild has been excluded from this service, the bot will now leave the guild.")
+      const user = await interaction.guild.fetchOwner()
+      user.send("Embed here")
+      client.guilds.cache.get(interaction.guild.id).leave()
+      return;
+    } else if (UserExcluded) {
+      return interaction.reply("<:crab_shield:1349197477198168249> You have been excluded from this service and cannot run any commands.")
+    }
       if (interaction.isCommand()) {
           try {
               const Command = client.slashCommands.get(interaction.commandName);

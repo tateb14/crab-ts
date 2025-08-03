@@ -1,8 +1,9 @@
 const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, MessageFlags, User, Message } = require("discord.js")
+require("dotenv").config()
 module.exports = {
   customId: "crab-modal_access-code-form",
   execute: async (interaction) => {
-    const AccessCode = 'jrAU7m'
+    const AccessCode = process.env.ACCESS_CODE
     const InputtedAccessCode = interaction.fields.getTextInputValue("crab_access-code-input")
 
     if (InputtedAccessCode === AccessCode) {

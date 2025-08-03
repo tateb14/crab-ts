@@ -1,11 +1,18 @@
 const { EmbedBuilder, Embed } = require('discord.js')
 const crabConfig = require('../schemas/CrabConfig')
-
+const CrabGuildExclusion = require("../schemas/CrabGuildExclusion")
 module.exports = {
   event: 'guildCreate',
   once: false,
   execute: async (client, guild) => {
     const channel = await client.channels.fetch('1349900497452011600')
+    const GuildExluded = await CrabGuildExclusion.findOne({ crab_guildId: guild.id })
+    if (GuildExluded) {
+      const user = await guild.fetchOwner()
+      await user.send("Embed here")
+      client.guilds.cache.get(guild.id).leave()
+      return;
+    }
     if (channel) {
       const LeaveEmbed = new EmbedBuilder()
       .setColor('#fcc85a')

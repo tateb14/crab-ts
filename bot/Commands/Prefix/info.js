@@ -1,6 +1,7 @@
 const { EmbedBuilder, inlineCode } = require("discord.js")
 module.exports = {
   command: 'info',
+  aliases: ['i', 'information'],
   execute: async (message, client) => {
     const embed = new EmbedBuilder()
     .setTitle('Crab Information')

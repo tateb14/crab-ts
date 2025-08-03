@@ -5,6 +5,10 @@ const CrabConfig = new Schema({
     type: String,
     required: false,
   },
+  crab_Prefix: {
+    type: String,
+    required: false,
+  },
   shift_OnDuty: {
     type: String,
     required: false,
