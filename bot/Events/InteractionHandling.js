@@ -49,11 +49,17 @@ module.exports = {
       } else if (interaction.isAnySelectMenu()) {
           try {
               const SelectMenu = client.selectMenus.get(interaction.values[0]) || client.selectMenus.get(interaction.customId);
-              if (!SelectMenu) {
+              const UserSelectMenu = [...client.userSMs.values()].find(sm => interaction.customId.startsWith(sm.customIdPrefix));
+              if (!SelectMenu && !UserSelectMenu) {
                   interaction.reply({ content: 'This select menu could not be found!', flags: ['Ephemeral'] });
                   return;
               };
-              SelectMenu.execute(interaction, client);
+              if (SelectMenu) {
+                SelectMenu.execute(interaction, client);
+            } else if (UserSelectMenu) {
+                UserSelectMenu.execute(interaction, client);
+            }
+  
           } catch (error) {
               interaction.reply({ content: 'There was an error while trying to execute this interaction!', flags: ['Ephemeral'] });
               console.log(`There was an error while executing a select menu interaction!\nError: ${error}`);
