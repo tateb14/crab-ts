@@ -91,6 +91,7 @@ module.exports = {
               "The username of the suspect you are performing the search on."
             )
             .setRequired(true)
+            .setAutocomplete(true)
         )
     )
     .addSubcommand((subcommand) =>

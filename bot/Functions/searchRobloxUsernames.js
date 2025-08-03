@@ -1,7 +1,6 @@
 async function searchRobloxUsers(query) {
   if (!query) return [];
 
-  // ✅ Use dynamic import to support ESM in CommonJS
   const fetch = (await import('node-fetch')).default;
 
   const res = await fetch(`https://users.roblox.com/v1/usernames/users`, {
