@@ -1,7 +1,7 @@
 const { EmbedBuilder, inlineCode, ButtonBuilder, ButtonStyle, ActionRowBuilder, MessageFlags } = require("discord.js")
 module.exports = {
   command: 'flags',
-  execute: async (message, client) => {
+  execute: async (message) => {
     const AuthorizedUsers = ["653787450761543680", "658973112028626957", "1082009818526654464", "1265984568746573846"]
     if (message.guild.id === "1348623820331679744") {
     if (AuthorizedUsers.includes(message.author.id)){
