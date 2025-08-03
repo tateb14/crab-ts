@@ -15,6 +15,16 @@ module.exports = {
     } else if (UserExcluded) {
       return interaction.reply("<:crab_shield:1349197477198168249> You have been excluded from this service and cannot run any commands.")
     }
+    if (interaction.isAutocomplete()) {
+      try {
+        const command = client.slashCommands.get(interaction.commandName);
+        if (!command || typeof command.autocomplete !== 'function') return;
+
+        await command.autocomplete(interaction, client);
+      } catch (error) {
+        console.error(`Error handling autocomplete interaction:\n${error}`);
+      }
+    }
       if (interaction.isCommand()) {
           try {
               const Command = client.slashCommands.get(interaction.commandName);
