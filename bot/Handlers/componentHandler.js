@@ -8,11 +8,14 @@ module.exports = (client) => {
     const ButtonsFolder = fs.readdirSync(buttonPath).filter(command => command.endsWith(".js"));
     const userButtonPath = path.join(__dirname, '..', 'Components', 'UserSpecificButtons');
     const UserButtonFolder = fs.readdirSync(userButtonPath).filter(command => command.endsWith(".js"));
+    const UserSMPath = path.join(__dirname, '..', 'Components', 'UserSM');
+    const UserSMFolder = fs.readdirSync(UserSMPath).filter(command => command.endsWith(".js"));
     const modalPath = path.join(__dirname, '..', 'Components', 'Modals');
     const ModalsFolder = fs.readdirSync(modalPath).filter(command => command.endsWith(".js"));
     
     client.buttons = new Map();
     client.userButtons = new Map()
+    client.userSMs = new Map()
     client.selectMenus = new Map();
     client.modals = new Map();
     try {
@@ -41,6 +44,12 @@ module.exports = (client) => {
           const UserButtonsFile = require(UserButtonsFilePath);
 
           client.userButtons.set(UserButtonsFile.customIdPrefix, UserButtonsFile)
+        }
+        for (const File of UserSMFolder) {
+          const UserSMFilePath = path.join(__dirname, '../Components/UserSM', File);
+          const UserSMFile = require(UserSMFilePath);
+
+          client.userSMs.set(UserSMFile.customIdPrefix, UserSMFile)
         }
     } catch (error) {
         console.log(`There was an error while running the Component Handler.\nError: ${error}`);

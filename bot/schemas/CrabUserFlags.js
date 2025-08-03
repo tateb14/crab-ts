@@ -5,7 +5,7 @@ const CrabUserFlags = new Schema({
     type: String,
     required: false,
   },
-  shift_Types: {
+  flags: {
     type: Array,
     required: false,
   },

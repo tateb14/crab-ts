@@ -15,6 +15,16 @@ module.exports = {
     } else if (UserExcluded) {
       return interaction.reply("<:crab_shield:1349197477198168249> You have been excluded from this service and cannot run any commands.")
     }
+    if (interaction.isAutocomplete()) {
+      try {
+        const command = client.slashCommands.get(interaction.commandName);
+        if (!command || typeof command.autocomplete !== 'function') return;
+
+        await command.autocomplete(interaction, client);
+      } catch (error) {
+        console.error(`Error handling autocomplete interaction:\n${error}`);
+      }
+    }
       if (interaction.isCommand()) {
           try {
               const Command = client.slashCommands.get(interaction.commandName);
@@ -49,11 +59,17 @@ module.exports = {
       } else if (interaction.isAnySelectMenu()) {
           try {
               const SelectMenu = client.selectMenus.get(interaction.values[0]) || client.selectMenus.get(interaction.customId);
-              if (!SelectMenu) {
+              const UserSelectMenu = [...client.userSMs.values()].find(sm => interaction.customId.startsWith(sm.customIdPrefix));
+              if (!SelectMenu && !UserSelectMenu) {
                   interaction.reply({ content: 'This select menu could not be found!', flags: ['Ephemeral'] });
                   return;
               };
-              SelectMenu.execute(interaction, client);
+              if (SelectMenu) {
+                SelectMenu.execute(interaction, client);
+            } else if (UserSelectMenu) {
+                UserSelectMenu.execute(interaction, client);
+            }
+  
           } catch (error) {
               interaction.reply({ content: 'There was an error while trying to execute this interaction!', flags: ['Ephemeral'] });
               console.log(`There was an error while executing a select menu interaction!\nError: ${error}`);
