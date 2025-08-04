@@ -10,11 +10,14 @@ module.exports = (client) => {
     const UserButtonFolder = fs.readdirSync(userButtonPath).filter(command => command.endsWith(".js"));
     const modalPath = path.join(__dirname, '..', 'Components', 'Modals');
     const ModalsFolder = fs.readdirSync(modalPath).filter(command => command.endsWith(".js"));
+    const typeModalPath = path.join(__dirname, '..', 'Components', 'TypeModals');
+    const typeModalFolder = fs.readdirSync(typeModalPath).filter(command => command.endsWith(".js"));
     
     client.buttons = new Map();
     client.userButtons = new Map()
     client.selectMenus = new Map();
     client.modals = new Map();
+    client.typeModals = new Map();
     try {
         for (const File of SelectMenusFolder) {
             const SelectMenuFilePath = path.join(__dirname, '../Components/SelectMenus', File);
@@ -42,6 +45,21 @@ module.exports = (client) => {
 
           client.userButtons.set(UserButtonsFile.customIdPrefix, UserButtonsFile)
         }
+<<<<<<< Updated upstream
+=======
+        for (const File of UserSMFolder) {
+          const UserSMFilePath = path.join(__dirname, '../Components/UserSM', File);
+          const UserSMFile = require(UserSMFilePath);
+
+          client.userSMs.set(UserSMFile.customIdPrefix, UserSMFile)
+        }
+        for (const File of typeModalFolder) {
+          const TypeModalsFilePath = path.join(__dirname, '../Components/TypeModals', File);
+          const TypeModalsFile = require(TypeModalsFilePath);
+
+          client.typeModals.set(TypeModalsFile.customIdPrefix, TypeModalsFile)
+        }
+>>>>>>> Stashed changes
     } catch (error) {
         console.log(`There was an error while running the Component Handler.\nError: ${error}`);
     };
