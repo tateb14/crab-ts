@@ -51,6 +51,12 @@ module.exports = (client) => {
 
           client.userSMs.set(UserSMFile.customIdPrefix, UserSMFile)
         }
+        for (const File of typeModalFolder) {
+          const TypeModalsFilePath = path.join(__dirname, '../Components/TypeModals', File);
+          const TypeModalsFile = require(TypeModalsFilePath);
+
+          client.typeModals.set(TypeModalsFile.customIdPrefix, TypeModalsFile)
+        }
     } catch (error) {
         console.log(`There was an error while running the Component Handler.\nError: ${error}`);
     };
