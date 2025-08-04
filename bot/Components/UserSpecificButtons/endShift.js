@@ -9,6 +9,10 @@ module.exports = {
     const guildConfig = await CrabConfig.findOne({ guildId: interaction.guild.id })
     const OnDutyRole = guildConfig.shift_OnDuty
     const OnBreakRole = guildConfig.shift_OnBreak
+    const onDutyRoleObj = interaction.guild.roles.cache.get(OnDutyRole);
+    const onBreakRoleObj = interaction.guild.roles.cache.get(OnBreakRole);
+    const botMember = await interaction.guild.members.fetch(client.user.id);
+    const BotRole = botMember.roles.highest;
     if (interaction.user.id !== userId) {
       await interaction.update({})
       await interaction.followUp({ content: 'You **cannot** interact with this button.', flags: MessageFlags.Ephemeral })
@@ -64,10 +68,13 @@ module.exports = {
           startButton.setDisabled(false)
           const newRow = new ActionRowBuilder().addComponents(startButton)
           if (interaction.guild.roles.cache.has(OnDutyRole) && interaction.guild.roles.cache.has(OnBreakRole)) {
+            if (BotRole.position <= onDutyRoleObj.position || BotRole.position <= onBreakRoleObj.position) {
+              return interaction.reply({ content: `I cannot assign roles to this user. Please edit my role position to be above the <@&${OnDutyRole}> and/or <@&${OnBreakRole}> role.`, flags: MessageFlags.Ephemeral })
+            }
             try {
               if (interaction.member.roles.cache.has(OnDutyRole) || interaction.member.roles.cache.has(OnBreakRole)){
-              interaction.member.roles.remove(OnDutyRole)
-              interaction.member.roles.remove(OnBreakRole)
+              await interaction.member.roles.remove(OnDutyRole)
+              await interaction.member.roles.remove(OnBreakRole)
               }
             } catch (error) {
               console.error(error)

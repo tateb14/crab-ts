@@ -8,11 +8,15 @@ const CrabShifts = require("../../schemas/UserShift");
 const humanizeDuration = require('humanize-duration')
 module.exports = {
   customIdPrefix: "crab-buttons_shift-break",
-  execute: async (interaction) => {
+  execute: async (interaction, client) => {
     const userId = interaction.customId.split(":")[1];
     const guildConfig = await CrabConfig.findOne({ guildId: interaction.guild.id })
     const OnBreakRole = guildConfig.shift_OnBreak
     const OnDutyRole = guildConfig.shift_OnDuty
+    const onDutyRoleObj = interaction.guild.roles.cache.get(OnDutyRole);
+    const OnBreakRoleObj = interaction.guild.roles.cache.get(OnBreakRole);
+    const botMember = await interaction.guild.members.fetch(client.user.id);
+    const BotRole = botMember.roles.highest;
     if (interaction.user.id !== userId) {
       await interaction.update({});
       await interaction.followUp({
@@ -59,6 +63,9 @@ module.exports = {
           const Buttons = interaction.message.components
           const row = ActionRowBuilder.from(Buttons[0])
           if (interaction.guild.roles.cache.has(OnBreakRole)) {
+            if (BotRole.position <= onDutyRoleObj.position || BotRole.position <= OnBreakRoleObj.position) {
+              return interaction.reply({ content: `I cannot assign roles to this user. Please edit my role position to be above the <@&${OnDutyRole}> and/or <@&${OnBreakRole}> role.`, flags: MessageFlags.Ephemeral })
+            }
             try {
               if (!interaction.member.roles.cache.has(OnBreakRole)){
               interaction.member.roles.add(OnBreakRole)
@@ -103,6 +110,9 @@ module.exports = {
       const Buttons = interaction.message.components
       const row = ActionRowBuilder.from(Buttons[0])
       if (interaction.guild.roles.cache.has(OnBreakRole)) {
+        if (BotRole.position <= onDutyRoleObj.position || BotRole.position <= OnBreakRoleObj.position) {
+          return interaction.reply({ content: `I cannot assign roles to this user. Please edit my role position to be above the <@&${OnDutyRole}> and/or <@&${OnBreakRole}> role.`, flags: MessageFlags.Ephemeral })
+        }
         try {
           if (interaction.member.roles.cache.has(OnBreakRole)){
           interaction.member.roles.remove(OnBreakRole)
