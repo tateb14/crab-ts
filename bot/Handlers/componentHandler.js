@@ -42,8 +42,6 @@ module.exports = (client) => {
 
           client.userButtons.set(UserButtonsFile.customIdPrefix, UserButtonsFile)
         }
-<<<<<<< Updated upstream
-=======
         for (const File of UserSMFolder) {
           const UserSMFilePath = path.join(__dirname, '../Components/UserSM', File);
           const UserSMFile = require(UserSMFilePath);
@@ -56,7 +54,6 @@ module.exports = (client) => {
 
           client.typeModals.set(TypeModalsFile.customIdPrefix, TypeModalsFile)
         }
->>>>>>> Stashed changes
     } catch (error) {
         console.log(`There was an error while running the Component Handler.\nError: ${error}`);
     };
