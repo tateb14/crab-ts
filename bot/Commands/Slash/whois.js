@@ -81,6 +81,7 @@ const roleBadges = [
     .setAuthor({ name: `@${user.username}`, iconURL: user.displayAvatarURL() })
     .setColor(0x6A994E)
     .setTimestamp()
+    .setThumbnail(interaction.user.displayAvatarURL())
     .addFields(
       {
         name: "Discord Information:",
