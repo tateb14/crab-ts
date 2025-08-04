@@ -12,12 +12,15 @@ module.exports = (client) => {
     const UserSMFolder = fs.readdirSync(UserSMPath).filter(command => command.endsWith(".js"));
     const modalPath = path.join(__dirname, '..', 'Components', 'Modals');
     const ModalsFolder = fs.readdirSync(modalPath).filter(command => command.endsWith(".js"));
+    const typeModalPath = path.join(__dirname, '..', 'Components', 'TypeModals');
+    const typeModalFolder = fs.readdirSync(typeModalPath).filter(command => command.endsWith(".js"));
     
     client.buttons = new Map();
     client.userButtons = new Map()
     client.userSMs = new Map()
     client.selectMenus = new Map();
     client.modals = new Map();
+    client.typeModals = new Map();
     try {
         for (const File of SelectMenusFolder) {
             const SelectMenuFilePath = path.join(__dirname, '../Components/SelectMenus', File);
