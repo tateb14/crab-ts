@@ -9,6 +9,7 @@ const {
 } = require("discord.js");
 const CrabConfig = require("../../schemas/CrabConfig");
 const CrabRecord = require("../../schemas/GuildRecord");
+const searchRobloxUsers = require("../../Functions/searchRobloxUsernames")
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("record")
@@ -40,6 +41,7 @@ module.exports = {
               "The username of the suspect you are issuing the report on."
             )
             .setRequired(true)
+            .setAutocomplete(true)
         )
         .addStringOption((option) =>
           option
@@ -89,6 +91,7 @@ module.exports = {
               "The username of the suspect you are performing the search on."
             )
             .setRequired(true)
+            .setAutocomplete(true)
         )
     )
     .addSubcommand((subcommand) =>
@@ -375,4 +378,14 @@ module.exports = {
 
     }
   },
+  async autocomplete(interaction, client) {
+    const focused = interaction.options.getFocused();
+    const results = await searchRobloxUsers(focused); // Your search function
+    await interaction.respond(
+      results.map(user => ({
+        name: user.name,
+        value: user.name
+      })).slice(0, 25)
+    );
+  }
 };
