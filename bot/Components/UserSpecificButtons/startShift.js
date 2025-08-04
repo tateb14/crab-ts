@@ -5,10 +5,13 @@ const ShiftLog = require("../../schemas/ShiftLog")
 const humanizeDuration = require('humanize-duration')
 module.exports = {
   customIdPrefix: `crab-buttons_start-shift`,
-  execute: async (interaction) => {
+  execute: async (interaction, client) => {
     const userId = interaction.customId.split(":")[1]
     const guildConfig = await CrabConfig.findOne({ guildId: interaction.guild.id })
     const OnDutyRole = guildConfig.shift_OnDuty
+    const onDutyRoleObj = interaction.guild.roles.cache.get(OnDutyRole);
+    const botMember = await interaction.guild.members.fetch(client.user.id);
+    const BotRole = botMember.roles.highest;
     if (interaction.user.id !== userId) {
       await interaction.update({})
       await interaction.followUp({ content: 'You **cannot** interact with this button.', flags: MessageFlags.Ephemeral })
@@ -55,9 +58,12 @@ module.exports = {
       .setStyle(ButtonStyle.Danger)
       const newRow = new ActionRowBuilder().addComponents(startButton, BreakButton, EndButton)
       if (interaction.guild.roles.cache.has(OnDutyRole)) {
+        if (BotRole.position <= onDutyRoleObj.position) {
+          return interaction.reply({ content: `I cannot assign roles to this user. Please edit my role position to be above the <@&${OnDutyRole}> role.`, flags: MessageFlags.Ephemeral })
+        }
         try {
           if (!interaction.member.roles.cache.has(OnDutyRole)){
-          interaction.member.roles.add(OnDutyRole)
+          await interaction.member.roles.add(OnDutyRole)
           }
         } catch (error) {
           console.error(error)
