@@ -1,36 +1,43 @@
-const { SlashCommandBuilder, MessageFlags, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js')
-const CrabConfig = require('../../schemas/CrabConfig')
-const UserShift = require('../../schemas/UserShift')
-const humanizeDuration = require('humanize-duration')
+const { SlashCommandBuilder, MessageFlags, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, inlineCode, StringSelectMenuBuilder } = require("discord.js")
+const CrabConfig = require("../../schemas/CrabConfig")
+const UserShift = require("../../schemas/UserShift")
+const ShiftLog = require("../../schemas/ShiftLog")
+const humanizeDuration = require("humanize-duration")
+const randomString = require("../../Functions/randomId")
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName('shift')
-  .setDescription('..')
+  .setName("shift")
+  .setDescription("..")
   .addSubcommand(subcommand =>
     subcommand
-    .setName('manage')
-    .setDescription('Manage your shift.')
+    .setName("manage")
+    .setDescription("Manage your shift.")
     .addStringOption(option => 
-      option.setName('type')
+      option.setName("type")
       .setRequired(false)
-      .setDescription('Log your shift on a specific type if you wish!')
+      .setDescription("Log your shift on a specific type if you wish!")
       .addChoices(
-        { name: 'Patrol', value: 'patrol-shift' },
-        { name: 'SWAT', value: 'swat-shift' },
-        { name: 'Internal Affairs', value: 'ia-shift' },
-        { name: 'Detective', value: 'detective-shift' }
+        { name: "Patrol", value: "patrol-shift" },
+        { name: "SWAT", value: "swat-shift" },
+        { name: "Internal Affairs", value: "ia-shift" },
+        { name: "Detective", value: "detective-shift" }
       )
     )
   )
   .addSubcommand(subcommand =>
     subcommand
-    .setName('active')
-    .setDescription('List all active shifts.')
+    .setName("active")
+    .setDescription("List all active shifts.")
   )
   .addSubcommand(subcommand =>
     subcommand
-    .setName('admin')
+    .setName("admin")
     .setDescription("Manage a user's shift.")
+    .addUserOption(user => user
+      .setName("user")
+      .setDescription("The user you want to manage their shifts.")
+      .setRequired(true)
+    )
   ),
   execute: async (interaction) => {
     const subcommand = interaction.options.getSubcommand()
@@ -39,11 +46,11 @@ module.exports = {
     const HiCommRole =  guildConfig.perms_HiCommRole
     const SupervisorRole = guildConfig.perms_SupervisorRole
     const AARole = guildConfig.perms_AllAccessRole
-    if (!interaction.member.roles.cache.has(staffRole || SupervisorRole || HiCommRole) || !interaction.member.roles.cache.has(AARole)) {
-      interaction.reply({ content: '**Insufficient** permissions.', flags: MessageFlags.Ephemeral })
+    if (!interaction.member.roles.cache.has(staffRole || SupervisorRole || HiCommRole || AARole)) {
+      return interaction.reply({ content: "**Insufficient** permissions.", flags: MessageFlags.Ephemeral })
     } else {
-    if (subcommand === 'manage') {
-      const shiftType = interaction.options.getString('type') || 'Default'
+    if (subcommand === "manage") {
+      const shiftType = interaction.options.getString("type") || "Default"
       const departmentTypes = guildConfig.shift_Types
       let userInfo = await UserShift.findOne({ shift_User: interaction.user.id, guildId: interaction.guild.id })
       if (!userInfo) {
@@ -60,7 +67,7 @@ module.exports = {
         await newShiftUser.save()
       }
 
-      if (departmentTypes.includes(shiftType) || shiftType === 'Default') {
+      if (departmentTypes.includes(shiftType) || shiftType === "Default") {
         const onDuty = userInfo.shift_OnDuty === true;
         const onBreak = userInfo.shift_OnBreak === true;
         const totalShiftTime = userInfo.shift_Total || 0
@@ -74,33 +81,33 @@ module.exports = {
         .setDescription(`${interaction.user}, you can manage your shift below.`)
         .addFields(
           {
-            name: 'Current Status',
+            name: "Current Status",
             value: `<:crab_break:1350630809580732569> On Break`
           },
           {
-            name: 'Total Time Online',
+            name: "Total Time Online",
             value: `${totalTimeOnline}`
           },
           {
-            name: 'Shift Type',
+            name: "Shift Type",
             value: `${shiftType}`
           },
         )
         const startButton = new ButtonBuilder()
         .setCustomId(`crab-buttons_start-shift:${interaction.user.id}`)
-        .setEmoji('<:crab_clock_play:1350635274857611375>')
-        .setLabel('Start Shift')
+        .setEmoji("<:crab_clock_play:1350635274857611375>")
+        .setLabel("Start Shift")
         .setDisabled(true)
         .setStyle(ButtonStyle.Success)
         const BreakButton = new ButtonBuilder()
       .setCustomId(`crab-buttons_shift-break:${interaction.user.id}`)
-      .setLabel('Toggle Break')
-      .setEmoji('<:crab_clock_pause:1350701435116847216>')
+      .setLabel("Toggle Break")
+      .setEmoji("<:crab_clock_pause:1350701435116847216>")
       .setStyle(ButtonStyle.Secondary)
       const EndButton = new ButtonBuilder()
       .setCustomId(`crab-buttons_shift-end:${interaction.user.id}`)
-      .setLabel('End Shift')
-      .setEmoji('<:crab_clock_stop:1350701433980325979>')
+      .setLabel("End Shift")
+      .setEmoji("<:crab_clock_stop:1350701433980325979>")
       .setStyle(ButtonStyle.Danger)
       const row = new ActionRowBuilder().addComponents(startButton, BreakButton, EndButton)
         interaction.reply({ embeds: [embed], components: [row] })
@@ -111,33 +118,33 @@ module.exports = {
         .setDescription(`${interaction.user}, you can manage your shift below.`)
         .addFields(
           {
-            name: 'Current Status',
+            name: "Current Status",
             value: `<:crab_online:1350630807022207017> On Duty`
           },
           {
-            name: 'Time Online',
+            name: "Time Online",
             value: `${totalTimeOnline}`
           },
           {
-            name: 'Shift Type',
+            name: "Shift Type",
             value: `${shiftType}`
           },
         )
         const startButton = new ButtonBuilder()
         .setCustomId(`crab-buttons_start-shift:${interaction.user.id}`)
-        .setEmoji('<:crab_clock_play:1350635274857611375>')
-        .setLabel('Start Shift')
+        .setEmoji("<:crab_clock_play:1350635274857611375>")
+        .setLabel("Start Shift")
         .setDisabled(true)
         .setStyle(ButtonStyle.Success)
         const BreakButton = new ButtonBuilder()
       .setCustomId(`crab-buttons_shift-break:${interaction.user.id}`)
-      .setLabel('Toggle Break')
-      .setEmoji('<:crab_clock_pause:1350701435116847216>')
+      .setLabel("Toggle Break")
+      .setEmoji("<:crab_clock_pause:1350701435116847216>")
       .setStyle(ButtonStyle.Secondary)
       const EndButton = new ButtonBuilder()
       .setCustomId(`crab-buttons_shift-end:${interaction.user.id}`)
-      .setLabel('End Shift')
-      .setEmoji('<:crab_clock_stop:1350701433980325979>')
+      .setLabel("End Shift")
+      .setEmoji("<:crab_clock_stop:1350701433980325979>")
       .setStyle(ButtonStyle.Danger)
       const row = new ActionRowBuilder().addComponents(startButton, BreakButton, EndButton)
         interaction.reply({ embeds: [embed], components: [row] })
@@ -148,28 +155,28 @@ module.exports = {
         .setDescription(`${interaction.user}, you can manage your shift below.`)
         .addFields(
           {
-            name: 'Current Status',
+            name: "Current Status",
             value: `<:crab_offline:1350630808666374205> Off Duty`
           },
           {
-            name: 'Time Online',
+            name: "Time Online",
             value: `${totalTimeOnline}`
           },
           {
-            name: 'Shift Type',
+            name: "Shift Type",
             value: `${shiftType}`
           },
         )
         const startButton = new ButtonBuilder()
         .setCustomId(`crab-buttons_start-shift:${interaction.user.id}`)
-        .setEmoji('<:crab_clock_play:1350635274857611375>')
-        .setLabel('Start Shift')
+        .setEmoji("<:crab_clock_play:1350635274857611375>")
+        .setLabel("Start Shift")
         .setStyle(ButtonStyle.Success)
         const row = new ActionRowBuilder().addComponents(startButton)
         interaction.reply({ embeds: [embed], components: [row] })
         }
       }
-    } else if (subcommand === 'active') {
+    } else if (subcommand === "active") {
       const OnlineUser = await UserShift.find({
         guildId: interaction.guild.id,
         shift_OnDuty: true,
@@ -194,7 +201,7 @@ module.exports = {
     
       const onDutyList = OnlineUser
         .map(user => `- <@${user.shift_User}>`)
-        .join('\n');
+        .join("\n");
     
       onDutyEmbed.setDescription(
         onDutyList.length > 0 ? onDutyList : "No one is on duty!"
@@ -205,18 +212,57 @@ module.exports = {
     
       const onBreakList = BreakUser
         .map(user => `- <@${user.shift_User}>`)
-        .join('\n');
+        .join("\n");
     
       onBreakEmbed.setDescription(
         onBreakList.length > 0 ? onBreakList : "No one is on break!"
       );
   
       return interaction.reply({ embeds: [onDutyEmbed, onBreakEmbed] });
-    } else if (subcommand === 'admin') {
-      
-    }
-    
-  }
-}
+    } else if (subcommand === "admin") {
+      if (!interaction.member.roles.cache.has(HiCommRole || AARole)) {
+        return interaction.reply({ content: "**Insufficient** permissions.", flags: MessageFlags.Ephemeral })
+      } else {
+        const user = interaction.options.getUser("user")
+         // If the user has the AA role, they can administer their own shifts. If not, it will not allow them to do so.
+        // if (user.id === interaction.user.id) {
+        //   if (!interaction.member.roles.cache.has(AARole)){
+        //   return interaction.reply({ content: "**Denied**, you cannot administrate your own shifts.", flags: MessageFlags.Ephemeral })
+        //   } else {
 
+        //   }
+        // }
+        const UserLogs = await ShiftLog.find({ shift_User: user.id, guildId: interaction.guild.id })
+        const UserLogMap = new Map()
+        for (const log of UserLogs) {
+          UserLogMap.set(log.shift_id, log.shift_Time, log.shift_BreakTime)
+        }
+        const embed = new EmbedBuilder()
+        .setAuthor({ name: `Displaying ${UserLogs.length} for @${user.username}`, iconURL: user.displayAvatarURL() })
+        .setColor(0xFAF3E0)
+        .setFooter({ text: `Requested by @${interaction.user.username} || Powered by Crab` })
+        .setTimestamp()
+        const ShiftSelectMenu = new StringSelectMenuBuilder()
+        .setCustomId("crab-sm_")
+        let counter = 1
+        for (const [shift_id, shift_time, shift_BreakTime] of UserLogMap.entries()) {
+          const totalTimeOnline = humanizeDuration(shift_time, {
+            round: true,
+          })
+          const totalBreakTime = humanizeDuration(shift_BreakTime, {
+            round: true,
+          })
+          embed.addFields(
+            {
+              name: `**${counter}:** ${inlineCode(shift_id)}`,
+              value: `>>> **Shift Time:** ${totalTimeOnline}\n**Shift Break:** ${totalBreakTime}`
+            }
+          )
+          counter++;
+        }
+        interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral })
+      }
+      }
+    } 
+  }
 }
