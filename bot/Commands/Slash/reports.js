@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, MessageFlags } = require("discord.js")
 const CrabConfig = require("../../schemas/CrabConfig")
-
 module.exports = {
   data: new SlashCommandBuilder()
   .setName("report")

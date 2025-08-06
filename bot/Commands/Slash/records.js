@@ -10,6 +10,7 @@ const {
 const CrabConfig = require("../../schemas/CrabConfig");
 const CrabRecord = require("../../schemas/GuildRecord");
 const searchRobloxUsers = require("../../Functions/searchRobloxUsernames")
+const randomString = require("../../Functions/randomId")
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("record")
@@ -115,12 +116,6 @@ module.exports = {
     const supervisorRole = GuildConfig.perms_SupervisorRole;
     const hiCommRole = GuildConfig.perms_HiCommRole;
     const aaRole = GuildConfig.perms_AllAccessRole;
-    function randomString(length, chars) {
-      var result = "";
-      for (var i = length; i > 0; --i)
-        result += chars[Math.floor(Math.random() * chars.length)];
-      return result;
-    }
     const recordId = `record_${randomString(
       24,
       "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"

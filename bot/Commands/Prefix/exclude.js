@@ -1,6 +1,6 @@
 const { EmbedBuilder, inlineCode, ButtonBuilder, ButtonStyle, ActionRowBuilder, MessageFlags } = require("discord.js")
 module.exports = {
-  command: 'exclude',
+  command: "exclude",
   execute: async (message, client) => {
     console.log(message)
     const AuthorizedUsers = ["653787450761543680", "658973112028626957", "1082009818526654464", "1265984568746573846"]

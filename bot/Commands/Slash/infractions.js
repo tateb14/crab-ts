@@ -10,12 +10,7 @@ const {
 } = require("discord.js");
 const CrabPunishment = require("../../schemas/CrabPunishment");
 const crabConfig = require("../../schemas/CrabConfig");
-function randomString(length, chars) {
-  var result = "";
-  for (var i = length; i > 0; --i)
-    result += chars[Math.floor(Math.random() * chars.length)];
-  return result;
-}
+const randomString = require("../../Functions/randomId")
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("punishment")
