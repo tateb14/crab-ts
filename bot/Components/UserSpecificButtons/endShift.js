@@ -56,7 +56,6 @@ module.exports = {
         shift_BreakTime: totalShiftBreakTime
       })
       await newShiftLog.save()
-      console.log(newShiftLog)
       const totalTimeOnline = humanizeDuration(updatedShift.shift_Total || 0, {
         round: true,
       });    

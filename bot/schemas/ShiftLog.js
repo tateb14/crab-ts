@@ -10,11 +10,11 @@ const shiftLog = new Schema({
     required: false,
   },
   shift_Time: {
-    type: String,
+    type: Number,
     required: false,
   },
   shift_BreakTime: {
-    type: String,
+    type: Number,
     required: false,
   },
   shift_id: {

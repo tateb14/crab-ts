@@ -208,15 +208,9 @@ module.exports = {
         const punishmentRecord = await CrabPunishment.findOneAndDelete({ punishment_id: punishmentId });
         try {
           if (punishmentRecord) {
-            interaction.reply({
-              content: `The punishment record has been found and deleted.\n-# Punishment ID: ${inlineCode(
-                punishmentId
-              )}`, flags: MessageFlags.Ephemeral
-            });
+            interaction.reply({content: `The punishment record has been found and deleted.\n-# Punishment ID: ${inlineCode(punishmentId)}`, flags: MessageFlags.Ephemeral});
           } else {
-            interaction.reply({
-              content: "No punishment record with that ID was found.", flags: MessageFlags.Ephemeral
-            });
+            interaction.reply({content: "No punishment record with that ID was found.", flags: MessageFlags.Ephemeral});
           }
         } catch (error) {
           console.error(error);

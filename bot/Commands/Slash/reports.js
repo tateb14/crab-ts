@@ -38,7 +38,7 @@ module.exports = {
     if (interaction.member.roles.cache.has(PersonnelRole || SupervisorRole || HiCommRole || AARole)) {
       if (departmentType === "leo") {
       const embed = new EmbedBuilder()
-      .setColor(0xffffff)
+      .setColor(0xfaf3e0)
       .setDescription(`To record a report, please select which report you want to record. Each report is tailored to your department: **Law Enforcement**. All report types available to the department you work for will be listed below.\n\n- Accident Reports\n- Scene Reports\n- Incident Reports`)
       .setFooter({ text: "Powered by Crab" })
       .setTitle("Report Panel")
@@ -67,7 +67,7 @@ module.exports = {
       interaction.reply({ embeds: [embed], components: [row], flags: MessageFlags.Ephemeral })
     } else if (departmentType === "fd-med") {
       const embed = new EmbedBuilder()
-      .setColor(0xffffff)
+      .setColor(0xfaf3e0)
       .setDescription(`To record a report, please select which report you want to record. Each report is tailored to your department: **Fire and Medical**. All report types available to the department you work for will be listed below.\n\n- Accident Reports\n- Fire Reports\n- Medical Reports`)
       .setFooter({ text: "Powered by Crab" })
       .setTitle("Report Panel")
@@ -96,7 +96,7 @@ module.exports = {
       interaction.reply({ embeds: [embed], components: [row], flags: MessageFlags.Ephemeral })
     } else if (departmentType === "dot") {
       const embed = new EmbedBuilder()
-      .setColor(0xffffff)
+      .setColor(0xfaf3e0)
       .setDescription(`To record a report, please select which report you want to record. Each report is tailored to your department: **Department of Transportation**. All report types available to the department you work for will be listed below.\n\n- Accident Reports\n- Repair Reports\n- Tow Reports`)
       .setFooter({ text: "Powered by Crab" })
       .setTitle("Report Panel")

@@ -8,7 +8,6 @@ module.exports = {
     const SupervisorRole = GuildConfig.perms_SupervisorRole
     const HiCommRole = GuildConfig.perms_HiCommRole
     const AARole = GuildConfig.perms_AllAccessRole
-
     if (interaction.member.roles.cache.has(SupervisorRole || HiCommRole || AARole)) {
       const Record = await GuildRecord.findOneAndUpdate(
       { messageId: interaction.message.id },
