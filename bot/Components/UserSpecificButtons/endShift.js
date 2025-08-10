@@ -2,6 +2,8 @@ const { ActionRowBuilder, EmbedBuilder, MessageFlags } = require('discord.js')
 const CrabConfig = require('../../schemas/CrabConfig')
 const CrabShifts = require('../../schemas/UserShift')
 const humanizeDuration = require('humanize-duration')
+const ShiftLog = require('../../schemas/ShiftLog')
+const randomString = require('../../Functions/randomId')
 module.exports = {
   customIdPrefix: 'crab-buttons_shift-end',
   execute: async (interaction, client) => {
@@ -27,7 +29,7 @@ module.exports = {
       const totalNBTime = endTime - startTime;
       const totalShiftBreakTime = (UserShift.shift_endBreak || endTime) - (UserShift.shift_startBreak || endTime);
       const totalTime = totalNBTime - totalShiftBreakTime;
-      
+
       const updatedShift = await CrabShifts.findOneAndUpdate(
         { guildId: interaction.guild.id, shift_User: interaction.user.id },
         {
@@ -42,7 +44,18 @@ module.exports = {
         },
         { new: true }
       );
-      
+      const shiftId = `shift_${randomString(
+        24,
+        "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      )}`;
+      const newShiftLog = new ShiftLog({
+        shift_User: interaction.user.id,
+        shift_Time: totalTime,
+        shift_id: shiftId,
+        guildId: interaction.guild.id,
+        shift_BreakTime: totalShiftBreakTime
+      })
+      await newShiftLog.save()
       const totalTimeOnline = humanizeDuration(updatedShift.shift_Total || 0, {
         round: true,
       });    

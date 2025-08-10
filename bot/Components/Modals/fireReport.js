@@ -19,7 +19,7 @@ module.exports = {
     const SupervisorRole = GuildConfig.perms_SupervisorRole
     const embed = new EmbedBuilder()
     .setAuthor({ name: `@${interaction.user.username}`, iconURL: interaction.user.displayAvatarURL() })
-    .setColor(0xffffff)
+    .setColor(0xfaf3e0)
     .setFooter({ text: `Report ID: ${ReportID} || Powered by Crab` })
     .setDescription(`Below are details of the fire report submitted by ${interaction.user}.`)
     .setTitle("Fire Report")
