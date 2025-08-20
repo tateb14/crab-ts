@@ -168,6 +168,18 @@ module.exports = {
         const row = new ActionRowBuilder().addComponents(startButton)
         interaction.reply({ embeds: [embed], components: [row] })
         }
+      } else if (subcommand === "leaderboard") {
+        const GuildShifts = UserShift.findOne({ guildId: interaction.guild.id })
+        
+        const embed = new EmbedBuilder()
+        .setColor(0xffffff)
+        .setFooter({ text: `Requested by @${interaction.user.username}` })
+        .setTimestamp()
+        .setThumbnail(interaction.guild.icon ?? null)
+        .setTitle("Shift Leaderboard ")
+        for (const Shift of GuildShifts) {
+
+        }
       }
     } else if (subcommand === 'active') {
       const OnlineUser = await UserShift.find({
