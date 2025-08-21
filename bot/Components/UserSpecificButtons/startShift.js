@@ -3,6 +3,7 @@ const CrabConfig = require('../../schemas/CrabConfig')
 const UserShift = require("../../schemas/UserShift")
 const ShiftLog = require("../../schemas/ShiftLog")
 const humanizeDuration = require('humanize-duration')
+const responses = require("../../Functions/responses")
 module.exports = {
   customIdPrefix: `crab-buttons_start-shift`,
   execute: async (interaction, client) => {
@@ -14,7 +15,7 @@ module.exports = {
     const BotRole = botMember.roles.highest;
     if (interaction.user.id !== userId) {
       await interaction.update({})
-      await interaction.followUp({ content: 'You **cannot** interact with this button.', flags: MessageFlags.Ephemeral })
+      return interaction.followUp(responses.errors.unauthorizedUser)
     } else {
       const userInfo = UserShift.findOne({ guildId: interaction.guild.id, shift_User: userId })
       const totalShiftTime = userInfo.shift_Total;

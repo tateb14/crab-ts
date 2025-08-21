@@ -39,6 +39,9 @@ module.exports = {
       subcommand.setName("active").setDescription("List all active shifts.")
     )
     .addSubcommand((subcommand) =>
+      subcommand.setName("leaderboard").setDescription("Display a leaderboard of all staff members.")
+    )
+    .addSubcommand((subcommand) =>
       subcommand
         .setName("admin")
         .setDescription("Manage a user's shift.")
@@ -297,7 +300,7 @@ module.exports = {
             })
             .setTimestamp();
           const ShiftSelectMenu = new StringSelectMenuBuilder()
-            .setCustomId("crab-sm_shift-admin-options")
+            .setCustomId(`crab-sm_shift-admin-options:${interaction.user.id}`)
             .setMaxValues(1)
             .setPlaceholder("Select an shift to manage");
 
@@ -324,7 +327,6 @@ module.exports = {
           const row = new ActionRowBuilder().addComponents(ShiftSelectMenu);
           interaction.reply({
             embeds: [embed],
-            flags: MessageFlags.Ephemeral,
             components: [row],
           });
         }

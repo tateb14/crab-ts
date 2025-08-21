@@ -140,8 +140,8 @@ module.exports = {
         embeds: [ErrorEmbed],
         content: "<@&1404099944457175110>",
       });
-      interaction.reply({
-        content: "There was an error while trying to execute this command! The issue has been reported to [Tropical Systems](https://discord.gg/8XScx8MNfE).",
+      interaction.channel.send({
+        content: "There was an error while trying to execute this command! The issue has been reported to [Tropical Systems](<https://discord.gg/8XScx8MNfE>).",
         flags: ["Ephemeral"],
       });
       console.log(
