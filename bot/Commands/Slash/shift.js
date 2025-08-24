@@ -18,40 +18,37 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("shift")
     .setDescription("..")
-    .addSubcommand((subcommand) =>
-      subcommand
-        .setName("manage")
-        .setDescription("Manage your shift.")
-        .addStringOption((option) =>
-          option
-            .setName("type")
-            .setRequired(false)
-            .setDescription("Log your shift on a specific type if you wish!")
-            .addChoices(
-              { name: "Patrol", value: "patrol-shift" },
-              { name: "SWAT", value: "swat-shift" },
-              { name: "Internal Affairs", value: "ia-shift" },
-              { name: "Detective", value: "detective-shift" }
-            )
-        )
+  .addSubcommand(subcommand =>
+    subcommand
+    .setName('manage')
+    .setDescription('Manage your shift.')
+    .addStringOption(option => 
+      option.setName('type')
+      .setRequired(false)
+      .setDescription('Log your shift on a specific type if you wish!')
+      .addChoices(
+        { name: 'Patrol', value: 'patrol-shift' },
+        { name: 'SWAT', value: 'swat-shift' },
+        { name: 'Internal Affairs', value: 'ia-shift' },
+        { name: 'Detective', value: 'detective-shift' }
+      )
     )
-    .addSubcommand((subcommand) =>
-      subcommand.setName("active").setDescription("List all active shifts.")
-    )
-    .addSubcommand((subcommand) =>
-      subcommand.setName("leaderboard").setDescription("Display a leaderboard of all staff members.")
-    )
-    .addSubcommand((subcommand) =>
-      subcommand
-        .setName("admin")
-        .setDescription("Manage a user's shift.")
-        .addUserOption((user) =>
-          user
-            .setName("user")
-            .setDescription("The user you want to manage their shifts.")
-            .setRequired(true)
-        )
-    ),
+  )
+  .addSubcommand(subcommand =>
+    subcommand
+    .setName('active')
+    .setDescription('List all active shifts.')
+  )
+  .addSubcommand(subcommand =>
+    subcommand
+    .setName('admin')
+    .setDescription("Manage a user's shift.")
+  )
+    .addSubcommand(subcommand =>
+    subcommand
+    .setName('leaderboard')
+    .setDescription("View your server's leaderboard!")
+  ),
   execute: async (interaction) => {
     const subcommand = interaction.options.getSubcommand();
     const guildConfig = await CrabConfig.findOne({
@@ -331,18 +328,8 @@ module.exports = {
           });
         }
       } else if (subcommand === "leaderboard") {
-        const GuildShifts = UserShift.findOne({ guildId: interaction.guild.id })
-        
-        const embed = new EmbedBuilder()
-        .setColor(0xffffff)
-        .setFooter({ text: `Requested by @${interaction.user.username}` })
-        .setTimestamp()
-        .setThumbnail(interaction.guild.icon ?? null)
-        .setTitle("Shift Leaderboard ")
-        for (const Shift of GuildShifts) {
-
-        }
-      }
-    }
-  },
-};
+        const GuildShift = await UserShift.find({ guildId: interaction.guild.id })
+  }
+}
+}
+}
