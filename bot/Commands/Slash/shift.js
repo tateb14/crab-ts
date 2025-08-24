@@ -18,37 +18,34 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("shift")
     .setDescription("..")
-  .addSubcommand(subcommand =>
-    subcommand
-    .setName('manage')
-    .setDescription('Manage your shift.')
-    .addStringOption(option => 
-      option.setName('type')
-      .setRequired(false)
-      .setDescription('Log your shift on a specific type if you wish!')
-      .addChoices(
-        { name: 'Patrol', value: 'patrol-shift' },
-        { name: 'SWAT', value: 'swat-shift' },
-        { name: 'Internal Affairs', value: 'ia-shift' },
-        { name: 'Detective', value: 'detective-shift' }
-      )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName("manage")
+        .setDescription("Manage your shift.")
+        .addStringOption((option) =>
+          option
+            .setName("type")
+            .setRequired(false)
+            .setDescription("Log your shift on a specific type if you wish!")
+            .addChoices(
+              { name: "Patrol", value: "patrol-shift" },
+              { name: "SWAT", value: "swat-shift" },
+              { name: "Internal Affairs", value: "ia-shift" },
+              { name: "Detective", value: "detective-shift" }
+            )
+        )
     )
-  )
-  .addSubcommand(subcommand =>
-    subcommand
-    .setName('active')
-    .setDescription('List all active shifts.')
-  )
-  .addSubcommand(subcommand =>
-    subcommand
-    .setName('admin')
-    .setDescription("Manage a user's shift.")
-  )
-    .addSubcommand(subcommand =>
-    subcommand
-    .setName('leaderboard')
-    .setDescription("View your server's leaderboard!")
-  ),
+    .addSubcommand((subcommand) =>
+      subcommand.setName("active").setDescription("List all active shifts.")
+    )
+    .addSubcommand((subcommand) =>
+      subcommand.setName("admin").setDescription("Manage a user's shift.")
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName("leaderboard")
+        .setDescription("View your server's leaderboard!")
+    ),
   execute: async (interaction) => {
     const subcommand = interaction.options.getSubcommand();
     const guildConfig = await CrabConfig.findOne({
@@ -59,7 +56,12 @@ module.exports = {
     const SupervisorRole = guildConfig.perms_SupervisorRole;
     const AARole = guildConfig.perms_AllAccessRole;
     if (
-      !(interaction.member.roles.cache.has(staffRole) || interaction.member.roles.cache.has(SupervisorRole) || interaction.member.roles.cache.has(HiCommRole) || interaction.member.roles.cache.has(AARole))
+      !(
+        interaction.member.roles.cache.has(staffRole) ||
+        interaction.member.roles.cache.has(SupervisorRole) ||
+        interaction.member.roles.cache.has(HiCommRole) ||
+        interaction.member.roles.cache.has(AARole)
+      )
     ) {
       return interaction.reply({
         content: "**Insufficient** permissions.",
@@ -73,6 +75,7 @@ module.exports = {
           shift_User: interaction.user.id,
           guildId: interaction.guild.id,
         });
+
         if (!userInfo) {
           const newShiftUser = new UserShift({
             guildId: interaction.guild.id,
@@ -85,6 +88,7 @@ module.exports = {
             shift_TotalBreakTime: 0,
           });
           await newShiftUser.save();
+          userInfo = newShiftUser;
         }
 
         if (departmentTypes.includes(shiftType) || shiftType === "Default") {
@@ -263,7 +267,10 @@ module.exports = {
 
         return interaction.reply({ embeds: [onDutyEmbed, onBreakEmbed] });
       } else if (subcommand === "admin") {
-        if (!interaction.member.roles.cache.has(HiCommRole) && !interaction.member.roles.cache.has(AARole)) {
+        if (
+          !interaction.member.roles.cache.has(HiCommRole) &&
+          !interaction.member.roles.cache.has(AARole)
+        ) {
           return interaction.reply({
             content: "**Insufficient** permissions.",
             flags: MessageFlags.Ephemeral,
@@ -272,7 +279,7 @@ module.exports = {
           const user = interaction.options.getUser("user");
           if (interaction.user.id === user.id) {
             if (!interaction.member.roles.cache.has(AARole)) {
-              return interaction.reply("NO")
+              return interaction.reply("NO");
             }
           }
           const UserLogs = await ShiftLog.find({
@@ -280,7 +287,7 @@ module.exports = {
             guildId: interaction.guild.id,
           });
           if (!UserLogs || UserLogs.length === 0) {
-            return interaction.reply("This user has no current shifts.")
+            return interaction.reply("This user has no current shifts.");
           }
           const UserLogMap = new Map();
           for (const log of UserLogs) {
@@ -302,7 +309,11 @@ module.exports = {
             .setPlaceholder("Select an shift to manage");
 
           let counter = 1;
-          for (const [ shift_id, shift_time, shift_BreakTime,] of UserLogMap.entries()) {
+          for (const [
+            shift_id,
+            shift_time,
+            shift_BreakTime,
+          ] of UserLogMap.entries()) {
             const totalTimeOnline = humanizeDuration(shift_time, {
               round: true,
             });
@@ -328,8 +339,37 @@ module.exports = {
           });
         }
       } else if (subcommand === "leaderboard") {
-        const GuildShift = await UserShift.find({ guildId: interaction.guild.id })
-  }
-}
-}
-}
+        try {
+          const GuildShifts = await UserShift.find({
+            guildId: interaction.guild.id,
+          });
+          let LeaderboardDescription = [];
+          const embed = new EmbedBuilder()
+            .setColor(0xffffff)
+            .setTitle(`${interaction.guild.name} | Shift Leaderboard`)
+            .setFooter({ text: "Powered by Crab" })
+            .setTimestamp();
+
+          if (GuildShifts.length === 0) {
+            const NoShifts = "No current shifts have been logged.";
+            LeaderboardDescription.push(NoShifts);
+            embed.setDescription(LeaderboardDescription.toString());
+          }
+
+          for (const Shift of GuildShifts) {
+            const ShiftUser = Shift.shift_User;
+            const ShiftTotal = Shift.shift_Total || "0 seconds";
+            const humanizedTime = humanizeDuration(ShiftTotal, {
+              round: true,
+            });
+            LeaderboardDescription.push(`<@${ShiftUser}> • ${humanizedTime}`);
+            embed.setDescription(LeaderboardDescription.join("\n"));
+          }
+          return interaction.reply({ embeds: [embed] });
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    }
+  },
+};

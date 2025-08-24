@@ -2,7 +2,7 @@ const { REST, Routes } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const config = require('../../config.json');
-
+const chalk = require("chalk")
 module.exports = async (client) => {
     const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
     client.slashCommands = new Map()
@@ -24,8 +24,8 @@ module.exports = async (client) => {
 
         await rest.put(Routes.applicationCommands(config.clientId), { body: Commands })
 
-        console.log('🐚 Successfully registered all (/) commands.')
+        console.log(chalk.green('[SYSTEM] 🐚 Successfully registered all (/) commands.'))
     } catch (error) {
-        console.error(`There was an error while registering (/) commands: ${error}`);
+        console.error(chalk.red(`There was an error while registering (/) commands: ${error}`));
     }
 }
