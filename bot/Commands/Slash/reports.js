@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, MessageFlags } = require("discord.js")
 const CrabConfig = require("../../schemas/CrabConfig")
+const CrabReport = require("../../schemas/GuildReport")
 module.exports = {
   data: new SlashCommandBuilder()
   .setName("report")
@@ -30,12 +31,14 @@ module.exports = {
   execute: async (interaction) => {
     const subcommand = interaction.options.getSubcommand()
     const GuildConfig = await CrabConfig.findOne({ guildId: interaction.guild.id })
+    const GuildReports = await CrabRe
     const PersonnelRole = GuildConfig.perms_PersonnelRole
     const SupervisorRole = GuildConfig.perms_SupervisorRole
     const HiCommRole = GuildConfig.perms_HiCommRole
     const AARole = GuildConfig.perms_AllAccessRole
     const departmentType = GuildConfig.crab_DepartmentType
     if (interaction.member.roles.cache.has(PersonnelRole || SupervisorRole || HiCommRole || AARole)) {
+     if (subcommand === "create") {
       if (departmentType === "leo") {
       const embed = new EmbedBuilder()
       .setColor(0xfaf3e0)
@@ -126,6 +129,12 @@ module.exports = {
     } else {
       interaction.reply("Department **not configured**.")
     }
+     } else if (subcommand === "search") {
+      //! Needs coded
+     } else if (subcommand === "void") {
+      const Report = await GuildReports.findOne() 
+     }
+      
     } else {
       interaction.reply("**Insufficient** permissions.")
     }
