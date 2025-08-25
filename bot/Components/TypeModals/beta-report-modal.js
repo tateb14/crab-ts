@@ -26,7 +26,7 @@ module.exports = {
   .setTimestamp()
 
   const SupportServer = await client.guilds.fetch("1348623820331679744")
-  const channel = await SupportServer.channels.fetch("1397405057481310359")
+  const channel = await SupportServer.channels.fetch("1409507293673951373")
 
   await channel.send({ embeds: [embed] })
   interaction.editReply("Your report has been sent!")

@@ -276,10 +276,10 @@ module.exports = {
             flags: MessageFlags.Ephemeral,
           });
         } else {
-          const user = interaction.options.getUser("user");
+          const user = interaction.options.getUser("user") || interaction.user
           if (interaction.user.id === user.id) {
             if (!interaction.member.roles.cache.has(AARole)) {
-              return interaction.reply("NO");
+              return interaction.reply("You cannot edit your own shifts.");
             }
           }
           const UserLogs = await ShiftLog.find({
