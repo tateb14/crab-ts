@@ -7,6 +7,7 @@ module.exports = {
     const GuildConfig = await CrabConfig.findOne({ guildId: interaction.guild.id }) 
     const departmentType = GuildConfig.crab_DepartmentType
     const embed = interaction.message.embeds[0]
+    const GuildPrefix = GuildConfig.crab_Prefix
     if (departmentType === 'leo') {
        const ConfigEmbed = EmbedBuilder.from(embed)
        ConfigEmbed.setDescription(
