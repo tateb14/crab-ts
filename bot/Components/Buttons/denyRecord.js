@@ -16,7 +16,7 @@ module.exports = {
       const embed = interaction.message.embeds[0]
       const user = await interaction.guild.members.fetch(Record.issuedBy);
       const DenyEmbed = EmbedBuilder.from(embed)
-      DenyEmbed.setColor(0xff3b3f)
+      DenyEmbed.setColor(0xec3935)
       interaction.update({ content: `This record has been denied by ${interaction.user}`, embeds: [DenyEmbed], components: [] })
       if (user) {
         try {

@@ -39,7 +39,10 @@ module.exports = {
       subcommand.setName("active").setDescription("List all active shifts.")
     )
     .addSubcommand((subcommand) =>
-      subcommand.setName("admin").setDescription("Manage a user's shift.")
+      subcommand.setName("admin").setDescription("Manage a user's shift.").addUserOption(user => user
+        .setName("user")
+        .setDescription("The user you want to manage.")
+      )
     )
     .addSubcommand((subcommand) =>
       subcommand
@@ -104,10 +107,11 @@ module.exports = {
                 name: `@${interaction.user.username}`,
                 iconURL: interaction.user.displayAvatarURL(),
               })
-              .setColor(0xe9c46a)
+              .setColor(0xec3935)
               .setDescription(
                 `${interaction.user}, you can manage your shift below.`
               )
+              .setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&")
               .addFields(
                 {
                   name: "Current Status",
@@ -150,7 +154,7 @@ module.exports = {
                 name: `@${interaction.user.username}`,
                 iconURL: interaction.user.displayAvatarURL(),
               })
-              .setColor(0x2a9d8f)
+              .setColor(0xec3935)
               .setDescription(
                 `${interaction.user}, you can manage your shift below.`
               )
@@ -196,7 +200,7 @@ module.exports = {
                 name: `@${interaction.user.username}`,
                 iconURL: interaction.user.displayAvatarURL(),
               })
-              .setColor(0x572626)
+              .setColor(0xec3935)
               .setDescription(
                 `${interaction.user}, you can manage your shift below.`
               )
@@ -239,6 +243,7 @@ module.exports = {
             .setTitle(`Displaying 0 Active Personnel`)
             .setColor(0x2a9d8f)
             .setDescription("Currently no active personnel were found.");
+            
 
           return interaction.reply({ embeds: [embed] });
         }
@@ -255,7 +260,8 @@ module.exports = {
         );
         const onBreakEmbed = new EmbedBuilder()
           .setTitle(`Personnel On Break (${BreakUser.length})`)
-          .setColor(0xe9c46a);
+          .setColor(0xe9c46a)
+          .setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&")
 
         const onBreakList = BreakUser.map(
           (user) => `- <@${user.shift_User}>`
@@ -298,7 +304,8 @@ module.exports = {
               name: `Displaying ${UserLogs.length} for @${user.username}`,
               iconURL: user.displayAvatarURL(),
             })
-            .setColor(0xfaf3e0)
+            .setColor(0xec3935)
+            .setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&")
             .setFooter({
               text: `Requested by @${interaction.user.username} || Powered by Crab`,
             })
@@ -345,10 +352,11 @@ module.exports = {
           });
           let LeaderboardDescription = [];
           const embed = new EmbedBuilder()
-            .setColor(0xffffff)
+            .setColor(0xec3935)
             .setTitle(`${interaction.guild.name} | Shift Leaderboard`)
             .setFooter({ text: "Powered by Crab" })
-            .setTimestamp();
+            .setTimestamp()
+            .setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&");
 
           if (GuildShifts.length === 0) {
             const NoShifts = "No current shifts have been logged.";

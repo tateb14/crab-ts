@@ -8,7 +8,8 @@ module.exports = {
     const embed = new EmbedBuilder()
     .setAuthor({ name: `This command is restricted and has two levels of security.` })
     .setDescription("Please click the button below and input the access code provided to you by Chief Executive Officer.")
-    .setColor(0xfaf3e0)
+    .setColor(0xec3935)
+    .setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&")
 
     const AccessButton = new ButtonBuilder()
     .setCustomId(`crab-exclude_access-code:${message.author.id}`)

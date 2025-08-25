@@ -25,7 +25,7 @@ module.exports = {
           message.reply("Invalid ID");
         }
         const embed = new EmbedBuilder()
-        .setColor(0xE9C46A)
+        .setColor(0xec3935)
       }
     }
   },

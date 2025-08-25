@@ -113,8 +113,9 @@ module.exports = {
             name: `Issued by @${interaction.user.username}`,
             iconURL: interaction.user.displayAvatarURL(),
           })
+          .setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&")
           .setTitle("Departmental Punishment")
-          .setColor(0xff3b3f)
+          .setColor(0xec3935)
           .setDescription(
             `A departmental punishment has been issued to ${user}. Details have been provided by the issuing supervisor below.`
           )
@@ -168,7 +169,8 @@ module.exports = {
               iconURL: interaction.user.displayAvatarURL(),
             })
             .setTitle("Departmental Punishment")
-            .setColor(0xff3b3f)
+            .setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&")
+            .setColor(0xec3935)
             .setDescription(
               `A departmental punishment has been **found**, addressed to <@${PunishmentResult.punishment_staffMember}>. Details have been provided below.`
             )

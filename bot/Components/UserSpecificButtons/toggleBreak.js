@@ -38,6 +38,7 @@ module.exports = {
         const breakEmbed = new EmbedBuilder()
           .setColor(0xE9C46A)
           .setTitle("Shift Management")
+          .setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&")
           .setDescription(
             `${interaction.user}, you can manage your shift below.`
           )
@@ -83,6 +84,7 @@ module.exports = {
       const discordStartTime = Math.floor((Date.now()) / 1000);
       const breakEndEmbed = new EmbedBuilder()
       .setColor(0x2A9D8F)
+      .setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&")
       .setTitle('Shift Management')
       .setDescription(`${interaction.user}, you can manage your shift below.`)
       .addFields(
