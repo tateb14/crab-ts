@@ -1,0 +1,2 @@
+BOT_STATUS_URL="https://uptime.betterstack.com/api/v1/heartbeat/REeuMyCW7cXJx4YpiXEjDrwD"
+DB_HEARTBEAT_URL="https://uptime.betterstack.com/api/v1/heartbeat/7tuM92RWpKYww7DoxxLqF1wN"
