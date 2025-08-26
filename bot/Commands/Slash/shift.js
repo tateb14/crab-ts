@@ -293,7 +293,7 @@ module.exports = {
             guildId: interaction.guild.id,
           });
           if (!UserLogs || UserLogs.length === 0) {
-            return interaction.reply("This user has no current shifts.");
+            return interaction.reply("This user has no shifts.");
           }
           const UserLogMap = new Map();
           for (const log of UserLogs) {

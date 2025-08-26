@@ -17,14 +17,18 @@ module.exports = {
       );
       const user = await guild.fetchOwner();
       const ExclusionEmbed = new EmbedBuilder()
-        .setColor(0xf4a261)
+        .setColor(0xec3935)
         .setDescription(
           "This message is in regards of the recent exclusion from the service of **Crab**.\n\nTo clarify, an exclusion from our service comes very rarely and is only applied if a server has broken our terms of service or violated a major rule. Exclusions are not appealable, but they can be removed if an Executive Board member choses to.\n\nThe details of your exclusion are confidential and secure to only Crab staff members. If you wish to inquiry about the exclusion, please see our [support](https://discord.gg/8XScx8MNfE)."
         )
         .setFooter({ text: "Crab Legal Affairs Team" })
         .setTitle("Crab Exclusion Notice")
         .setTimestamp();
-      await user.send({ embeds: [ExclusionEmbed] });
+      try {
+        await user.send({ embeds: [ExclusionEmbed] });
+      } catch (error) {
+        return
+      }
       client.guilds.cache.get(interaction.guild.id).leave();
       return;
     } else if (UserExcluded) {
@@ -109,7 +113,7 @@ module.exports = {
       const channel = await client.channels.fetch(logChannel);
       const ErrorEmbed = new EmbedBuilder()
         .setTitle("Error Report")
-        .setColor(0xe9c46a)
+        .setColor(0xec3935)
         .setTimestamp()
         .setDescription(
           `An error has occured while running </${interaction.commandName}:${interaction.commandId}>. Please review the information below.`

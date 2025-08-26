@@ -23,13 +23,13 @@ module.exports = {
       startButton.setDisabled(true)
       startButton.setLabel(`Reviewed by @${interaction.user.username}`)
       const newRow = new ActionRowBuilder().addComponents(startButton)
-      ReviewedEmbed.setColor(0x2A9D8F)
+      ReviewedEmbed.setColor(0x39ec35)
       interaction.update({ content: `This record has been reviewed by ${interaction.user}`, embeds: [ReviewedEmbed], components: [newRow] })
       if (user) {
         try {
           await user.send(`**Report ID:** ${inlineCode(Report.id)} has been reviewed by ${interaction.user}`);
         } catch (err) {
-          console.log(`Could not send DM to user ${user.id}:`, err.message);
+          return interaction.followUp({ content: "I could not DM this user.", flags: MessageFlags.Ephemeral })
         }
       }
     } else {

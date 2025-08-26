@@ -29,7 +29,7 @@ module.exports = {
       const UserInformation = await client.users.fetch(UserID);
       const embed = new EmbedBuilder()
         .setColor(0xec3935)
-        .setTitle("Flag Application Panel")
+        .setTitle("<:CrabIconWhite:1409689393161175091> Flag Application Panel")
         .setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&")
         .setDescription(
           `Please select which flag(s) to apply to <@${UserID}>. Once you have selected which flags to apply, they will automatically save. They will be displayed when using the ${inlineCode(

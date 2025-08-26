@@ -9,7 +9,6 @@ module.exports = {
     const HiCommRole = GuildConfig.perms_HiCommRole
     const AARole = GuildConfig.perms_AllAccessRole
     const AuthorizedRoles = [HiCommRole, AARole]
-    console.log(AuthorizedRoles)
     if (!AuthorizedRoles.some(roleId => interaction.member.roles.cache.has(roleId))) {
       return interaction.reply(responses.errors.insufficientPermissions)
     }

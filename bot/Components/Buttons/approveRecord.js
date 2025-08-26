@@ -17,13 +17,13 @@ module.exports = {
       const embed = interaction.message.embeds[0]
       const user = await interaction.guild.members.fetch(Record.issuedBy);
       const ApprovedEmbed = EmbedBuilder.from(embed)
-      ApprovedEmbed.setColor(0x2A9D8F)
+      ApprovedEmbed.setColor(0x39ec35)
       interaction.update({ content: `This record has been approved by ${interaction.user}`, embeds: [ApprovedEmbed], components: [] })
       if (user) {
         try {
           await user.send(`**Record ID:** ${inlineCode(Record.id)} has been approved by ${interaction.user}`);
         } catch (err) {
-          console.log(`Could not send DM to user ${user.id}:`, err.message);
+          return interaction.followUp({ content: "I could not DM this user.", flags: MessageFlags.Ephemeral })
         }
       }
     } else {

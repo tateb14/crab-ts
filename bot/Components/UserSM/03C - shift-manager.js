@@ -5,8 +5,7 @@ const responses = require("../../Functions/responses")
 module.exports = {
   customIdPrefix: 'crab-sm_shift-admin-options',
   execute: async (interaction) => {
-
-    const AuthorizedUser = interaction.customId.split(":")[1]
+  const AuthorizedUser = interaction.customId.split(":")[1]
     if (interaction.user.id !== AuthorizedUser) {
       return interaction.reply(responses.errors.unauthorizedUser)
     }
@@ -20,7 +19,7 @@ module.exports = {
     })
     const embed = new EmbedBuilder()
     .setTitle(`${shiftId} Management Panel`)
-    .setColor(0xfaf3e0)
+    .setColor(0xec3935)
     .setTimestamp()
     .setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&")
     .setFooter({ text: `Shift Management | Powered by Crab` })
@@ -49,7 +48,7 @@ module.exports = {
     .setLabel("Subtract Time")
     .setStyle(ButtonStyle.Secondary)
     const DeleteShift = new ButtonBuilder()
-    .setCustomId(`crab-button_shift-delete:${shiftId}:${interaction.message.id}`)
+    .setCustomId(`crab-button_shift-delete:${shiftId}:${interaction.message.id}:${interaction.user.id}`)
     .setEmoji("<:crab_clockx:1402658429323051220>")
     .setLabel("Delete Shift")
     .setStyle(ButtonStyle.Danger)

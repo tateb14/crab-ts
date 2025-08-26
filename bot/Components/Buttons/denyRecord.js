@@ -1,4 +1,4 @@
-const { EmbedBuilder, inlineCode, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, MessageFlags } = require('discord.js')
+const { EmbedBuilder, inlineCode, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, MessageFlags, Message } = require('discord.js')
 const CrabConfig = require('../../schemas/CrabConfig')
 const GuildRecord = require('../../schemas/GuildRecord')
 module.exports = {
@@ -22,7 +22,7 @@ module.exports = {
         try {
           await user.send(`**Record ID:** ${inlineCode(Record.id)} has been denied by ${interaction.user}`);
         } catch (err) {
-          console.log(`Could not send DM to user ${user.id}:`, err.message);
+          return interaction.followUp({ content: "I could not DM this user.", flags: MessageFlags.Ephemeral })
         }
       }
     } else {

@@ -8,7 +8,7 @@ module.exports = {
     const channel = await client.channels.fetch('1349900497452011600')
     if (channel) {
       const JoinEmbed = new EmbedBuilder()
-      .setColor('#fcc85a')
+      .setColor(0xec3935)
       .setTitle("Guild Information")
       .addFields(
         {

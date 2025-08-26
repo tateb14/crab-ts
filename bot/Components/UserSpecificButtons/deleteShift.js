@@ -9,7 +9,7 @@ module.exports = {
       return interaction.reply(responses.errors.unauthorizedUser)
     }
     const DeleteButton = new ButtonBuilder()
-    .setCustomId(`crab-button_shift-delete-confirm:${shiftId}`)
+    .setCustomId(`crab-button_shift-delete-confirm:${shiftId}:${messageId}`)
     .setLabel("Confirm")
     .setStyle(ButtonStyle.Success)
     const CancelButton = new ButtonBuilder()
