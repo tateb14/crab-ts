@@ -10,6 +10,15 @@ if (!process.env.DB_HEARTBEAT_URL) {
 
 const DB_HEARTBEAT_URL = process.env.DB_HEARTBEAT_URL;
 
+async function sendHeartbeat(url, type) {
+    try {
+        await axios.get(url);
+        console.log(chalk.green(`[HEARTBEAT] Successfully pinged BetterStack (${type})`));
+    } catch (error) {
+        console.error(chalk.red(`[HEARTBEAT] Failed to ping BetterStack (${type}):`, error));
+    }
+}
+
 async function startStayAliveDb() {
     if (!process.env.MONGODB_URI) {
         throw new Error("MongoDB URI is not defined in the config file.");
@@ -17,26 +26,17 @@ async function startStayAliveDb() {
 
     try {
       await mongoose.connect(process.env.MONGODB_URI)
-        console.log(chalk.green("[System]: Connected to MongoDB successfully."))
+        console.log(chalk.green("[SYSTEM] Connected to MongoDB successfully."))
         // Immediately send first heartbeat
-        await sendHeartbeat(DB_HEARTBEAT_URL, "database");
+        await sendHeartbeat(DB_HEARTBEAT_URL, "Database");
         // Schedule recurring heartbeat
-        setInterval(() => sendHeartbeat(DB_HEARTBEAT_URL, "database"), PING_INTERVAL);
+        setInterval(() => sendHeartbeat(DB_HEARTBEAT_URL, "Database"), PING_INTERVAL);
 
     } catch (err) {
-        console.error(chalk.red("[System]: Failed to connect to MongoDB", err))
+        console.error(chalk.red("[SYSTEM] Failed to connect to MongoDB", err))
         process.exit(1);
     }
 }
 
-async function sendHeartbeat(url, type) {
-    console.log(`Pinging BetterStack (${type})...`);
-    try {
-        await axios.get(url);
-        console.log(chalk.green(`Successfully pinged BetterStack (${type})`));
-    } catch (error) {
-        console.error(chalk.red(`Failed to ping BetterStack (${type}):`, error));
-    }
-}
 
-module.exports = startStayAliveDb, sendHeartbeat
+module.exports = { startStayAliveDb, sendHeartbeat }
