@@ -1,17 +1,16 @@
 const mongoose = require("mongoose")
 const axios = require("axios")
 const chalk = require("chalk")
-
+require('dotenv').config()
 const PING_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
-if (process.env.dbStatusUrl) {
+if (!process.env.DB_HEARTBEAT_URL) {
     throw new Error("DB_HEARTBEAT_URL is not defined in the config file.");
 }
 
-const DB_HEARTBEAT_URL = process.env.dbStatusUrl;
+const DB_HEARTBEAT_URL = process.env.DB_HEARTBEAT_URL;
 
-
-export async function startStayAliveDb() {
+async function startStayAliveDb() {
     if (!process.env.MONGODB_URI) {
         throw new Error("MongoDB URI is not defined in the config file.");
     }
@@ -30,7 +29,7 @@ export async function startStayAliveDb() {
     }
 }
 
-export async function sendHeartbeat(url, type) {
+async function sendHeartbeat(url, type) {
     console.log(`Pinging BetterStack (${type})...`);
     try {
         await axios.get(url);
@@ -39,3 +38,5 @@ export async function sendHeartbeat(url, type) {
         console.error(chalk.red(`Failed to ping BetterStack (${type}):`, error));
     }
 }
+
+module.exports = startStayAliveDb, sendHeartbeat
