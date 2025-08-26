@@ -1,12 +1,18 @@
 const wipeShifts = require("../Functions/wipeShifts");
 const mongoose = require("mongoose");
 const chalk = require("chalk")
+const { startStayAliveDb, sendHeartbeat } = require("../Functions/StartUp-Functions")
 module.exports = {
   event: 'ready',
   once: true,
   execute: async (client) => {
+    const TROPICA_HEARTBEAT_URL = process.env.BOT_STATUS_URL
     try {
-      await mongoose.connect(process.env.MONGODB_URI)
+      sendHeartbeat(TROPICA_HEARTBEAT_URL, "Tropica");
+      setInterval(() => sendHeartbeat(TROPICA_HEARTBEAT_URL, "Crab"), 5 * 60 * 1000);
+
+      (async () => await startStayAliveDb())();
+
       console.log(chalk.green("[SYSTEM] 🌺 Connected to DB."));
       console.log(chalk.green(`[SYSTEM] 🦀 Logged in as ${client.user.username}`));
       wipeShifts(); 
