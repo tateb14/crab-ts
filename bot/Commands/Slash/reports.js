@@ -198,7 +198,7 @@ module.exports = {
           for (const Report of UserReports) {
             const ReportID = Report.id;
             const ReportDescription = Report.Description;
-            const ReportReviewer = Report.ReviewedBy || "Not yet reviewed.";
+            const ReportReviewer = Report.ReviewedBy
             const embed = new EmbedBuilder()
               .setColor(0xec3935)
               .setFooter({ text: `Report ID: ${ReportID}` })
@@ -218,11 +218,13 @@ module.exports = {
                   name: `Report Description`,
                   value: `${ReportDescription}`,
                 },
-                {
-                  name: "Reviewer:",
-                  value: `${ReportReviewer}`,
-                }
               );
+              if (Report.ReviewedBy !== null) {
+                embed.addFields({
+                  name: "Reviewed by:",
+                  value: `<@${ReportReviewer}>`
+                })
+              }
             Reports.push(embed);
           }
           await interaction.reply({
