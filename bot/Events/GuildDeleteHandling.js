@@ -5,7 +5,7 @@ module.exports = {
   event: 'guildDelete',
   once: false,
   execute: async (client, guild) => {
-    const channel = await client.channels.fetch('1349900497452011600')
+    const channel = await client.channels.fetch('1342947016552091699')
     if (channel) {
       const JoinEmbed = new EmbedBuilder()
       .setColor(0xec3935)
@@ -38,7 +38,7 @@ module.exports = {
         },
       )
       await crabConfig.findOneAndDelete({ guildId: guild.id })
-      channel.send({ embeds: [JoinEmbed], content: `**Crab** has joined a new guild! Our current guild count is: **${client.guilds.cache.size}** and our member count is: **${client.users.cache.size}**.\n\n## Guild Information` })
+      channel.send({ embeds: [JoinEmbed], content: `**Crab** has left a guild! Our current guild count is: **${client.guilds.cache.size}** and our member count is: **${client.users.cache.size}**.\n\n## Guild Information` })
     }
   }
 }

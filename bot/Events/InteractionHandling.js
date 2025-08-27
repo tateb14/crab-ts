@@ -109,7 +109,7 @@ module.exports = {
           }
       } else return;
     } catch (error) {
-      const logChannel = "1404099479908651070";
+      const logChannel = "1398876136938799176";
       const channel = await client.channels.fetch(logChannel);
       const ErrorEmbed = new EmbedBuilder()
         .setTitle("Error Report")
@@ -142,7 +142,7 @@ module.exports = {
         );
       await channel.send({
         embeds: [ErrorEmbed],
-        content: "<@&1404099944457175110>",
+        content: "<@&1404203220695257241>",
       });
       interaction.channel.send({
         content: "There was an error while trying to execute this command! The issue has been reported to [Tropical Systems](<https://discord.gg/8XScx8MNfE>).",

@@ -5,7 +5,7 @@ module.exports = {
   event: 'guildCreate',
   once: false,
   execute: async (client, guild) => {
-    const channel = await client.channels.fetch('1349900497452011600')
+    const channel = await client.channels.fetch('1278524978840600687')
     const GuildExluded = await CrabGuildExclusion.findOne({ crab_guildId: guild.id })
     if (GuildExluded) {
       const user = await guild.fetchOwner()
@@ -58,7 +58,7 @@ module.exports = {
         guildId: guild.id,
       })
       await config.save()
-      channel.send({ embeds: [LeaveEmbed], content: `**Crab** has left a new guild! Our current guild count is: **${client.guilds.cache.size}** and our member count is: **${client.users.cache.size}**.` })
+      channel.send({ embeds: [LeaveEmbed], content: `**Crab** has joined a new guild! Our new guild count is: **${client.guilds.cache.size}** and our member count is: **${client.users.cache.size}**.` })
     }
   }
 }
