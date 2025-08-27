@@ -189,6 +189,7 @@ module.exports = {
         if (UserReports.length === 0) {
           return interaction.reply({ content: "This user has not yet created a report." })
         }
+        try {
         let Reports = []
         for (const Report of UserReports) {
           const ReportID = Report.id;
@@ -221,6 +222,9 @@ module.exports = {
             Reports.push(embed)
         }
         interaction.reply({ embeds: [Reports], flags: MessageFlags.Ephemeral })
+        } catch (error) {
+          interaction.reply({ content: `Error: ${error}`, flags: MessageFlags.Ephemeral })
+        }
       } else if (subcommand === "void") {
         const Report = await GuildReports.Findone();
       }
