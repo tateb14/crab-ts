@@ -209,7 +209,7 @@ module.exports = {
               {
                 name: `Report Creator:`,
                 value: `<@${Report.IssuedBy}>`
-              }
+              },
               {
                 name: `Report Description`,
                 value: `${ReportDescription}`,
