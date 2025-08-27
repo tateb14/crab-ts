@@ -196,12 +196,8 @@ module.exports = {
           const ReportDescription = Report.Description
           const ReportReviewer = `<@${Report.ReviewedBy}>` || "Not yet reviewed."
           const embed = new EmbedBuilder()
-            .setAuthor({
-              name: `@${interaction.user.username}`,
-              iconURL: interaction.user.displayAvatarURL(),
-            })
             .setColor(0xec3935)
-            .setFooter({ text: `Report ID: ${ReportID} || Powered by Crab` })
+            .setFooter({ text: `Report ID: ${ReportID}` })
             .setDescription(
               `Below are details of the ${Report.ReportType} report submitted by <@${Report.IssuedBy}>.`
             )
@@ -211,12 +207,16 @@ module.exports = {
             .setTitle(`${Report.ReportType} Report`)
             .addFields(
               {
+                name: `Report Creator:`,
+                value: `<@${Report.IssuedBy}>`
+              }
+              {
                 name: `Report Description`,
                 value: `${ReportDescription}`,
               },
               {
                 name: "Reviewer:",
-                value: `${ReportReviewer}`,
+                value: ReportReviewer,
               }
             );
             Reports.push(embed)
