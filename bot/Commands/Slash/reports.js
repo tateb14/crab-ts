@@ -185,7 +185,7 @@ module.exports = {
         const UserReports = await CrabReport.find({
           guildId: interaction.guild.id,
           IssuedBy: userId,
-        });
+        }).sort({ _id: -1 }).limit(10);
         if (UserReports.length === 0) {
           return interaction.reply({ content: "This user has not yet created a report." })
         }
