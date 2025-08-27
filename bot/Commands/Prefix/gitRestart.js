@@ -21,7 +21,7 @@ module.exports = {
           const pullResult = await git.pull("master");
           console.log(pullResult);
 
-          await respone.edit("<:crab_check:1410064912427778219> Updates HI successfully!");
+          await respone.edit("<:crab_check:1410064912427778219> Updates pulled successfully and the server has restarted!");
 
           exec("pm2 restart Crab", (error, stdout, stderr) => {
                 if (error) {
