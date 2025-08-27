@@ -21,7 +21,7 @@ module.exports = {
           const pullResult = await git.pull("master");
           console.log(pullResult);
 
-          await respone.edit("✅ Updates pulled successfully!");
+          await respone.edit("<:crab_check:1410064912427778219> Updates HI successfully!");
 
           exec("pm2 restart Crab", (error, stdout, stderr) => {
                 if (error) {
@@ -33,7 +33,7 @@ module.exports = {
                     return respone.edit(`<:crab_alert:1400664519339937974> PM2 reported an error`);
                 }
                 console.log(`PM2 stdout: ${stdout}`);
-                respone.edit("<:crab_check:1410064912427778219> Server restarted successfully!");
+                respone.edit("<:crab_check:141006491242777821> Server HI successfully!");
             });
 
         } catch (error) {
