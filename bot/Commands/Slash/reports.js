@@ -185,45 +185,55 @@ module.exports = {
         const UserReports = await CrabReport.find({
           guildId: interaction.guild.id,
           IssuedBy: userId,
-        }).sort({ _id: -1 }).limit(10);
+        })
+          .sort({ _id: -1 })
+          .limit(10);
         if (UserReports.length === 0) {
-          return interaction.reply({ content: "This user has not yet created a report." })
+          return interaction.reply({
+            content: "This user has not yet created a report.",
+          });
         }
         try {
-        let Reports = []
-        for (const Report of UserReports) {
-          const ReportID = Report.id;
-          const ReportDescription = Report.Description
-          const ReportReviewer = `<@${Report.ReviewedBy}>` || "Not yet reviewed."
-          const embed = new EmbedBuilder()
-            .setColor(0xec3935)
-            .setFooter({ text: `Report ID: ${ReportID}` })
-            .setDescription(
-              `Below are details of the ${Report.ReportType} report submitted by <@${Report.IssuedBy}>.`
-            )
-            .setImage(
-              "https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&"
-            )
-            .setTitle(`${Report.ReportType} Report`)
-            .addFields(
-              {
-                name: `Report Creator:`,
-                value: `<@${Report.IssuedBy}>`
-              },
-              {
-                name: `Report Description`,
-                value: `${ReportDescription}`,
-              },
-              {
-                name: "Reviewer:",
-                value: ReportReviewer,
-              }
-            );
-            Reports.push(embed)
-        }
-        await interaction.reply({ embeds: Reports, flags: MessageFlags.Ephemeral })
+          let Reports = [];
+          for (const Report of UserReports) {
+            const ReportID = Report.id;
+            const ReportDescription = Report.Description;
+            const ReportReviewer = Report.ReviewedBy || "Not yet reviewed.";
+            const embed = new EmbedBuilder()
+              .setColor(0xec3935)
+              .setFooter({ text: `Report ID: ${ReportID}` })
+              .setDescription(
+                `Below are details of the ${Report.ReportType} report submitted by <@${Report.IssuedBy}>.`
+              )
+              .setImage(
+                "https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&"
+              )
+              .setTitle(`${Report.ReportType} Report`)
+              .addFields(
+                {
+                  name: `Report Creator:`,
+                  value: `<@${Report.IssuedBy}>`,
+                },
+                {
+                  name: `Report Description`,
+                  value: `${ReportDescription}`,
+                },
+                {
+                  name: "Reviewer:",
+                  value: `${ReportReviewer}`,
+                }
+              );
+            Reports.push(embed);
+          }
+          await interaction.reply({
+            embeds: Reports,
+            flags: MessageFlags.Ephemeral,
+          });
         } catch (error) {
-          interaction.reply({ content: `Error: ${error}`, flags: MessageFlags.Ephemeral })
+          interaction.reply({
+            content: `Error: ${error}`,
+            flags: MessageFlags.Ephemeral,
+          });
         }
       } else if (subcommand === "void") {
         const Report = await GuildReports.Findone();
