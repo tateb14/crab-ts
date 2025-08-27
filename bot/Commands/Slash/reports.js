@@ -215,7 +215,7 @@ module.exports = {
               },
               {
                 name: "Reviewer:",
-                value: ``,
+                value: `${ReportReviewer}`,
               }
             );
             Reports.push(embed)
