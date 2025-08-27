@@ -221,7 +221,7 @@ module.exports = {
             );
             Reports.push(embed)
         }
-        interaction.reply({ embeds: Reports, flags: MessageFlags.Ephemeral })
+        await interaction.reply({ embeds: Reports, flags: MessageFlags.Ephemeral })
         } catch (error) {
           interaction.reply({ content: `Error: ${error}`, flags: MessageFlags.Ephemeral })
         }
