@@ -186,10 +186,14 @@ module.exports = {
           guildId: interaction.guild.id,
           IssuedBy: userId,
         });
+        if (UserReports.length === 0) {
+          return interaction.reply({ content: "This user has not yet created a report." })
+        }
         let Reports = []
         for (const Report of UserReports) {
           const ReportID = Report.id;
           const ReportDescription = Report.Description
+          const ReportReviewer = `<@${Report.ReviewedBy}>` || "Not yet reviewed."
           const embed = new EmbedBuilder()
             .setAuthor({
               name: `@${interaction.user.username}`,
@@ -211,12 +215,12 @@ module.exports = {
               },
               {
                 name: "Reviewer:",
-                value: `<@${Report.ReviewedBy}>`,
+                value: ``,
               }
             );
             Reports.push(embed)
         }
-        interaction({ embeds: [Reports], flags: MessageFlags.Ephemeral })
+        interaction.reply({ embeds: [Reports], flags: MessageFlags.Ephemeral })
       } else if (subcommand === "void") {
         const Report = await GuildReports.Findone();
       }
