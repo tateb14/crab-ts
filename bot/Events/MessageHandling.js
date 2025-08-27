@@ -1,6 +1,7 @@
 const crabConfig = require("../schemas/CrabConfig");
 const CrabGuildExclusion = require("../schemas/CrabGuildExclusion");
 const CrabUserExclusion = require("../schemas/CrabUserExclusion");
+const { EmbedBuilder } = require("discord.js")
 module.exports = {
   event: "messageCreate",
   once: false,
