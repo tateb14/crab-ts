@@ -17,15 +17,20 @@ module.exports = {
         const args = message.content.trim().split(/ +/);
         const ID = args.slice(1).join(" ").toLowerCase();
         const result = await detectIdType(client, ID)
+        const embed = new EmbedBuilder()
+        .setColor(0xec3935)
+        .setDescription("hi")
         if (result.type === "user") {
+          const userFetch = client.users.cache.fetch(ID)
           message.reply("User")
         } else if (result.type === 'guild') {
-          message.reply(`It's a guild: ${result.object.name}`);
+          const guildFetch = client.guilds.cache.fetch(ID)
+          embed.setAuthor({ name: `${guildFetch.name}` })
+          message.reply({ embeds: [embed] });
         } else {
           message.reply("Invalid ID");
         }
-        const embed = new EmbedBuilder()
-        .setColor(0xec3935)
+
       }
     }
   },
