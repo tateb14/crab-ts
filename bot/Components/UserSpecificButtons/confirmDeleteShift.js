@@ -37,7 +37,7 @@ module.exports = {
     if (!UserLogs || UserLogs.length === 0) {
       await message.edit({ content: "This user has no shifts.", embeds: [], components: [] });
       return interaction.update({
-        content: "✅ Shift deleted. User has no more shifts.",
+        content: "<:crab_check:1409695243816669316> Action **confirmed**, I have deleted the shift.",
         components: [],
       });
     }
@@ -88,7 +88,7 @@ module.exports = {
     });
 
     await interaction.update({
-      content: "Action **confirmed**, I have deleted the shift.",
+      content: "<:crab_check:1409695243816669316> Action **confirmed**, I have deleted the shift.",
       components: [],
       ephemeral: true,
     });
