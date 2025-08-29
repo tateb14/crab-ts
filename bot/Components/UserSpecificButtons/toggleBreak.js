@@ -58,7 +58,7 @@ module.exports = {
           );
           await UserShift.updateOne({ shift_startBreak: breakStartTime }, { upsert: true, new: true })
           await UserShift.updateOne({ shift_OnBreak: true }, { upsert: true, new: true })
-          await UserShift.updateOne({ shift_OnDuty: false }, { upsert: true, new: true })
+          await UserShift.updateOne({ shift_OnDuty: true }, { upsert: true, new: true })
           const Buttons = interaction.message.components
           const row = ActionRowBuilder.from(Buttons[0])
           if (interaction.guild.roles.cache.has(OnBreakRole)) {

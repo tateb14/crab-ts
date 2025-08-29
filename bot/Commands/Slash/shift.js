@@ -94,8 +94,6 @@ module.exports = {
           await newShiftUser.save();
           userInfo = newShiftUser;
         }
-        console.log("Shift Type Selected:", shiftType);
-        console.log("Department Types:", departmentTypes);
         if (shiftType !== "default") {
         if (!departmentTypes.includes(shiftType)) {
           return interaction.reply({ content: `<:crab_x:1409708189896671357> The shift type you selected, ${inlineCode(capitalizeFirstLetter(shiftType))}, is not an approved shift in this department.` })
@@ -108,8 +106,6 @@ module.exports = {
             round: true,
           });
           if (onBreak === true) {
-            console.log(onBreak)
-            console.log("hi")
             const embed = new EmbedBuilder()
               .setAuthor({
                 name: `@${interaction.user.username}`,
@@ -238,14 +234,8 @@ module.exports = {
         const OnlineUser = await UserShift.find({
           guildId: interaction.guild.id,
           shift_OnDuty: true,
-          shift_OnBreak: false,
         });
-
-        const BreakUser = await UserShift.find({
-          guildId: interaction.guild.id,
-          shift_OnBreak: true,
-        });
-        if (OnlineUser.length + BreakUser.length === 0) {
+        if (OnlineUser.length === 0) {
           const embed = new EmbedBuilder()
             .setTitle(`Displaying 0 Active Personnel`)
             .setColor(0x2a9d8f)
@@ -256,29 +246,32 @@ module.exports = {
         }
         const onDutyEmbed = new EmbedBuilder()
           .setTitle(`Active Personnel (${OnlineUser.length})`)
-          .setColor(0x2a9d8f);
+          .setColor(0x2a9d8f)
+          .setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&");
 
-        const onDutyList = OnlineUser.map(
-          (user) => `- <@${user.shift_User}>`
-        ).join("\n");
+        const activeList = OnlineUser.map((user) => {
+            const startTime = user.shift_start
+            if(!startTime) return null;
+            const diff = Date.now() - startTime;
+            return `- <@${user.shift_User}> | ${humanizeDuration(diff, { round: true })} | ${user.shift_OnBreak ? "**On Break**" : "**On Duty**"}`}).filter(Boolean).join("\n")
 
         onDutyEmbed.setDescription(
-          onDutyList.length > 0 ? onDutyList : "No one is on duty!"
+          activeList.length > 0 ? activeList : "No one is on duty!"
         );
-        const onBreakEmbed = new EmbedBuilder()
-          .setTitle(`Personnel On Break (${BreakUser.length})`)
-          .setColor(0xe9c46a)
-          .setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&")
+        // const onBreakEmbed = new EmbedBuilder()
+        //   .setTitle(`Personnel On Break (${BreakUser.length})`)
+        //   .setColor(0xe9c46a)
+        //   .setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&")
 
-        const onBreakList = BreakUser.map(
-          (user) => `- <@${user.shift_User}>`
-        ).join("\n");
+        // const onBreakList = BreakUser.map(
+        //   (user) => `- <@${user.shift_User}>`
+        // ).join("\n");
 
-        onBreakEmbed.setDescription(
-          onBreakList.length > 0 ? onBreakList : "No one is on break!"
-        );
+        // onBreakEmbed.setDescription(
+        //   onBreakList.length > 0 ? onBreakList : "No one is on break!"
+        // );
 
-        return interaction.reply({ embeds: [onDutyEmbed, onBreakEmbed] });
+        return interaction.reply({ embeds: [onDutyEmbed] });
       } else if (subcommand === "admin") {
         if (
           !interaction.member.roles.cache.has(HiCommRole) &&

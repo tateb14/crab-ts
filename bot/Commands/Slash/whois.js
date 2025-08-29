@@ -21,7 +21,7 @@ module.exports = {
   execute: async (interaction, client) => {
     const user = interaction.options.getUser("user") || interaction.user;
 
-    const CrabServer = await client.guilds.fetch("1350297958037590061");
+    const CrabServer = await client.guilds.fetch("1265766606555054142");
     if (!CrabServer) {
       return interaction.reply({
         content: "Failed to fetch Tropical Systems guild.",
@@ -30,8 +30,8 @@ module.exports = {
     }
 
     const member = await CrabServer.members.fetch(user.id);
-    const flags = await user.fetchFlags();
-    const badges = flags.toArray();
+    const flags = await user.fetch();
+    const badges = flags.flags.toArray();
 
 const badgeMap = {
   'Staff': '<:crab_discordstaff:1400658440484946062> Discord Staff',
@@ -49,16 +49,16 @@ const badgeMap = {
 };
 
 const roleBadges = [
-      { id: "1350301437703491614", badge: "<:crab_crown:1409695241166127214> Tropical Systems Chief Executive Officer" },
-      { id: "1350301707162091671", badge: "<:crab_layout_dashboard:1409695234836795613> Tropical Systems Chief Operations Officer" },
-      { id: "1350305189566877877", badge: "<:crab_brain:1409695247142879314> Tropical Systems Chief Technology Officer" },
-      { id: "1350302882821570640", badge: "<:crab_officer:1349197478720831599> Tropical Systems Director of Human Resources" },
-      { id: "1352121634743517184", badge: "<:crab_clipboardlist:1409695242709504051> Tropical Systems Project Manager" },
-      { id: "1350304233521414194", badge: "<:crab_settings:1409708164768862289> Tropical Systems Lead Engineer" },
-      { id: "1352121671154139216", badge: "<:crab_usersgroup:1409708459779162133> Tropical Systems Community Manager" },
-      { id: "1378067036038500383", badge: "<:crab_lifebuoy:1409695233330905198> Tropical Systems Support Manager" },
-      { id: "1350304202273853471", badge: "<:crab_tool:1409695228792930354> Tropical Systems Engineer" },
-      { id: "1350304776138653788", badge: "<:crab_headset:1409695236153802834> Tropical Systems Support" }
+      { id: "1339431933897085040", badge: "<:crab_crown:1409695241166127214> Tropical Systems Chief Executive Officer" },
+      { id: "1398879356192952391", badge: "<:crab_layout_dashboard:1409695234836795613> Tropical Systems Chief Operations Officer" },
+      { id: "1398879252425740361", badge: "<:crab_brain:1409695247142879314> Tropical Systems Chief Technology Officer" },
+      { id: "1398879405505249453", badge: "<:crab_officer:1349197478720831599> Tropical Systems Director of Human Resources" },
+      { id: "1398879051040686151", badge: "<:crab_clipboardlist:1409695242709504051> Tropical Systems Project Manager" },
+      { id: "1398879067679359146", badge: "<:crab_settings:1409708164768862289> Tropical Systems Lead Engineer" },
+      { id: "1398879030136279080", badge: "<:crab_usersgroup:1409708459779162133> Tropical Systems Community Manager" },
+      { id: "1398879010716389376", badge: "<:crab_lifebuoy:1409695233330905198> Tropical Systems Support Manager" },
+      { id: "1337250124530847876", badge: "<:crab_tool:1409695228792930354> Tropical Systems Engineer" },
+      { id: "1327496680207024199", badge: "<:crab_headset:1409695236153802834> Tropical Systems Support" }
     ];
     const badgeDisplay = badges
     .map(b => badgeMap[b] || b)

@@ -10,7 +10,7 @@ module.exports = {
 
     if (result.type === "guild") {
       if (type === "add") {
-
+        
       }
       const embed = new EmbedBuilder()
     } else {

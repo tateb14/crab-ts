@@ -81,11 +81,11 @@ module.exports = {
           )
           .addFields(
             {
-              name: "Promoted to",
+              name: "Promoted To:",
               value: `<@&${newRole.id}>`,
             },
             {
-              name: "Punishment Notes",
+              name: "Punishment Notes:",
               value: `${notes}`,
             }
           )
