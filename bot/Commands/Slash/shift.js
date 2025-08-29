@@ -14,6 +14,7 @@ const UserShift = require("../../schemas/UserShift");
 const ShiftLog = require("../../schemas/ShiftLog");
 const humanizeDuration = require("humanize-duration");
 const randomString = require("../../Functions/randomId");
+const capitalizeFirstLetter = require("../../Functions/capitalizeFirstLetter");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("shift")
@@ -28,10 +29,10 @@ module.exports = {
             .setRequired(false)
             .setDescription("Log your shift on a specific type if you wish!")
             .addChoices(
-              { name: "Patrol", value: "patrol-shift" },
-              { name: "SWAT", value: "swat-shift" },
-              { name: "Internal Affairs", value: "ia-shift" },
-              { name: "Detective", value: "detective-shift" }
+              { name: "Patrol", value: "patrol" },
+              { name: "SWAT", value: "swat" },
+              { name: "Internal Affairs", value: "ia" },
+              { name: "Detective", value: "detective" }
             )
         )
     )
@@ -72,7 +73,7 @@ module.exports = {
       });
     } else {
       if (subcommand === "manage") {
-        const shiftType = interaction.options.getString("type") || "Default";
+        const shiftType = interaction.options.getString("type") || "default";
         const departmentTypes = guildConfig.shift_Types;
         let userInfo = await UserShift.findOne({
           shift_User: interaction.user.id,
@@ -93,21 +94,28 @@ module.exports = {
           await newShiftUser.save();
           userInfo = newShiftUser;
         }
-
-        if (departmentTypes.includes(shiftType) || shiftType === "Default") {
+        console.log("Shift Type Selected:", shiftType);
+        console.log("Department Types:", departmentTypes);
+        if (shiftType !== "default") {
+        if (!departmentTypes.includes(shiftType)) {
+          return interaction.reply({ content: `<:crab_x:1409708189896671357> The shift type you selected, ${inlineCode(capitalizeFirstLetter(shiftType))}, is not an approved shift in this department.` })
+        }
+      }
           const onDuty = userInfo.shift_OnDuty === true;
-          const onBreak = userInfo.shift_OnBreak === true;
+          const onBreak = userInfo.shift_OnBreak;
           const totalShiftTime = userInfo.shift_Total || 0;
           const totalTimeOnline = humanizeDuration(totalShiftTime, {
             round: true,
           });
-          if (onBreak) {
+          if (onBreak === true) {
+            console.log(onBreak)
+            console.log("hi")
             const embed = new EmbedBuilder()
               .setAuthor({
                 name: `@${interaction.user.username}`,
                 iconURL: interaction.user.displayAvatarURL(),
               })
-              .setColor(0xec3935)
+              .setColor(0xE9C46A)
               .setDescription(
                 `${interaction.user}, you can manage your shift below.`
               )
@@ -123,7 +131,7 @@ module.exports = {
                 },
                 {
                   name: "Shift Type",
-                  value: `${shiftType}`,
+                  value: `${capitalizeFirstLetter(shiftType)}`,
                 }
               );
             const startButton = new ButtonBuilder()
@@ -169,7 +177,7 @@ module.exports = {
                 },
                 {
                   name: "Shift Type",
-                  value: `${shiftType}`,
+                  value: `${capitalizeFirstLetter(shiftType)}`,
                 }
               );
             const startButton = new ButtonBuilder()
@@ -215,7 +223,7 @@ module.exports = {
                 },
                 {
                   name: "Shift Type",
-                  value: `${shiftType}`,
+                  value: `${capitalizeFirstLetter(shiftType)}`,
                 }
               );
             const startButton = new ButtonBuilder()
@@ -226,7 +234,6 @@ module.exports = {
             const row = new ActionRowBuilder().addComponents(startButton);
             interaction.reply({ embeds: [embed], components: [row] });
           }
-        }
       } else if (subcommand === "active") {
         const OnlineUser = await UserShift.find({
           guildId: interaction.guild.id,
