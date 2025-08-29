@@ -1,8 +1,0 @@
-name: Crab CI/CD
-
-on:
-  push:
-    branches: 
-      -master
-
-
