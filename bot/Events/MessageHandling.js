@@ -1,7 +1,7 @@
 const crabConfig = require("../schemas/CrabConfig");
 const CrabGuildExclusion = require("../schemas/CrabGuildExclusion");
 const CrabUserExclusion = require("../schemas/CrabUserExclusion");
-const { EmbedBuilder } = require("discord.js")
+const { EmbedBuilder, inlineCode, codeBlock } = require("discord.js")
 module.exports = {
   event: "messageCreate",
   once: false,
@@ -61,19 +61,19 @@ module.exports = {
         .setColor(0xec3935)
         .setTimestamp()
         .setDescription(
-          `An error has occured while running </${interaction.commandName}:${interaction.commandId}>. Please review the information below.`
+          `An error has occured while running prefix command. Please review the information below.`
         )
         .addFields(
           {
             name: "Guild Information",
-            value: `${interaction.guild.name} :: ${inlineCode(
-              interaction.guild.id
+            value: `${message.guild.name} :: ${inlineCode(
+              message.guild.id
             )}`,
           },
           {
             name: "User Information",
-            value: `${interaction.user.username} :: ${inlineCode(
-              interaction.user.id
+            value: `${message.author.username} :: ${inlineCode(
+              message.auhtorId
             )}`,
           },
           {
