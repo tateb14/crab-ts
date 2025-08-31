@@ -38,7 +38,8 @@ module.exports = {
         },
       )
       await crabConfig.findOneAndDelete({ guildId: guild.id })
-      channel.send({ embeds: [JoinEmbed], content: `**Crab** has left a guild! Our current guild count is: **${client.guilds.cache.size}** and our member count is: **${client.users.cache.size}**.\n\n## Guild Information` })
+      const totalMembers = client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0);
+      channel.send({ embeds: [JoinEmbed], content: `**Crab** has left a guild! Our current guild count is: **${client.guilds.cache.size}** and our member count is: **${totalMembers}**.\n\n## Guild Information` })
     }
   }
 }

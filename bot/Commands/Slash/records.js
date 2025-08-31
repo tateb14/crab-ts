@@ -147,7 +147,7 @@ module.exports = {
           const dangerous = interaction.options.getString("dangerous") || "N/A";
           const mentallyIll =
             interaction.options.getString("mentally-ill") || "N/A";
-          if (recordType !== "Vehicle BOLO" || recordType !== "Suspect BOLO") {
+          if ((recordType !== "Vehicle BOLO" && recordType !== "Suspect BOLO")) {
             const embed = new EmbedBuilder()
               .setAuthor({
                 name: `Record created by @${interaction.user.username}`,
@@ -159,6 +159,11 @@ module.exports = {
                 `A new record has been created, you can view the details below.`
               )
               .addFields(
+                {
+                  name: "Recort Type:",
+                  value: `${recordType}`,
+                  inline: true,
+                },
                 {
                   name: "Suspect Username:",
                   value: `${suspectUsername}`,
@@ -246,6 +251,15 @@ module.exports = {
               )
               .setFooter({ text: `Record ID: ${recordId} || Powered by Crab` });
 
+            const recordChannel = GuildConfig.records_Logs;
+            const channel = await interaction.guild.channels.fetch(
+              recordChannel
+            );
+            if (channel) {
+              const message = await channel.send({
+                embeds: [embed],
+              });
+
             const newRecord = new CrabRecord({
               guildId: guildId,
               suspectFlags: `Armed? **${armed}**, Dangerous? **${dangerous}**, Mentally Ill? **${mentallyIll}**`,
@@ -253,36 +267,13 @@ module.exports = {
               charges: charges,
               issuedBy: interaction.user.id,
               recordType: recordType,
-              messageId: interaction.message.id,
+              messageId: message.id,
               id: `${recordId}`,
-            });
-
-            const ApproveButton = new ButtonBuilder()
-              .setCustomId("crab-button_record-approve")
-              .setLabel("Approve Record")
-              .setStyle(ButtonStyle.Success);
-            const DenyButton = new ButtonBuilder()
-              .setCustomId("crab-button_record-deny")
-              .setLabel("Deny Record")
-              .setStyle(ButtonStyle.Danger);
-            const row = new ActionRowBuilder().addComponents(
-              ApproveButton,
-              DenyButton
-            );
-            const recordChannel = GuildConfig.records_Logs;
-            const channel = await interaction.guild.channels.fetch(
-              recordChannel
-            );
-            if (channel) {
+            })
               await newRecord.save();
-              await channel.send({
-                embeds: [embed],
-                components: [row],
-                content: `<@&${supervisorRole}>, a new record has been submitted.`,
-              });
               await interaction.reply({
                 content:
-                  "**Successfully** sent your record and it is pending approval. You will be messaged when it is approved or denied.",
+                  "**Successfully** sent your record!",
                 flags: MessageFlags.Ephemeral,
               });
             } else {
@@ -337,7 +328,7 @@ module.exports = {
                   },
                   {
                     name: "Reviewed By:",
-                    value: `${reviewedBy}`,
+                    value: `<@${reviewedBy}>`,
                     inline: true,
                   },
                 )
@@ -353,8 +344,13 @@ module.exports = {
           flags: MessageFlags.Ephemeral,
         });
       }
-      if (interaction.member.roles.cache.has(hiCommRole) || interaction.member.roles.cache.has(aaRole)) {
         if (subcommand === 'void') {
+          if (!(interaction.member.roles.cache.has(hiCommRole) || interaction.member.roles.cache.has(aaRole))) {
+          interaction.reply({
+            content: "**Insufficient** permissions.",
+            flags: MessageFlags.Ephemeral,
+          });
+          }
           const recordId = interaction.options.getString("record-id")
           const record = await CrabRecord.findOneAndDelete({ id: recordId })
           try {
@@ -367,13 +363,6 @@ module.exports = {
             console.error(error)
           }
         }
-      } else {
-        interaction.reply({
-          content: "**Insufficient** permissions.",
-          flags: MessageFlags.Ephemeral,
-        });
-      }
-
     }
   },
   async autocomplete(interaction, client) {

@@ -52,13 +52,22 @@ module.exports = {
     const Supervisor = GuildConfig.perms_SupervisorRole;
     const HiComm = GuildConfig.perms_HiCommRole;
     const AARole = GuildConfig.perms_AllAccessRole;
-    if (interaction.member.roles.cache.has(Supervisor || HiComm || AARole)) {
+    if (!(
+        interaction.member.roles.cache.has(Supervisor) ||
+        interaction.member.roles.cache.has(HiComm) ||
+        interaction.member.roles.cache.has(AARole)
+      )) {
+        return interaction.reply({ content: "<:crab_x:1409708189896671357> **Insufficient** permissions." })
+      }
       if (subcommand === "issue") {
         const user = interaction.options.getUser("staff-member");
         const newRole = interaction.options.getRole("new-role");
         const notes =
           interaction.options.getString("punishment-notes") ||
           "No additional notes were provided.";
+        if (user.id === interaction.user.id) {
+          return interaction.reply({ content: "<:crab_x:1409708189896671357> You cannot promote yourself." }) 
+        }
         const newPromotion = new CrabPromotion({
           guildId: interaction.guild.id,
           promotion_issuedBy: interaction.user.id,
@@ -75,17 +84,17 @@ module.exports = {
           })
           .setTitle("Departmental Promotion")
           .setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&")
-          .setColor(0x39ec35)
+          .setColor(0x2A9D8F)
           .setDescription(
             `A departmental promotion has been issued to ${user}. Details have been provided by the issuing supervisor below.`
           )
           .addFields(
             {
-              name: "Promoted To:",
+              name: "New Rank:",
               value: `<@&${newRole.id}>`,
             },
             {
-              name: "Punishment Notes:",
+              name: "Promotion Notes:",
               value: `${notes}`,
             }
           )
@@ -108,5 +117,4 @@ module.exports = {
         }
       } 
     }
-  },
-};
+  };

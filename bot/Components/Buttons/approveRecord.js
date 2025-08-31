@@ -17,7 +17,7 @@ module.exports = {
       const embed = interaction.message.embeds[0]
       const user = await interaction.guild.members.fetch(Record.issuedBy);
       const ApprovedEmbed = EmbedBuilder.from(embed)
-      ApprovedEmbed.setColor(0x39ec35)
+      ApprovedEmbed.setColor(0x2A9D8F)
       interaction.update({ content: `This record has been approved by ${interaction.user}`, embeds: [ApprovedEmbed], components: [] })
       if (user) {
         try {

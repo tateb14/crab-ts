@@ -58,7 +58,8 @@ module.exports = {
         guildId: guild.id,
       })
       await config.save()
-      channel.send({ embeds: [LeaveEmbed], content: `**Crab** has joined a new guild! Our new guild count is: **${client.guilds.cache.size}** and our member count is: **${client.users.cache.size}**.` })
+      const totalMembers = client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0);
+      channel.send({ embeds: [LeaveEmbed], content: `**Crab** has joined a new guild! Our new guild count is: **${client.guilds.cache.size}** and our member count is: **${totalMembers}**.` })
     }
   }
 }
