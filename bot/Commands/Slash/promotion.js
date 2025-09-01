@@ -114,7 +114,13 @@ module.exports = {
           );
           interaction.reply({ content: "**Successfully** sent the promotion!", flags: MessageFlags.Ephemeral })
           channel.send({ embeds: [embed] });
-          await StaffMember.send({ embeds: [embed] });
+
+          try {
+            await StaffMember.send({ embeds: [embed] });
+          } catch (error) {
+            return
+          }
+
         }
       } 
     }
