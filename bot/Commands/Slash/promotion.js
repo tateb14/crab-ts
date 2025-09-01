@@ -69,6 +69,9 @@ module.exports = {
         if (user.id === interaction.user.id) {
           return interaction.reply({ content: "<:crab_x:1409708189896671357> You cannot promote yourself.", flags: MessageFlags.Ephemeral }) 
         }
+         if (user.bot) {
+          return interaction.reply({ content: "<:crab_x:1409708189896671357> You cannot promote a bot.", flags: MessageFlags.Ephemeral }) 
+        }
         const newPromotion = new CrabPromotion({
           guildId: interaction.guild.id,
           promotion_issuedBy: interaction.user.id,
