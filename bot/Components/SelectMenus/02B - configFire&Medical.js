@@ -13,10 +13,14 @@ module.exports = {
     .setCustomId('crab-sm_fd-med-plugins')
     .setPlaceholder('Configure Fire and Medical Plugins')
     .setOptions(
-      new StringSelectMenuOptionBuilder()
+            new StringSelectMenuOptionBuilder()
               .setEmoji({ id: "1349197473339670559", name: "crab_lock_pass" })
               .setLabel("Configure Permissions")
               .setValue("crab-sm_perms"),
+            new StringSelectMenuOptionBuilder()
+              .setEmoji({ id: "1409695230466326628", name: "crab_message" })
+              .setLabel("Configure Prefix")
+              .setValue("crab-sm_prefix"),
             new StringSelectMenuOptionBuilder()
               .setEmoji({ id: "1349595336389427221", name: "crab_clock" })
               .setLabel("Shift Logging")

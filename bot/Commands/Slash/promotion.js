@@ -7,6 +7,7 @@ const {
   ActionRowBuilder,
   MessageFlags,
   inlineCode,
+  Message,
 } = require("discord.js");
 const CrabPromotion = require("../../schemas/CrabPromotion");
 const crabConfig = require("../../schemas/CrabConfig");
@@ -66,7 +67,7 @@ module.exports = {
           interaction.options.getString("punishment-notes") ||
           "No additional notes were provided.";
         if (user.id === interaction.user.id) {
-          return interaction.reply({ content: "<:crab_x:1409708189896671357> You cannot promote yourself." }) 
+          return interaction.reply({ content: "<:crab_x:1409708189896671357> You cannot promote yourself.", flags: MessageFlags.Ephemeral }) 
         }
         const newPromotion = new CrabPromotion({
           guildId: interaction.guild.id,

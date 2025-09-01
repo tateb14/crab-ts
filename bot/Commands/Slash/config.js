@@ -74,6 +74,10 @@ module.exports = {
               .setLabel("Configure Permissions")
               .setValue("crab-sm_perms"),
             new StringSelectMenuOptionBuilder()
+              .setEmoji({ id: "1409695230466326628", name: "crab_message" })
+              .setLabel("Configure Prefix")
+              .setValue("crab-sm_prefix"),
+            new StringSelectMenuOptionBuilder()
               .setEmoji({ id: "1349595336389427221", name: "crab_clock" })
               .setLabel("Shift Logging")
               .setValue("crab-sm_shifts"),
@@ -111,10 +115,14 @@ module.exports = {
           .setCustomId("crab-sm_fd-med-plugins")
           .setPlaceholder("Configure Fire and Medical Plugins")
           .setOptions(
-                        new StringSelectMenuOptionBuilder()
+            new StringSelectMenuOptionBuilder()
               .setEmoji({ id: "1349197473339670559", name: "crab_lock_pass" })
               .setLabel("Configure Permissions")
               .setValue("crab-sm_perms"),
+            new StringSelectMenuOptionBuilder()
+              .setEmoji({ id: "1409695230466326628", name: "crab_message" })
+              .setLabel("Configure Prefix")
+              .setValue("crab-sm_prefix"),
             new StringSelectMenuOptionBuilder()
               .setEmoji({ id: "1349595336389427221", name: "crab_clock" })
               .setLabel("Shift Logging")
@@ -149,10 +157,14 @@ module.exports = {
           .setCustomId("crab-sm_dot-plugins")
           .setPlaceholder("Configure Department of Transportation Plugins")
           .setOptions(
-              new StringSelectMenuOptionBuilder()
+            new StringSelectMenuOptionBuilder()
               .setEmoji({ id: "1349197473339670559", name: "crab_lock_pass" })
               .setLabel("Configure Permissions")
               .setValue("crab-sm_perms"),
+            new StringSelectMenuOptionBuilder()
+              .setEmoji({ id: "1409695230466326628", name: "crab_message" })
+              .setLabel("Configure Prefix")
+              .setValue("crab-sm_prefix"),
             new StringSelectMenuOptionBuilder()
               .setEmoji({ id: "1349595336389427221", name: "crab_clock" })
               .setLabel("Shift Logging")
@@ -189,7 +201,7 @@ module.exports = {
         .setCustomId("crab-sm_department-selection")
         .setPlaceholder("Configure Department Types")
         .addOptions(
-new StringSelectMenuOptionBuilder()
+          new StringSelectMenuOptionBuilder()
             .setEmoji({ id: "1349197478720831599", name: "crab_officer" })
             .setLabel("Law Enforcement")
             .setValue("crab-sm_le"),
