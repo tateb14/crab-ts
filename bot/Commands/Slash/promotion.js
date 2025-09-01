@@ -58,7 +58,7 @@ module.exports = {
         interaction.member.roles.cache.has(HiComm) ||
         interaction.member.roles.cache.has(AARole)
       )) {
-        return interaction.reply({ content: "<:crab_x:1409708189896671357> **Insufficient** permissions." })
+        return interaction.reply({ content: "<:crab_x:1409708189896671357> **Insufficient** permissions.", flags: MessageFlags.Ephemeral })
       }
       if (subcommand === "issue") {
         const user = interaction.options.getUser("staff-member");
