@@ -81,7 +81,7 @@ module.exports = {
           promotion_id: promotionId
         });
         await newPromotion.save();
-        const role = await interaction.guild.roles.cache.fetch(newRole.id)
+        const role = await interaction.guild.roles.cache.get(newRole.id)
         const embed = new EmbedBuilder()
           .setAuthor({
             name: `Issued by @${interaction.user.username}`,
@@ -96,7 +96,7 @@ module.exports = {
           .addFields(
             {
               name: "New Rank:",
-              value: `${role}`,
+              value: `@${role.name}`,
             },
             {
               name: "Promotion Notes:",
@@ -107,22 +107,31 @@ module.exports = {
             text: `Promotion ID: ${promotionId} || Powered by Crab`,
           })
           .setTimestamp();
+
+        const serverButton = new ButtonBuilder()
+        .setCustomId("crab-button_server-name-disabled")
+        .setDisabled(true)
+        .setStyle(ButtonStyle.Secondary)
+        .setLabel(`Sent from ${interaction.guild.name}`)
+        const row = new ActionRowBuilder().addComponents(serverButton)
         const PromotionChannel = GuildConfig.promote_Logs;
         const StaffMember = await client.users.fetch(user);
         if (!PromotionChannel) {
           interaction.reply({ embeds: [embed] });
-          await StaffMember.send({ embeds: [embed] });
+          await StaffMember.send({ embeds: [embed], components: [row] });
         } else {
           const channel = await interaction.guild.channels.fetch(
             PromotionChannel
           );
-          interaction.reply({ content: "**Successfully** sent the promotion!", flags: MessageFlags.Ephemeral })
-          channel.send({ embeds: [embed] });
           try {
-            await StaffMember.send({ embeds: [embed] });
+            channel.send({ embeds: [embed] });
+            await StaffMember.send({ embeds: [embed], components: [row] });
+            interaction.reply({ content: "**Successfully** sent the promotion!", flags: MessageFlags.Ephemeral })
           } catch (error) {
-            return
+            console.log(error)
+            return interaction.reply({ content: "I had an issue messaging the user, I have sent the promotion to the logging channel!", flags: MessageFlags.Ephemeral })
           }
+
         }
       } 
     }

@@ -2,6 +2,7 @@ const crabConfig = require("../schemas/CrabConfig");
 const CrabGuildExclusion = require("../schemas/CrabGuildExclusion");
 const CrabUserExclusion = require("../schemas/CrabUserExclusion");
 const { EmbedBuilder, inlineCode, codeBlock } = require("discord.js")
+const { errorLogs } = require("../../config.json")
 module.exports = {
   event: "messageCreate",
   once: false,
@@ -54,8 +55,7 @@ module.exports = {
       if (!Command) return;
       await Command.execute(message, client, args);
     } catch (error) {
-      const logChannel = "1398876136938799176";
-      const channel = await client.channels.fetch(logChannel);
+      const channel = await client.channels.fetch(errorLogs);
       const ErrorEmbed = new EmbedBuilder()
         .setTitle("Error Report")
         .setColor(0xec3935)
