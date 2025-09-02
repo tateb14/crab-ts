@@ -81,6 +81,7 @@ module.exports = {
           promotion_id: promotionId
         });
         await newPromotion.save();
+        const role = await interaction.guild.roles.cache.fetch(newRole.id)
         const embed = new EmbedBuilder()
           .setAuthor({
             name: `Issued by @${interaction.user.username}`,
@@ -95,7 +96,7 @@ module.exports = {
           .addFields(
             {
               name: "New Rank:",
-              value: `<@&${newRole.id}>`,
+              value: `${role}`,
             },
             {
               name: "Promotion Notes:",
@@ -117,13 +118,11 @@ module.exports = {
           );
           interaction.reply({ content: "**Successfully** sent the promotion!", flags: MessageFlags.Ephemeral })
           channel.send({ embeds: [embed] });
-
           try {
             await StaffMember.send({ embeds: [embed] });
           } catch (error) {
             return
           }
-
         }
       } 
     }
