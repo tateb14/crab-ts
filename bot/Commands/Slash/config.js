@@ -16,7 +16,7 @@ module.exports = {
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
   execute: async (interaction) => {
     const GuildConfig = await crabConfig.findOne({ guildId: interaction.guild.id })
-    const GuildPrefix = GuildConfig.crab_Prefix || "-"
+    const GuildPrefix = GuildConfig?.crab_Prefix ?? "-"
     if (!GuildConfig) {
       const embed = new EmbedBuilder()
         .setColor(0xec3935)
