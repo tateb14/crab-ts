@@ -70,7 +70,7 @@ module.exports = {
           .addFields(
             {
               name: "Current Status",
-              value: `<:crab_offline:1350630808666374205> Off Duty`,
+              value: `<:crab_clock_stop:1350701433980325979> Off Duty`,
             },
             {
               name: "Time Online",

@@ -119,7 +119,7 @@ module.exports = {
               .addFields(
                 {
                   name: "Current Status",
-                  value: `<:crab_break:1350630809580732569> On Break`,
+                  value: `<:crab_clock_pause:1350701435116847216> On Break`,
                 },
                 {
                   name: "Total Time Online",
@@ -165,7 +165,7 @@ module.exports = {
               .addFields(
                 {
                   name: "Current Status",
-                  value: `<:crab_online:1350630807022207017> On Duty`,
+                  value: `<:crab_clock_play:1350635274857611375> On Duty`,
                 },
                 {
                   name: "Time Online",
@@ -211,7 +211,7 @@ module.exports = {
               .addFields(
                 {
                   name: "Current Status",
-                  value: `<:crab_offline:1350630808666374205> Off Duty`,
+                  value: `<:crab_clock_stop:1350701433980325979> Off Duty`,
                 },
                 {
                   name: "Time Online",

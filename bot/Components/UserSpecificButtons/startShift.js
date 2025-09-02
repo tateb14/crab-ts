@@ -33,7 +33,7 @@ module.exports = {
       .addFields(
         {
           name: 'Current Status',
-          value: `<:crab_online:1350630807022207017> On Duty`
+          value: `<:crab_clock_play:1350635274857611375> On Duty`
         },
         {
           name: 'Current Shift Time Online',
