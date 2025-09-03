@@ -55,12 +55,12 @@ module.exports = {
     .addSubcommand((subcommand) =>
       subcommand
         .setName("search")
-        .setDescription("Search a punishment via identification string.")
+        .setDescription("Search a punishment via user.")
         .addStringOption((option) =>
           option
-            .setName("punishment-id")
+            .setName("punishment-user")
             .setDescription(
-              "The punishment identiification number given when the punishment was issued."
+              "The punished user you wish to search."
             )
             .setRequired(true)
         )
@@ -149,11 +149,18 @@ module.exports = {
           text: `Punishment ID: ${punishmentId} || Powered by Crab`,
         })
         .setTimestamp();
+
+      const serverButton = new ButtonBuilder()
+        .setCustomId("crab-button_server-name-disabled")
+        .setDisabled(true)
+        .setStyle(ButtonStyle.Secondary)
+        .setLabel(`Sent from ${interaction.guild.name}`)
+      const row = new ActionRowBuilder().addComponents(serverButton)
       const PunishmentChannel = GuildConfig.punish_Logs;
       const StaffMember = await client.users.fetch(user);
       if (!PunishmentChannel) {
         interaction.reply({ embeds: [embed] });
-        await StaffMember.send({ embeds: [embed] });
+        await StaffMember.send({ embeds: [embed], components: [row] });
       } else {
         const channel = await interaction.guild.channels.fetch(
           PunishmentChannel
@@ -163,60 +170,11 @@ module.exports = {
           flags: MessageFlags.Ephemeral,
         });
         channel.send({ embeds: [embed] });
-        await StaffMember.send({ embeds: [embed] });
+        await StaffMember.send({ embeds: [embed], components: [row] });
       }
     } else if (subcommand === "search") {
-      const punishmentId = interaction.options.getString("punishment-id");
-      const PunishmentResult = await CrabPunishment.findOne({
-        guildId: interaction.guild.id,
-        punishment_id: punishmentId,
-      });
-      if (!PunishmentResult || PunishmentResult.length === 0) {
-        return interaction.reply({
-          content: "No punishment was found under that identificaiton string.",
-          flags: MessageFlags.Ephemeral,
-        });
-      } else {
-        const embed = new EmbedBuilder()
-          .setAuthor({
-            name: `Search requested by @${interaction.user.username}`,
-            iconURL: interaction.user.displayAvatarURL(),
-          })
-          .setTitle("Departmental Punishment")
-          .setImage(
-            "https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&"
-          )
-          .setColor(0xec3935)
-          .setDescription(
-            `A departmental punishment has been **found**, addressed to <@${PunishmentResult.punishment_staffMember}>. Details have been provided below.`
-          )
-          .addFields(
-            {
-              name: "Punishment Type",
-              value: `${PunishmentResult.punishment_type}`,
-            },
-            {
-              name: "Punishment Reason",
-              value: `${PunishmentResult.punishment_reason}`,
-            },
-            {
-              name: "Punishment Notes",
-              value: `${PunishmentResult.punishment_notes}`,
-            },
-            {
-              name: "Punishment Issuer",
-              value: `<@${PunishmentResult.punishment_issuedBy}>`,
-            }
-          )
-          .setFooter({
-            text: `Punishment ID: ${punishmentId} || Powered by Crab`,
-          });
-        interaction.reply({
-          content: "A punishment log has been located and is displayed below.",
-          embeds: [embed],
-          flags: MessageFlags.Ephemeral,
-        });
-      }
+      const punishmentUser = interaction.options.getUser("punishment-user");
+      
     }
     if (subcommand === "void") {
       if (

@@ -26,7 +26,13 @@ module.exports = {
     .setURL(Proof)
     .setStyle(ButtonStyle.Link)
 
+    const serverButton = new ButtonBuilder()
+        .setCustomId("crab-button_server-name-disabled")
+        .setDisabled(true)
+        .setStyle(ButtonStyle.Secondary)
+        .setLabel(`Official Notice from Tropical Systems`)
     const row = new ActionRowBuilder().addComponents(ProofButton)
+    const row2 = new ActionRowBuilder().addComponents(serverButton)
     const ExclusionChannel = await interaction.guild.channels.fetch("1398166536971091978")
     const newExclusion = new CrabGuildExclusion({
       crab_guildId: GuildId,
@@ -36,6 +42,6 @@ module.exports = {
     })
     await newExclusion.save()
     interaction.reply({ content: "Exclusion created and complete.", flags: MessageFlags.Ephemeral })
-   await ExclusionChannel.send({ embeds: [embed], components: [row] })
+   await ExclusionChannel.send({ embeds: [embed], components: [row, row2] })
   }
 }

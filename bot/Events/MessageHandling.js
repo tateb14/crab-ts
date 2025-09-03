@@ -1,8 +1,8 @@
 const crabConfig = require("../schemas/CrabConfig");
 const CrabGuildExclusion = require("../schemas/CrabGuildExclusion");
 const CrabUserExclusion = require("../schemas/CrabUserExclusion");
-const { EmbedBuilder, inlineCode, codeBlock } = require("discord.js")
-const { errorLogs } = require("../../config.json")
+const { EmbedBuilder, inlineCode, codeBlock } = require("discord.js");
+const { errorLogs } = require("../../config.json");
 module.exports = {
   event: "messageCreate",
   once: false,
@@ -26,11 +26,18 @@ module.exports = {
         .setFooter({ text: "Crab Legal Affairs Team" })
         .setTitle("Crab Exclusion Notice")
         .setTimestamp();
+
+      const serverButton = new ButtonBuilder()
+        .setCustomId("crab-button_server-name-disabled")
+        .setDisabled(true)
+        .setStyle(ButtonStyle.Secondary)
+        .setLabel(`Official Notice from Tropical Systems`);
+      const row = new ActionRowBuilder().addComponents(serverButton);
       const user = await message.guild.fetchOwner();
       try {
-      await user.send({ embeds: [ExclusionEmbed] });
+        await user.send({ embeds: [ExclusionEmbed], components: [row] });
       } catch (error) {
-        return
+        return;
       }
       client.guilds.cache.get(message.guild.id).leave();
       return;
@@ -66,9 +73,7 @@ module.exports = {
         .addFields(
           {
             name: "Guild Information",
-            value: `${message.guild.name} :: ${inlineCode(
-              message.guild.id
-            )}`,
+            value: `${message.guild.name} :: ${inlineCode(message.guild.id)}`,
           },
           {
             name: "User Information",

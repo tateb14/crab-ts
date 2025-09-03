@@ -24,10 +24,16 @@ module.exports = {
       startButton.setLabel(`Reviewed by @${interaction.user.username}`)
       const newRow = new ActionRowBuilder().addComponents(startButton)
       ReviewedEmbed.setColor(0x39ec35)
+      const serverButton = new ButtonBuilder()
+        .setCustomId("crab-button_server-name-disabled")
+        .setDisabled(true)
+        .setStyle(ButtonStyle.Secondary)
+        .setLabel(`Sent from ${interaction.guild.name}`)
+      const ServerRow = new ActionRowBuilder().addComponents(serverButton)
       interaction.update({ content: `This record has been reviewed by ${interaction.user}`, embeds: [ReviewedEmbed], components: [newRow] })
       if (user) {
         try {
-          await user.send(`**Report ID:** ${inlineCode(Report.id)} has been reviewed by ${interaction.user}`);
+          await user.send({ content: `**Report ID:** ${inlineCode(Report.id)} has been reviewed by ${interaction.user}`, components: [ServerRow] });
         } catch (err) {
           return interaction.followUp({ content: "I could not DM this user.", flags: MessageFlags.Ephemeral })
         }
