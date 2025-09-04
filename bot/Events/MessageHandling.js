@@ -2,7 +2,7 @@ const crabConfig = require("../schemas/CrabConfig");
 const CrabGuildExclusion = require("../schemas/CrabGuildExclusion");
 const CrabUserExclusion = require("../schemas/CrabUserExclusion");
 const { EmbedBuilder, inlineCode, codeBlock } = require("discord.js");
-const { errorLogs } = require("../../config.json");
+const { errorLogs, onCallRole } = require("../../config.json");
 module.exports = {
   event: "messageCreate",
   once: false,
@@ -92,7 +92,7 @@ module.exports = {
         );
       await channel.send({
         embeds: [ErrorEmbed],
-        content: "<@&1404203220695257241>",
+        content: `<@&${onCallRole}>`,
       });
       interaction.reply({
         content:

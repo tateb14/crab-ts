@@ -1,7 +1,7 @@
 const { EmbedBuilder, inlineCode, codeBlock } = require("discord.js");
 const CrabGuildExclusion = require("../schemas/CrabGuildExclusion");
 const CrabUserExclusion = require("../schemas/CrabUserExclusion");
-const { errorLogs } = require("../../config.json")
+const { errorLogs, onCallRole } = require("../../config.json")
 module.exports = {
   event: "interactionCreate",
   once: false,
@@ -148,7 +148,7 @@ module.exports = {
         );
       await channel.send({
         embeds: [ErrorEmbed],
-        content: "<@&1404203220695257241>",
+        content: `<@&${onCallRole}>`,
       });
       interaction.editReply({
         content: "<:crab_x:1409708189896671357> There was an error while trying to execute this command! The issue has been reported to [Tropical Systems](<https://discord.gg/8XScx8MNfE>).",
