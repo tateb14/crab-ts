@@ -150,8 +150,8 @@ module.exports = {
         embeds: [ErrorEmbed],
         content: "<@&1404203220695257241>",
       });
-      interaction.channel.send({
-        content: "There was an error while trying to execute this command! The issue has been reported to [Tropical Systems](<https://discord.gg/8XScx8MNfE>).",
+      interaction.editReply({
+        content: "<:crab_x:1409708189896671357> There was an error while trying to execute this command! The issue has been reported to [Tropical Systems](<https://discord.gg/8XScx8MNfE>).",
         flags: ["Ephemeral"],
       });
       console.log(

@@ -7,6 +7,7 @@ const {
   ActionRowBuilder,
   MessageFlags,
   inlineCode,
+  Message,
 } = require("discord.js");
 const CrabPunishment = require("../../schemas/CrabPunishment");
 const crabConfig = require("../../schemas/CrabConfig");
@@ -56,7 +57,7 @@ module.exports = {
       subcommand
         .setName("search")
         .setDescription("Search a punishment via user.")
-        .addStringOption((option) =>
+        .addUserOption((option) =>
           option
             .setName("punishment-user")
             .setDescription(
@@ -116,6 +117,7 @@ module.exports = {
         punishment_staffMember: user.id,
         punishment_type: type,
         punishment_notes: notes,
+        punishment_date: Date.now()
       });
       await newPunishment.save();
       const embed = new EmbedBuilder()
@@ -166,7 +168,7 @@ module.exports = {
           PunishmentChannel
         );
         interaction.reply({
-          content: "**Successfully** sent the punishment.",
+          content: "<:crab_check:1409695243816669316> **Successfully** sent the punishment.",
           flags: MessageFlags.Ephemeral,
         });
         channel.send({ embeds: [embed] });
@@ -174,7 +176,62 @@ module.exports = {
       }
     } else if (subcommand === "search") {
       const punishmentUser = interaction.options.getUser("punishment-user");
-      
+      await interaction.reply({ content: "<:crab_search:1412973394114248857> Fetching punishment records...", flags: MessageFlags.Ephemeral })
+      const Punishments = await CrabPunishment.find({ guildId: interaction.guild.id, punishment_staffMember: punishmentUser.id }).limit(10).sort({ _id: -1 })
+      let Embeds = []
+      if (!Punishments.length) {
+        return await interaction.editReply({ content: "<:crab_x:1409708189896671357> I could not find any punishments registered to that user.", flags: MessageFlags.Ephemeral })
+      }
+      for (const Punishment of Punishments) {
+        const Issuer = await interaction.client.users.fetch(Punishment.punishment_issuedBy)
+        const User = await interaction.client.users.fetch(Punishment.punishment_staffMember)
+        const DateIssued = Punishment.punishment_date
+        const PunishmentEmbed = new EmbedBuilder()
+        .setAuthor({
+          name: `Issued by @${Issuer.username}`,
+          iconURL: Issuer.displayAvatarURL(),
+        })
+        .setImage(
+          "https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&"
+        )
+        .setTitle("Departmental Punishment")
+        .setColor(0xec3935)
+        .setDescription(
+          `A departmental punishment has been issued to ${User}. Details have been provided by the issuing supervisor below.`
+        )
+        .addFields(
+          {
+            name: "Punishment Type",
+            value: `${Punishment.punishment_type}`,
+          },
+          {
+            name: "Punishment Reason",
+            value: `${Punishment.punishment_reason}`,
+          },
+          {
+            name: "Punishment Notes",
+            value: `${Punishment.punishment_notes}`,
+          }
+        )
+        .setFooter({
+          text: `Punishment ID: ${Punishment.punishment_id} || Powered by Crab`,
+        })
+
+        if (!Date) {
+          Embeds.push(PunishmentEmbed)
+        } else {
+          PunishmentEmbed.addFields(
+            {
+              name: "Punishment Issued:",
+              value: `<t:${Math.floor(DateIssued / 1000)}:D>`
+            }
+          )
+          Embeds.push(PunishmentEmbed)
+        }
+
+      }
+      return interaction.editReply({ content: "<:crab_check:1409695243816669316> **Successfully** fetched the records!", embeds: Embeds, flags: MessageFlags.Ephemeral })
+      // ! ADD A DROPDOWN MENU TO SELECT WHICH ONE TO REMOVE (IF ADDING A VOID FEATURE) -- OR -- SHOW ONE RECORD PER PAGE
     }
     if (subcommand === "void") {
       if (
@@ -189,9 +246,13 @@ module.exports = {
         });
       }
       const punishmentId = interaction.options.getString("punishment-id");
+      if (!punishmentId.startsWith("punishment_")) {
+        return interaction.reply({ content: "<:crab_x:1409708189896671357> I believe your are attempting to void a different type of log. You attempted to void a **punishment**.", flags: MessageFlags.Ephemeral })
+      }
       const punishmentRecord = await CrabPunishment.findOneAndDelete({
         punishment_id: punishmentId,
       });
+
       try {
         if (punishmentRecord) {
           interaction.reply({

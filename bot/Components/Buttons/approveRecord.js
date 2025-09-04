@@ -3,6 +3,8 @@ const {
   inlineCode,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
+  ButtonBuilder,
+  ButtonStyle,
   ActionRowBuilder,
   MessageFlags,
 } = require("discord.js");
@@ -18,7 +20,9 @@ module.exports = {
     const HiCommRole = GuildConfig.perms_HiCommRole;
     const AARole = GuildConfig.perms_AllAccessRole;
     if (
-      interaction.member.roles.cache.has(SupervisorRole || HiCommRole || AARole)
+      interaction.member.roles.cache.has(SupervisorRole) ||
+      interaction.member.roles.cache.has(HiCommRole) ||
+      interaction.member.roles.cache.has(AARole)
     ) {
       const Record = await GuildRecord.findOneAndUpdate(
         { messageId: interaction.message.id },
@@ -43,9 +47,9 @@ module.exports = {
       if (user) {
         try {
           await user.send({
-            content: `**Record ID:** ${inlineCode(Record.id)} has been approved by ${
-              interaction.user
-            }`,
+            content: `**Record ID:** ${inlineCode(
+              Record.id
+            )} has been approved by ${interaction.user}`,
             components: [row],
           });
         } catch (err) {
