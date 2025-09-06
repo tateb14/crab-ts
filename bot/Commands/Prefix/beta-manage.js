@@ -1,6 +1,7 @@
 const { EmbedBuilder, inlineCode, ButtonBuilder, ButtonStyle, ActionRowBuilder, MessageFlags, Guild } = require("discord.js")
 const detectIdType = require("../../Functions/detectIdType")
 const CrabBetaServer = require("../../schemas/CrabBetaServers")
+const { x } = require("../../../emojis.json")
 module.exports = {
   command: "beta",
   execute: async (message, client) => {
@@ -18,7 +19,7 @@ module.exports = {
 
       if (type.startsWith("add")) {
       if (savedGuild) {
-        return message.reply("<:crab_x:1409708189896671357> This server has already been added to the guild list.")
+        return message.reply(`${x} This server has already been added to the guild list.`)
       }
         const newGuild = new CrabBetaServer({
             ownerId: guild.ownerId,
@@ -65,11 +66,11 @@ module.exports = {
         )
         return message.reply({ embeds: [embed] })
         } else {
-          return message.reply("<:crab_x:1409708189896671357> Plese enter a valid **action** (add/remove).")
+          return message.reply(`${x} Plese enter a valid **action** (add/remove).`)
         }
 
     } else {
-      return message.reply("<:crab_x:1409708189896671357> Plese enter a valid **guild** id.")
+      return message.reply(`${x} Plese enter a valid **guild** id.`)
     }
 }
 }

@@ -8,6 +8,7 @@ const {
 } = require("discord.js");
 const ShiftLog = require("../../schemas/ShiftLog");
 const humanizeDuration = require("humanize-duration")
+const { search, x, check } = require("../../../emojis.json")
 module.exports = {
   customIdPrefix: "crab-button_shift-delete-confirm",
   execute: async (interaction, client) => {
@@ -31,13 +32,13 @@ module.exports = {
       message = await interaction.channel.messages.fetch(messageId);
     } catch {
       return interaction.editReply(
-        "❌ Could not find the original shift panel message."
+        `${x} Could not find the original shift panel message.`
       );
     }
     if (!UserLogs || UserLogs.length === 0) {
       await message.edit({ content: "This user has no shifts.", embeds: [], components: [] });
       return interaction.update({
-        content: "<:crab_check:1409695243816669316> Action **confirmed**, I have deleted the shift.",
+        content: `${check} Action **confirmed**, I have deleted the shift.`,
         components: [],
       });
     }
@@ -88,7 +89,7 @@ module.exports = {
     });
 
     await interaction.update({
-      content: "<:crab_check:1409695243816669316> Action **confirmed**, I have deleted the shift.",
+      content: `${check} Action **confirmed**, I have deleted the shift.`,
       components: [],
       ephemeral: true,
     });

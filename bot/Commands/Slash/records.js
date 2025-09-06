@@ -11,6 +11,7 @@ const CrabConfig = require("../../schemas/CrabConfig");
 const CrabRecord = require("../../schemas/GuildRecord");
 const searchRobloxUsers = require("../../Functions/searchRobloxUsernames")
 const randomString = require("../../Functions/randomId")
+const { check, x, search } = require("../../../emojis.json")
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("record")
@@ -352,25 +353,25 @@ module.exports = {
           });
           }
         const RecordId = interaction.options.getString("record-id")
-        await interaction.reply({ content: "<:crab_search:1412973394114248857> **Fetching** the record..." })
+        await interaction.reply({ content: `${search} **Fetching** the record...` })
         const response = await interaction.fetchReply();
         const Record = await CrabRecord.findOne({ guildId: interaction.guild.id, id: RecordId })
         if (!Record) {
-          return await interaction.editReply({ content: "<:crab_x:1409708189896671357> I was unable to locate a record with that id, please double check the ID and try again." })
+          return await interaction.editReply({ content: `${x} I was unable to locate a record with that id, please double check the ID and try again.` })
         }
         const confirmDelete = new ButtonBuilder()
         .setCustomId(`crab_button-confirm_delete:${response.id}:${interaction.user.id}:${RecordId}`)
-        .setEmoji("<:crab_check:1409695243816669316>")
+        .setEmoji(check)
         .setLabel("Confirm Delete")
         .setStyle(ButtonStyle.Danger)
          const cancelDelete = new ButtonBuilder()
         .setCustomId(`crab_button-cancel_delete:${response.id}:${interaction.user.id}`)
-        .setEmoji("<:crab_x:1409708189896671357>")
+        .setEmoji(x)
         .setLabel("Cancel Delete")
         .setStyle(ButtonStyle.Secondary)
 
         const confirmationRow = new ActionRowBuilder().addComponents(confirmDelete, cancelDelete)
-        await interaction.editReply({ content: "<:crab_check:1409695243816669316> I was able to locate a record with this id string, would you like to proceed and void the report?\n-# This action is **irreversible**.", components: [confirmationRow] })
+        await interaction.editReply({ content: `${check} I was able to locate a record with this id string, would you like to proceed and void the report?\n-# This action is **irreversible**.`, components: [confirmationRow] })
         }
     }
   },

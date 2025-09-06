@@ -13,6 +13,7 @@ const CrabPunishment = require("../../schemas/CrabPunishment");
 const crabConfig = require("../../schemas/CrabConfig");
 const randomString = require("../../Functions/randomId");
 const punishmentMap = new Map()
+const { x, check, search } = require("../../../emojis.json")
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("punishment")
@@ -100,7 +101,7 @@ module.exports = {
       )
     ) {
       return interaction.reply({
-        content: "<:crab_x:1409708189896671357> **Insufficient** permissions.",
+        content: `${x} **Insufficient** permissions.`,
       });
     }
     if (subcommand === "issue") {
@@ -108,12 +109,12 @@ module.exports = {
       const type = interaction.options.getString("punishment-type");
       const reason = interaction.options.getString("punishment-reason");
       const notes =interaction.options.getString("punishment-notes") || "No additional notes were provided.";
-      await interaction.reply("<:crab_search:1412973394114248857> **Processing** you punishment...")
+      await interaction.reply(`${search} **Processing** you punishment...`)
       if (user.id === interaction.user.id) {
-        return await interaction.editReply({ content: "<:crab_x:1409708189896671357> You cannot punish yourself.", flags: MessageFlags.Ephemeral })
+        return await interaction.editReply({ content: `${x} You cannot punish yourself.`, flags: MessageFlags.Ephemeral })
       }
       if (user.bot) {
-        return await interaction.editReply({ content: "<:crab_x:1409708189896671357> You cannot punish a bot.", flags: MessageFlags.Ephemeral })
+        return await interaction.editReply({ content: `${x} You cannot punish a bot.`, flags: MessageFlags.Ephemeral })
       }
       const newPunishment = new CrabPunishment({
         guildId: interaction.guild.id,
@@ -174,7 +175,7 @@ module.exports = {
           PunishmentChannel
         );
         await interaction.editReply({
-          content: "<:crab_check:1409695243816669316> **Successfully** sent the punishment.",
+          content: `${check} **Successfully** sent the punishment.`,
           flags: MessageFlags.Ephemeral,
         });
         channel.send({ embeds: [embed] });
@@ -182,11 +183,11 @@ module.exports = {
       }
     } else if (subcommand === "search") {
       const punishmentUser = interaction.options.getUser("punishment-user");
-      await interaction.reply({ content: "<:crab_search:1412973394114248857> **Fetching** punishment records...", flags: MessageFlags.Ephemeral })
+      await interaction.reply({ content: `${search} **Fetching** punishment records...`, flags: MessageFlags.Ephemeral })
       const Punishments = await CrabPunishment.find({ guildId: interaction.guild.id, punishment_staffMember: punishmentUser.id }).limit(10).sort({ _id: -1 })
       let Embeds = []
       if (!Punishments.length) {
-        return await interaction.editReply({ content: "<:crab_x:1409708189896671357> I could not find any punishments registered to that user.", flags: MessageFlags.Ephemeral })
+        return await interaction.editReply({ content: `${x} I could not find any punishments registered to that user.`, flags: MessageFlags.Ephemeral })
       }
       for (const Punishment of Punishments) {
         const Issuer = await interaction.client.users.fetch(Punishment.punishment_issuedBy)
@@ -236,7 +237,7 @@ module.exports = {
         }
 
       }
-      return interaction.editReply({ content: "<:crab_check:1409695243816669316> **Successfully** fetched the records!", embeds: Embeds, flags: MessageFlags.Ephemeral })
+      return interaction.editReply({ content: `${check} **Successfully** fetched the records!`, embeds: Embeds, flags: MessageFlags.Ephemeral })
       // ! ADD A DROPDOWN MENU TO SELECT WHICH ONE TO REMOVE (IF ADDING A VOID FEATURE) -- OR -- SHOW ONE RECORD PER PAGE
     }
     if (subcommand === "void") {
@@ -248,31 +249,31 @@ module.exports = {
       ) {
         return interaction.reply({
           content:
-            "<:crab_x:1409708189896671357> **Insufficient** permissions.",
+            `${x} **Insufficient** permissions.`,
         });
       }
         const PunishmentId = interaction.options.getString("punishment-id")
-        await interaction.reply({ content: "<:crab_search:1412973394114248857> **Fetching** the punishment..." })
+        await interaction.reply({ content: `${search} **Fetching** the punishment...` })
         const response = await interaction.fetchReply();
         const Punishment = await CrabPunishment.findOne({ guildId: interaction.guild.id, punishment_id: PunishmentId })
         if (!Punishment) {
-          return await interaction.editReply({ content: "<:crab_x:1409708189896671357> I was unable to locate a punishment with that id, please double check the ID and try again." })
+          return await interaction.editReply({ content: `${x} I was unable to locate a punishment with that id, please double check the ID and try again.` })
         }
         const tempId = Math.floor(100000 + Math.random() * 900000).toString();
         punishmentMap.set(tempId, PunishmentId);
         const confirmDelete = new ButtonBuilder()
         .setCustomId(`crab_button-confirm_delete:${response.id}:${interaction.user.id}:${tempId}`)
-        .setEmoji("<:crab_check:1409695243816669316>")
+        .setEmoji(check)
         .setLabel("Confirm Delete")
         .setStyle(ButtonStyle.Danger)
          const cancelDelete = new ButtonBuilder()
         .setCustomId(`crab_button-cancel_delete:${response.id}:${interaction.user.id}`)
-        .setEmoji("<:crab_x:1409708189896671357>")
+        .setEmoji(x)
         .setLabel("Cancel Delete")
         .setStyle(ButtonStyle.Secondary)
 
         const confirmationRow = new ActionRowBuilder().addComponents(confirmDelete, cancelDelete)
-        await interaction.editReply({ content: "<:crab_check:1409695243816669316> I was able to locate a punishment with this id string, would you like to proceed and void the report?\n-# This action is **irreversible**.", components: [confirmationRow] })
+        await interaction.editReply({ content: `${check} I was able to locate a punishment with this id string, would you like to proceed and void the report?\n-# This action is **irreversible**.`, components: [confirmationRow] })
     }
   },
   punishmentMap

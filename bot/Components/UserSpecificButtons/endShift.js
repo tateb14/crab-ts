@@ -5,6 +5,7 @@ const humanizeDuration = require('humanize-duration')
 const ShiftLog = require('../../schemas/ShiftLog')
 const randomString = require('../../Functions/randomId')
 const responses = require("../../Functions/responses")
+const { clock_stop } = require("../../../emojis.json")
 module.exports = {
   customIdPrefix: 'crab-buttons_shift-end',
   execute: async (interaction, client) => {
@@ -70,7 +71,7 @@ module.exports = {
           .addFields(
             {
               name: "Current Status",
-              value: `<:crab_clock_stop:1350701433980325979> Off Duty`,
+              value: `${clock_stop} Off Duty`,
             },
             {
               name: "Time Online",

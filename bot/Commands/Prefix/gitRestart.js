@@ -10,6 +10,7 @@ const { exec } = require("child_process")
 const simpleGit = require("simple-git");
 const chalk = require("chalk");
 const git = simpleGit();
+const { check, x, alert } = require("../../../emojis.json")
 module.exports = {
   command: "c-restart",
   execute: async (message, client) => {
@@ -21,24 +22,24 @@ module.exports = {
           const pullResult = await git.pull("master");
           console.log(pullResult);
 
-          await respone.edit("<:crab_check:1410064912427778219> Updates pulled successfully and the server has restarted!");
+          await respone.edit(`${check} Updates pulled successfully and the server has restarted!`);
 
           exec("pm2 restart Crab", (error, stdout, stderr) => {
                 if (error) {
                     console.error(chalk.red(`[SERVER] [PM2] Error restarting PM2: ${error.message}`));
-                    return respone.edit(`<:crab_x:1409708189896671357> Failed to restart PM2.`);
+                    return respone.edit(`${x} Failed to restart PM2.`);
                 }
                 if (stderr) {
                     console.error(chalk.red(`[SERVER] [PM2] PM2 stderr: ${stderr}`));
-                    return respone.edit(`<:crab_alert:1400664519339937974> PM2 reported an error`);
+                    return respone.edit(`${alert} PM2 reported an error`);
                 }
                 console.log(`PM2 stdout: ${stdout}`);
-                respone.edit("<:crab_check:141006491242777821> Server HI successfully!");
+                respone.edit(`${check} Server HI successfully!`);
             });
 
         } catch (error) {
             console.error(chalk.red("[SYSTEM] Error while pulling a GitHub commit:", error));
-            await respone.edit(`<:crab_x:1409708189896671357> Failed to pull updates.`);
+            await respone.edit(`${x} Failed to pull updates.`);
 
         }
       }

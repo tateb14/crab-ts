@@ -3,6 +3,7 @@ const CrabGuildExclusion = require("../schemas/CrabGuildExclusion");
 const CrabUserExclusion = require("../schemas/CrabUserExclusion");
 const { EmbedBuilder, inlineCode, codeBlock } = require("discord.js");
 const { errorLogs, onCallRole } = require("../../config.json");
+const { x, shield } = require("../../emojis.json")
 module.exports = {
   event: "messageCreate",
   once: false,
@@ -16,7 +17,7 @@ module.exports = {
     });
     if (GuildExluded) {
       message.reply(
-        "<:crab_shield:1349197477198168249> This guild has been excluded from this service, the bot will now leave the guild."
+        `${shield} This guild has been excluded from this service, the bot will now leave the guild.`
       );
       const ExclusionEmbed = new EmbedBuilder()
         .setColor(0xec3935)
@@ -43,7 +44,7 @@ module.exports = {
       return;
     } else if (UserExcluded) {
       return message.reply(
-        "<:crab_shield:1349197477198168249> You have been excluded from this service and cannot run any commands."
+        `${shield} You have been excluded from this service and cannot run any commands.`
       );
     }
     try {
@@ -96,7 +97,7 @@ module.exports = {
       });
       interaction.reply({
         content:
-          "There was an error while trying to execute this command! The issue has been reported to [Tropical Systems](https://discord.gg/8XScx8MNfE).",
+          `${x} There was an error while trying to execute this command! The issue has been reported to [Tropical Systems](https://discord.gg/8XScx8MNfE).`,
         flags: ["Ephemeral"],
       });
       console.log(

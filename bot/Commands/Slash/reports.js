@@ -10,6 +10,7 @@ const {
 } = require("discord.js");
 const CrabConfig = require("../../schemas/CrabConfig");
 const CrabReport = require("../../schemas/GuildReport");
+const { check, x, car, clipboard, flag, fire_truck, flame, medical_cross, barrier, search } = require("../../../emojis.json")
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("report")
@@ -85,17 +86,17 @@ module.exports = {
                 .setLabel("Accident Report")
                 .setDescription("File an accident report on your vehicle.")
                 .setValue("crab_accident-report")
-                .setEmoji("<:crab_car:1409695280483270656>"),
+                .setEmoji(car),
               new StringSelectMenuOptionBuilder()
                 .setLabel("Scene Report")
                 .setDescription("File an scene report on a crime scene.")
                 .setValue("crab_scene-report")
-                .setEmoji("<:crab_clipboard:1349595335378337833>"),
+                .setEmoji(clipboard),
               new StringSelectMenuOptionBuilder()
                 .setLabel("Incident Report")
                 .setDescription("File an incident report.")
                 .setValue("crab_incident-report")
-                .setEmoji("<:crab_flag:1349595334463979550>")
+                .setEmoji(flag)
             );
           const row = new ActionRowBuilder().addComponents(ReportSelectMenu);
           interaction.reply({
@@ -123,17 +124,17 @@ module.exports = {
                 .setLabel("Accident Report")
                 .setDescription("File an accident report on your vehicle.")
                 .setValue("crab_accident-report")
-                .setEmoji("<:crab_firetruck:1349197479664685168>"),
+                .setEmoji(fire_truck),
               new StringSelectMenuOptionBuilder()
                 .setLabel("Fire Report")
                 .setDescription("File an fire report.")
                 .setValue("crab_fire-report")
-                .setEmoji("<:crab_flame:1396639743260753941>"),
+                .setEmoji(flame),
               new StringSelectMenuOptionBuilder()
                 .setLabel("Medical Report")
                 .setDescription("File an medical report.")
                 .setValue("crab_medical-report")
-                .setEmoji("<:crab_medicalcross:1396639745362366527>")
+                .setEmoji(medical_cross)
             );
           const row = new ActionRowBuilder().addComponents(ReportSelectMenu);
           interaction.reply({
@@ -161,17 +162,17 @@ module.exports = {
                 .setLabel("Accident Report")
                 .setDescription("File an accident report on your vehicle.")
                 .setValue("crab_accident-report")
-                .setEmoji("<:crab_car:1409695280483270656>"),
+                .setEmoji(car),
               new StringSelectMenuOptionBuilder()
                 .setLabel("Repair Report")
                 .setDescription("File an repair report.")
                 .setValue("crab_repair-report")
-                .setEmoji("<:crab_barrier:1349197476003057676>"),
+                .setEmoji(barrier),
               new StringSelectMenuOptionBuilder()
                 .setLabel("Tow Report")
                 .setDescription("File an tow report.")
                 .setValue("crab_tow-report")
-                .setEmoji("<:crab_flag:1349595334463979550>")
+                .setEmoji(flag)
             );
           const row = new ActionRowBuilder().addComponents(ReportSelectMenu);
           interaction.reply({
@@ -236,28 +237,28 @@ module.exports = {
         }
       } else if (subcommand === "void") {
         const ReportId = interaction.options.getString("report-id")
-        await interaction.reply({ content: "<:crab_search:1412973394114248857> **Fetching** the report...", withResponse: true, })
+        await interaction.reply({ content: `${search} **Fetching** the report...` })
         const response = await interaction.fetchReply();
         const Report = await CrabReport.findOne({ guildId: interaction.guild.id, id: ReportId })
         if (!Report) {
-          return await interaction.editReply({ content: "<:crab_x:1409708189896671357> I was unable to locate a report with that id, please double check the ID and try again." })
+          return await interaction.editReply({ content: `${x} I was unable to locate a report with that id, please double check the ID and try again.` })
         }
         const confirmDelete = new ButtonBuilder()
         .setCustomId(`crab_button-confirm_delete:${response.id}:${interaction.user.id}:${ReportId}`)
-        .setEmoji("<:crab_check:1409695243816669316>")
+        .setEmoji(check)
         .setLabel("Confirm Delete")
         .setStyle(ButtonStyle.Danger)
          const cancelDelete = new ButtonBuilder()
         .setCustomId(`crab_button-cancel_delete:${response.id}:${interaction.user.id}`)
-        .setEmoji("<:crab_x:1409708189896671357>")
+        .setEmoji(x)
         .setLabel("Cancel Delete")
         .setStyle(ButtonStyle.Secondary)
 
         const confirmationRow = new ActionRowBuilder().addComponents(confirmDelete, cancelDelete)
-        await interaction.editReply({ content: "<:crab_check:1409695243816669316> I was able to locate a report with this id string, would you like to proceed and void the report?\n-# This action is **irreversible**.", components: [confirmationRow] })
+        await interaction.editReply({ content: `${check} I was able to locate a report with this id string, would you like to proceed and void the report?\n-# This action is **irreversible**.`, components: [confirmationRow] })
       }
     } else {
-      return interaction.reply("**Insufficient** permissions.");
+      return interaction.reply(`${x} **Insufficient** permissions.`);
     }
   },
 };

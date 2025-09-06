@@ -12,6 +12,7 @@ const {
 const CrabPromotion = require("../../schemas/CrabPromotion");
 const crabConfig = require("../../schemas/CrabConfig");
 const randomString = require("../../Functions/randomId")
+const { x, check, alert } = require("../../../emojis.json")
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("promotion")
@@ -58,7 +59,7 @@ module.exports = {
         interaction.member.roles.cache.has(HiComm) ||
         interaction.member.roles.cache.has(AARole)
       )) {
-        return interaction.reply({ content: "<:crab_x:1409708189896671357> **Insufficient** permissions.", flags: MessageFlags.Ephemeral })
+        return interaction.reply({ content: `${x} **Insufficient** permissions.`, flags: MessageFlags.Ephemeral })
       }
       if (subcommand === "issue") {
         const user = interaction.options.getUser("staff-member");
@@ -67,10 +68,10 @@ module.exports = {
           interaction.options.getString("punishment-notes") ||
           "No additional notes were provided.";
         if (user.id === interaction.user.id) {
-          return interaction.reply({ content: "<:crab_x:1409708189896671357> You cannot promote yourself.", flags: MessageFlags.Ephemeral }) 
+          return interaction.reply({ content: `${x} You cannot promote yourself.`, flags: MessageFlags.Ephemeral }) 
         }
          if (user.bot) {
-          return interaction.reply({ content: "<:crab_x:1409708189896671357> You cannot promote a bot.", flags: MessageFlags.Ephemeral }) 
+          return interaction.reply({ content: `${x} You cannot promote a bot.`, flags: MessageFlags.Ephemeral }) 
         }
         const newPromotion = new CrabPromotion({
           guildId: interaction.guild.id,
@@ -126,10 +127,10 @@ module.exports = {
           try {
             channel.send({ embeds: [embed] });
             await StaffMember.send({ embeds: [embed], components: [row] });
-            interaction.reply({ content: "**Successfully** sent the promotion!", flags: MessageFlags.Ephemeral })
+            interaction.reply({ content: `${check} **Successfully** sent the promotion!`, flags: MessageFlags.Ephemeral })
           } catch (error) {
             console.log(error)
-            return interaction.reply({ content: "I had an issue messaging the user, I have sent the promotion to the logging channel!", flags: MessageFlags.Ephemeral })
+            return interaction.reply({ content: `${alert} I had an issue messaging the user, I have sent the promotion to the logging channel!`, flags: MessageFlags.Ephemeral })
           }
 
         }

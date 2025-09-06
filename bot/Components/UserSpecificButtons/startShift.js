@@ -4,6 +4,7 @@ const UserShift = require("../../schemas/UserShift")
 const ShiftLog = require("../../schemas/ShiftLog")
 const humanizeDuration = require('humanize-duration')
 const responses = require("../../Functions/responses")
+const { clock_pause, clock_play, clock_stop } = require("../../../emojis.json")
 module.exports = {
   customIdPrefix: `crab-buttons_start-shift`,
   execute: async (interaction, client) => {
@@ -33,7 +34,7 @@ module.exports = {
       .addFields(
         {
           name: 'Current Status',
-          value: `<:crab_clock_play:1350635274857611375> On Duty`
+          value: `${clock_play} On Duty`
         },
         {
           name: 'Current Shift Time Online',
@@ -51,12 +52,12 @@ module.exports = {
       const BreakButton = new ButtonBuilder()
       .setCustomId(`crab-buttons_shift-break:${interaction.user.id}`)
       .setLabel('Toggle Break')
-      .setEmoji('<:crab_clock_pause:1350701435116847216>')
+      .setEmoji(clock_pause)
       .setStyle(ButtonStyle.Secondary)
       const EndButton = new ButtonBuilder()
       .setCustomId(`crab-buttons_shift-end:${interaction.user.id}`)
       .setLabel('End Shift')
-      .setEmoji('<:crab_clock_stop:1350701433980325979>')
+      .setEmoji(clock_stop)
       .setStyle(ButtonStyle.Danger)
       const newRow = new ActionRowBuilder().addComponents(startButton, BreakButton, EndButton)
       if (interaction.guild.roles.cache.has(OnDutyRole)) {
