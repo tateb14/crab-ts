@@ -38,7 +38,7 @@ module.exports = {
     .setEmoji(check)
 
     const row = new ActionRowBuilder().addComponents(ReviewButton)
-    const channel = await interaction.guild.channels.fetch(GuildConfig.records_Logs)
+    const channel = await interaction.guild.channels.fetch(GuildConfig.report_Logss_Logs)
     if (channel) {
       const ReportMessage = await channel.send({ content: `<@&${SupervisorRole}>, a new report has been submitted by ${interaction.user}. Please review it and click the button.`, embeds: [embed], components: [row] })
       interaction.reply({ content: "Your report has been submitted and you will be messaged when it is reviewed.", flags: MessageFlags.Ephemeral })
