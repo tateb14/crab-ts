@@ -349,7 +349,8 @@ module.exports = {
         try {
           const GuildShifts = await UserShift.find({
             guildId: interaction.guild.id,
-          });
+          })
+          GuildShifts.sort((a, b) => (b.shift_Total || 0) - (a.shift_Total || 0))
           let LeaderboardDescription = [];
           const embed = new EmbedBuilder()
             .setColor(0xec3935)
