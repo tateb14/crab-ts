@@ -12,6 +12,7 @@ const {
 const CrabPunishment = require("../../schemas/CrabPunishment");
 const crabConfig = require("../../schemas/CrabConfig");
 const randomString = require("../../Functions/randomId");
+const punishmentMap = new Map()
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("punishment")
@@ -106,9 +107,14 @@ module.exports = {
       const user = interaction.options.getUser("staff-member");
       const type = interaction.options.getString("punishment-type");
       const reason = interaction.options.getString("punishment-reason");
-      const notes =
-        interaction.options.getString("punishment-notes") ||
-        "No additional notes were provided.";
+      const notes =interaction.options.getString("punishment-notes") || "No additional notes were provided.";
+      await interaction.reply("<:crab_search:1412973394114248857> **Processing** you punishment...")
+      if (user.id === interaction.user.id) {
+        return await interaction.editReply({ content: "<:crab_x:1409708189896671357> You cannot punish yourself.", flags: MessageFlags.Ephemeral })
+      }
+      if (user.bot) {
+        return await interaction.editReply({ content: "<:crab_x:1409708189896671357> You cannot punish a bot.", flags: MessageFlags.Ephemeral })
+      }
       const newPunishment = new CrabPunishment({
         guildId: interaction.guild.id,
         punishment_id: punishmentId,
@@ -161,13 +167,13 @@ module.exports = {
       const PunishmentChannel = GuildConfig.punish_Logs;
       const StaffMember = await client.users.fetch(user);
       if (!PunishmentChannel) {
-        interaction.reply({ embeds: [embed] });
+        await interaction.editReply({ embeds: [embed] });
         await StaffMember.send({ embeds: [embed], components: [row] });
       } else {
         const channel = await interaction.guild.channels.fetch(
           PunishmentChannel
         );
-        interaction.reply({
+        await interaction.editReply({
           content: "<:crab_check:1409695243816669316> **Successfully** sent the punishment.",
           flags: MessageFlags.Ephemeral,
         });
@@ -176,7 +182,7 @@ module.exports = {
       }
     } else if (subcommand === "search") {
       const punishmentUser = interaction.options.getUser("punishment-user");
-      await interaction.reply({ content: "<:crab_search:1412973394114248857> Fetching punishment records...", flags: MessageFlags.Ephemeral })
+      await interaction.reply({ content: "<:crab_search:1412973394114248857> **Fetching** punishment records...", flags: MessageFlags.Ephemeral })
       const Punishments = await CrabPunishment.find({ guildId: interaction.guild.id, punishment_staffMember: punishmentUser.id }).limit(10).sort({ _id: -1 })
       let Embeds = []
       if (!Punishments.length) {
@@ -245,31 +251,29 @@ module.exports = {
             "<:crab_x:1409708189896671357> **Insufficient** permissions.",
         });
       }
-      const punishmentId = interaction.options.getString("punishment-id");
-      if (!punishmentId.startsWith("punishment_")) {
-        return interaction.reply({ content: "<:crab_x:1409708189896671357> I believe your are attempting to void a different type of log. You attempted to void a **punishment**.", flags: MessageFlags.Ephemeral })
-      }
-      const punishmentRecord = await CrabPunishment.findOneAndDelete({
-        punishment_id: punishmentId,
-      });
-
-      try {
-        if (punishmentRecord) {
-          interaction.reply({
-            content: `The punishment record has been found and deleted.\n-# Punishment ID: ${inlineCode(
-              punishmentId
-            )}`,
-            flags: MessageFlags.Ephemeral,
-          });
-        } else {
-          interaction.reply({
-            content: "No punishment record with that ID was found.",
-            flags: MessageFlags.Ephemeral,
-          });
+        const PunishmentId = interaction.options.getString("punishment-id")
+        await interaction.reply({ content: "<:crab_search:1412973394114248857> **Fetching** the punishment..." })
+        const response = await interaction.fetchReply();
+        const Punishment = await CrabPunishment.findOne({ guildId: interaction.guild.id, punishment_id: PunishmentId })
+        if (!Punishment) {
+          return await interaction.editReply({ content: "<:crab_x:1409708189896671357> I was unable to locate a punishment with that id, please double check the ID and try again." })
         }
-      } catch (error) {
-        console.error(error);
-      }
+        const tempId = Math.floor(100000 + Math.random() * 900000).toString();
+        punishmentMap.set(tempId, PunishmentId);
+        const confirmDelete = new ButtonBuilder()
+        .setCustomId(`crab_button-confirm_delete:${response.id}:${interaction.user.id}:${tempId}`)
+        .setEmoji("<:crab_check:1409695243816669316>")
+        .setLabel("Confirm Delete")
+        .setStyle(ButtonStyle.Danger)
+         const cancelDelete = new ButtonBuilder()
+        .setCustomId(`crab_button-cancel_delete:${response.id}:${interaction.user.id}`)
+        .setEmoji("<:crab_x:1409708189896671357>")
+        .setLabel("Cancel Delete")
+        .setStyle(ButtonStyle.Secondary)
+
+        const confirmationRow = new ActionRowBuilder().addComponents(confirmDelete, cancelDelete)
+        await interaction.editReply({ content: "<:crab_check:1409695243816669316> I was able to locate a punishment with this id string, would you like to proceed and void the report?\n-# This action is **irreversible**.", components: [confirmationRow] })
     }
   },
+  punishmentMap
 };
