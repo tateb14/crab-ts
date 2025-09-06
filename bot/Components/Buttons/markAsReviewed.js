@@ -9,7 +9,7 @@ module.exports = {
     const HiCommRole = GuildConfig.perms_HiCommRole
     const AARole = GuildConfig.perms_AllAccessRole
 
-    if (interaction.member.roles.cache.has(SupervisorRole || HiCommRole || AARole)) {
+    if (interaction.member.roles.cache.has(SupervisorRole) || interaction.member.roles.cache.has(HiCommRole) || interaction.member.roles.cache.has(AARole)) {
       console.log()
       const Report = await GuildReport.findOne(
       { messageId: interaction.message.id },
