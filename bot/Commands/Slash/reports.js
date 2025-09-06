@@ -5,6 +5,8 @@ const {
   StringSelectMenuOptionBuilder,
   ActionRowBuilder,
   MessageFlags,
+  ButtonBuilder,
+  ButtonStyle,
 } = require("discord.js");
 const CrabConfig = require("../../schemas/CrabConfig");
 const CrabReport = require("../../schemas/GuildReport");
@@ -182,12 +184,7 @@ module.exports = {
         }
       } else if (subcommand === "search") {
         const userId = interaction.options.getUser("staff-username").id;
-        const UserReports = await CrabReport.find({
-          guildId: interaction.guild.id,
-          IssuedBy: userId,
-        })
-          .sort({ _id: -1 })
-          .limit(10);
+        const UserReports = await CrabReport.find({guildId: interaction.guild.id, IssuedBy: userId,}).sort({ _id: -1 }).limit(10);
         if (UserReports.length === 0) {
           return interaction.reply({
             content: "This user has not yet created a report.",
@@ -238,10 +235,29 @@ module.exports = {
           });
         }
       } else if (subcommand === "void") {
-        const Report = await GuildReports.Findone();
+        const ReportId = interaction.options.getString("report-id")
+        await interaction.reply({ content: "<:crab_search:1412973394114248857> **Fetching** the report...", withResponse: true, })
+        const response = await interaction.fetchReply();
+        const Report = await CrabReport.findOne({ guildId: interaction.guild.id, id: ReportId })
+        if (!Report) {
+          return await interaction.editReply({ content: "<:crab_x:1409708189896671357> I was unable to locate a report with that id, please double check the ID and try again." })
+        }
+        const confirmDelete = new ButtonBuilder()
+        .setCustomId(`crab_button-confirm_delete:${response.id}:${interaction.user.id}:${ReportId}`)
+        .setEmoji("<:crab_check:1409695243816669316>")
+        .setLabel("Confirm Delete")
+        .setStyle(ButtonStyle.Danger)
+         const cancelDelete = new ButtonBuilder()
+        .setCustomId(`crab_button-cancel_delete:${response.id}:${interaction.user.id}`)
+        .setEmoji("<:crab_x:1409708189896671357>")
+        .setLabel("Cancel Delete")
+        .setStyle(ButtonStyle.Secondary)
+
+        const confirmationRow = new ActionRowBuilder().addComponents(confirmDelete, cancelDelete)
+        await interaction.editReply({ content: "<:crab_check:1409695243816669316> I was able to locate a report with this id string, would you like to proceed and void the report?\n-# This action is **irreversible**.", components: [confirmationRow] })
       }
     } else {
-      interaction.reply("**Insufficient** permissions.");
+      return interaction.reply("**Insufficient** permissions.");
     }
   },
 };
