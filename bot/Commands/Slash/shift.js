@@ -15,6 +15,7 @@ const ShiftLog = require("../../schemas/ShiftLog");
 const humanizeDuration = require("humanize-duration");
 const randomString = require("../../Functions/randomId");
 const capitalizeFirstLetter = require("../../Functions/capitalizeFirstLetter");
+const { x, check, clock_pause, clock_stop, clock_play, clock } = require("../../../emojis.json")
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("shift")
@@ -96,7 +97,7 @@ module.exports = {
         }
         if (shiftType !== "default") {
         if (!departmentTypes.includes(shiftType)) {
-          return interaction.reply({ content: `<:crab_x:1409708189896671357> The shift type you selected, ${inlineCode(capitalizeFirstLetter(shiftType))}, is not an approved shift in this department.` })
+          return interaction.reply({ content: `${x} The shift type you selected, ${inlineCode(capitalizeFirstLetter(shiftType))}, is not an approved shift in this department.` })
         }
       }
           const onDuty = userInfo.shift_OnDuty === true;
@@ -119,7 +120,7 @@ module.exports = {
               .addFields(
                 {
                   name: "Current Status",
-                  value: `<:crab_break:1350630809580732569> On Break`,
+                  value: `${clock_pause} On Break`,
                 },
                 {
                   name: "Total Time Online",
@@ -132,19 +133,19 @@ module.exports = {
               );
             const startButton = new ButtonBuilder()
               .setCustomId(`crab-buttons_start-shift:${interaction.user.id}`)
-              .setEmoji("<:crab_clock_play:1350635274857611375>")
+              .setEmoji(clock_play)
               .setLabel("Start Shift")
               .setDisabled(true)
               .setStyle(ButtonStyle.Success);
             const BreakButton = new ButtonBuilder()
               .setCustomId(`crab-buttons_shift-break:${interaction.user.id}`)
               .setLabel("Toggle Break")
-              .setEmoji("<:crab_clock_pause:1350701435116847216>")
+              .setEmoji(clock_pause)
               .setStyle(ButtonStyle.Secondary);
             const EndButton = new ButtonBuilder()
               .setCustomId(`crab-buttons_shift-end:${interaction.user.id}`)
               .setLabel("End Shift")
-              .setEmoji("<:crab_clock_stop:1350701433980325979>")
+              .setEmoji(clock_stop)
               .setStyle(ButtonStyle.Danger);
             const row = new ActionRowBuilder().addComponents(
               startButton,
@@ -165,7 +166,7 @@ module.exports = {
               .addFields(
                 {
                   name: "Current Status",
-                  value: `<:crab_online:1350630807022207017> On Duty`,
+                  value: `${clock_play} On Duty`,
                 },
                 {
                   name: "Time Online",
@@ -178,19 +179,19 @@ module.exports = {
               );
             const startButton = new ButtonBuilder()
               .setCustomId(`crab-buttons_start-shift:${interaction.user.id}`)
-              .setEmoji("<:crab_clock_play:1350635274857611375>")
+              .setEmoji(clock_play)
               .setLabel("Start Shift")
               .setDisabled(true)
               .setStyle(ButtonStyle.Success);
             const BreakButton = new ButtonBuilder()
               .setCustomId(`crab-buttons_shift-break:${interaction.user.id}`)
               .setLabel("Toggle Break")
-              .setEmoji("<:crab_clock_pause:1350701435116847216>")
+              .setEmoji(clock_pause)
               .setStyle(ButtonStyle.Secondary);
             const EndButton = new ButtonBuilder()
               .setCustomId(`crab-buttons_shift-end:${interaction.user.id}`)
               .setLabel("End Shift")
-              .setEmoji("<:crab_clock_stop:1350701433980325979>")
+              .setEmoji(clock_stop)
               .setStyle(ButtonStyle.Danger);
             const row = new ActionRowBuilder().addComponents(
               startButton,
@@ -211,7 +212,7 @@ module.exports = {
               .addFields(
                 {
                   name: "Current Status",
-                  value: `<:crab_offline:1350630808666374205> Off Duty`,
+                  value: `${clock_stop} Off Duty`,
                 },
                 {
                   name: "Time Online",
@@ -224,7 +225,7 @@ module.exports = {
               );
             const startButton = new ButtonBuilder()
               .setCustomId(`crab-buttons_start-shift:${interaction.user.id}`)
-              .setEmoji("<:crab_clock_play:1350635274857611375>")
+              .setEmoji(clock_play)
               .setLabel("Start Shift")
               .setStyle(ButtonStyle.Success);
             const row = new ActionRowBuilder().addComponents(startButton);
@@ -349,7 +350,8 @@ module.exports = {
         try {
           const GuildShifts = await UserShift.find({
             guildId: interaction.guild.id,
-          });
+          })
+          GuildShifts.sort((a, b) => (b.shift_Total || 0) - (a.shift_Total || 0))
           let LeaderboardDescription = [];
           const embed = new EmbedBuilder()
             .setColor(0xec3935)

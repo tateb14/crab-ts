@@ -1,5 +1,5 @@
 const { EmbedBuilder, ChannelSelectMenuBuilder, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js')
-
+const { back_arrow } = require("../../../emojis.json")
 module.exports = {
   customId: 'crab-sm_records',
   execute: async (interaction) => {
@@ -14,7 +14,7 @@ module.exports = {
     .setMaxValues(1);
     const backButton = new ButtonBuilder()
     .setCustomId('crab-button_back')
-    .setEmoji("<:crab_back_arrow:1350551176780972113>")
+    .setEmoji(back_arrow)
     .setLabel('Back')
     .setStyle(ButtonStyle.Success);
     const row = new ActionRowBuilder().addComponents(RecordLogsMenu)

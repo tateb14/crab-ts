@@ -7,6 +7,7 @@ const CrabConfig = require("../../schemas/CrabConfig");
 const CrabShifts = require("../../schemas/UserShift");
 const humanizeDuration = require('humanize-duration')
 const responses = require("../../Functions/responses")
+const { clock_play, clock_pause } = require("../../../emojis.json")
 module.exports = {
   customIdPrefix: "crab-buttons_shift-break",
   execute: async (interaction, client) => {
@@ -45,7 +46,7 @@ module.exports = {
           .addFields(
             {
               name: "Current Status",
-              value: `<:crab_break:1350630809580732569> On Break`,
+              value: `${clock_pause} On Break`,
             },
             {
               name: "Current Shift Time Online",
@@ -90,7 +91,7 @@ module.exports = {
       .addFields(
         {
           name: 'Current Status',
-          value: `<:crab_online:1350630807022207017> On Duty`
+          value: `${clock_play} On Duty`
         },
         {
           name: 'Current Shift Time Online',

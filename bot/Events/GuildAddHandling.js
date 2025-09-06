@@ -15,8 +15,15 @@ module.exports = {
       .setFooter({ text: "Crab Legal Affairs Team" })
       .setTitle("Crab Exclusion Notice")
       .setTimestamp()
+
+      const serverButton = new ButtonBuilder()
+        .setCustomId("crab-button_server-name-disabled")
+        .setDisabled(true)
+        .setStyle(ButtonStyle.Secondary)
+        .setLabel(`Official Notice from Tropical Systems`)
+      const row = new ActionRowBuilder().addComponents(serverButton)
       try {
-        await user.send({ embeds: [ExclusionEmbed] })
+        await user.send({ embeds: [ExclusionEmbed], components: [row] })
       } catch (error) {
         return
       }

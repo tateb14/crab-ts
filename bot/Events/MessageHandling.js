@@ -1,7 +1,9 @@
 const crabConfig = require("../schemas/CrabConfig");
 const CrabGuildExclusion = require("../schemas/CrabGuildExclusion");
 const CrabUserExclusion = require("../schemas/CrabUserExclusion");
-const { EmbedBuilder, inlineCode, codeBlock } = require("discord.js")
+const { EmbedBuilder, inlineCode, codeBlock } = require("discord.js");
+const { errorLogs, onCallRole } = require("../../config.json");
+const { x, shield } = require("../../emojis.json")
 module.exports = {
   event: "messageCreate",
   once: false,
@@ -15,7 +17,7 @@ module.exports = {
     });
     if (GuildExluded) {
       message.reply(
-        "<:crab_shield:1349197477198168249> This guild has been excluded from this service, the bot will now leave the guild."
+        `${shield} This guild has been excluded from this service, the bot will now leave the guild.`
       );
       const ExclusionEmbed = new EmbedBuilder()
         .setColor(0xec3935)
@@ -25,17 +27,24 @@ module.exports = {
         .setFooter({ text: "Crab Legal Affairs Team" })
         .setTitle("Crab Exclusion Notice")
         .setTimestamp();
+
+      const serverButton = new ButtonBuilder()
+        .setCustomId("crab-button_server-name-disabled")
+        .setDisabled(true)
+        .setStyle(ButtonStyle.Secondary)
+        .setLabel(`Official Notice from Tropical Systems`);
+      const row = new ActionRowBuilder().addComponents(serverButton);
       const user = await message.guild.fetchOwner();
       try {
-      await user.send({ embeds: [ExclusionEmbed] });
+        await user.send({ embeds: [ExclusionEmbed], components: [row] });
       } catch (error) {
-        return
+        return;
       }
       client.guilds.cache.get(message.guild.id).leave();
       return;
     } else if (UserExcluded) {
       return message.reply(
-        "<:crab_shield:1349197477198168249> You have been excluded from this service and cannot run any commands."
+        `${shield} You have been excluded from this service and cannot run any commands.`
       );
     }
     try {
@@ -54,8 +63,7 @@ module.exports = {
       if (!Command) return;
       await Command.execute(message, client, args);
     } catch (error) {
-      const logChannel = "1398876136938799176";
-      const channel = await client.channels.fetch(logChannel);
+      const channel = await client.channels.fetch(errorLogs);
       const ErrorEmbed = new EmbedBuilder()
         .setTitle("Error Report")
         .setColor(0xec3935)
@@ -66,9 +74,7 @@ module.exports = {
         .addFields(
           {
             name: "Guild Information",
-            value: `${message.guild.name} :: ${inlineCode(
-              message.guild.id
-            )}`,
+            value: `${message.guild.name} :: ${inlineCode(message.guild.id)}`,
           },
           {
             name: "User Information",
@@ -87,11 +93,11 @@ module.exports = {
         );
       await channel.send({
         embeds: [ErrorEmbed],
-        content: "<@&1404203220695257241>",
+        content: `<@&${onCallRole}>`,
       });
       interaction.reply({
         content:
-          "There was an error while trying to execute this command! The issue has been reported to [Tropical Systems](https://discord.gg/8XScx8MNfE).",
+          `${x} There was an error while trying to execute this command! The issue has been reported to [Tropical Systems](https://discord.gg/8XScx8MNfE).`,
         flags: ["Ephemeral"],
       });
       console.log(

@@ -6,7 +6,7 @@ const {
   ActionRowBuilder
 } = require("discord.js");
 const UserFlag = require("../../schemas/CrabUserFlags");
-
+const { icon, alert } = require("../../../emojis.json")
 module.exports = {
   command: "flag",
   aliases: ["f"],
@@ -29,7 +29,7 @@ module.exports = {
       const UserInformation = await client.users.fetch(UserID);
       const embed = new EmbedBuilder()
         .setColor(0xec3935)
-        .setTitle("<:CrabIconWhite:1409689393161175091> Flag Application Panel")
+        .setTitle(`${icon} Flag Application Panel`)
         .setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&")
         .setDescription(
           `Please select which flag(s) to apply to <@${UserID}>. Once you have selected which flags to apply, they will automatically save. They will be displayed when using the ${inlineCode(
@@ -48,43 +48,43 @@ module.exports = {
           new StringSelectMenuOptionBuilder()
             .setLabel("Staff Impersonation Flag")
             .setDescription("This user has been caught allegedly impersonating staff of Tropical Systems.")
-            .setEmoji("<:crab_alert:1400664519339937974>")
+            .setEmoji(alert)
             .setValue("staff_impersonation"),
 
           new StringSelectMenuOptionBuilder()
             .setLabel("Exploiter Flag")
             .setDescription("This user has been caught attempting to exploit with our service.")
-            .setEmoji("<:crab_alert:1400664519339937974>")
+            .setEmoji(alert)
             .setValue("exploiter"),
 
           new StringSelectMenuOptionBuilder()
             .setLabel("Phishing/Scam Flag")
             .setDescription("This user has been caught using Crab to send scam/phishing links.")
-            .setEmoji("<:crab_alert:1400664519339937974>")
+            .setEmoji(alert)
             .setValue("scam"),
 
           new StringSelectMenuOptionBuilder()
             .setLabel("Raid/Spam Flag")
             .setDescription("This user has been caught in raid/spam activities.")
-            .setEmoji("<:crab_alert:1400664519339937974>")
+            .setEmoji(alert)
             .setValue("raid"),
 
           new StringSelectMenuOptionBuilder()
             .setLabel("Harassment Flag")
             .setDescription("This user has been caught harassing other individuals.")
-            .setEmoji("<:crab_alert:1400664519339937974>")
+            .setEmoji(alert)
             .setValue("harassment"),
 
           new StringSelectMenuOptionBuilder()
             .setLabel("Threats Flag")
             .setDescription("This user has been caught threatening other members.")
-            .setEmoji("<:crab_alert:1400664519339937974>")
+            .setEmoji(alert)
             .setValue("threats"),
 
           new StringSelectMenuOptionBuilder()
             .setLabel("Alt Account Flag")
             .setDescription("This user has used alternate accounts to evade punishments.")
-            .setEmoji("<:crab_alert:1400664519339937974>")
+            .setEmoji(alert)
             .setValue("alt_account")
         );
 

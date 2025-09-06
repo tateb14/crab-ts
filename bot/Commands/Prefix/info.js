@@ -1,10 +1,11 @@
 const { EmbedBuilder, inlineCode } = require("discord.js")
+const { icon } = require("../../../emojis.json")
 module.exports = {
   command: "info",
   aliases: ["i", "information"],
   execute: async (message, client) => {
     const embed = new EmbedBuilder()
-    .setTitle("<:CrabIconWhite:1409689393161175091> Crab Information")
+    .setTitle(`${icon} Crab Information`)
     .setDescription(`Crab is a versatile, one of a kind department management bot. Forget any other bot, Crab's sole purpose is to manage your department, with ease! We have each essential department type: **Law Enforcement, Fire and Medical, and Department of Transportation** for your leisure.`)
     .setFooter({ text: `Guild Count: ${client.guilds.cache.size} | Member Count: ${client.users.cache.size}` })
     .setColor(0xec3935)

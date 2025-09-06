@@ -7,10 +7,13 @@ const {
   ActionRowBuilder,
   MessageFlags,
   inlineCode,
+  Message,
 } = require("discord.js");
 const CrabPunishment = require("../../schemas/CrabPunishment");
 const crabConfig = require("../../schemas/CrabConfig");
 const randomString = require("../../Functions/randomId");
+const punishmentMap = new Map()
+const { x, check, search } = require("../../../emojis.json")
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("punishment")
@@ -55,12 +58,12 @@ module.exports = {
     .addSubcommand((subcommand) =>
       subcommand
         .setName("search")
-        .setDescription("Search a punishment via identification string.")
-        .addStringOption((option) =>
+        .setDescription("Search a punishment via user.")
+        .addUserOption((option) =>
           option
-            .setName("punishment-id")
+            .setName("punishment-user")
             .setDescription(
-              "The punishment identiification number given when the punishment was issued."
+              "The punished user you wish to search."
             )
             .setRequired(true)
         )
@@ -98,16 +101,21 @@ module.exports = {
       )
     ) {
       return interaction.reply({
-        content: "<:crab_x:1409708189896671357> **Insufficient** permissions.",
+        content: `${x} **Insufficient** permissions.`,
       });
     }
     if (subcommand === "issue") {
       const user = interaction.options.getUser("staff-member");
       const type = interaction.options.getString("punishment-type");
       const reason = interaction.options.getString("punishment-reason");
-      const notes =
-        interaction.options.getString("punishment-notes") ||
-        "No additional notes were provided.";
+      const notes =interaction.options.getString("punishment-notes") || "No additional notes were provided.";
+      await interaction.reply(`${search} **Processing** you punishment...`)
+      if (user.id === interaction.user.id) {
+        return await interaction.editReply({ content: `${x} You cannot punish yourself.`, flags: MessageFlags.Ephemeral })
+      }
+      if (user.bot) {
+        return await interaction.editReply({ content: `${x} You cannot punish a bot.`, flags: MessageFlags.Ephemeral })
+      }
       const newPunishment = new CrabPunishment({
         guildId: interaction.guild.id,
         punishment_id: punishmentId,
@@ -116,6 +124,7 @@ module.exports = {
         punishment_staffMember: user.id,
         punishment_type: type,
         punishment_notes: notes,
+        punishment_date: Date.now()
       });
       await newPunishment.save();
       const embed = new EmbedBuilder()
@@ -149,74 +158,87 @@ module.exports = {
           text: `Punishment ID: ${punishmentId} || Powered by Crab`,
         })
         .setTimestamp();
+
+      const serverButton = new ButtonBuilder()
+        .setCustomId("crab-button_server-name-disabled")
+        .setDisabled(true)
+        .setStyle(ButtonStyle.Secondary)
+        .setLabel(`Sent from ${interaction.guild.name}`)
+      const row = new ActionRowBuilder().addComponents(serverButton)
       const PunishmentChannel = GuildConfig.punish_Logs;
       const StaffMember = await client.users.fetch(user);
       if (!PunishmentChannel) {
-        interaction.reply({ embeds: [embed] });
-        await StaffMember.send({ embeds: [embed] });
+        await interaction.editReply({ embeds: [embed] });
+        await StaffMember.send({ embeds: [embed], components: [row] });
       } else {
         const channel = await interaction.guild.channels.fetch(
           PunishmentChannel
         );
-        interaction.reply({
-          content: "**Successfully** sent the punishment.",
+        await interaction.editReply({
+          content: `${check} **Successfully** sent the punishment.`,
           flags: MessageFlags.Ephemeral,
         });
         channel.send({ embeds: [embed] });
-        await StaffMember.send({ embeds: [embed] });
+        await StaffMember.send({ embeds: [embed], components: [row] });
       }
     } else if (subcommand === "search") {
-      const punishmentId = interaction.options.getString("punishment-id");
-      const PunishmentResult = await CrabPunishment.findOne({
-        guildId: interaction.guild.id,
-        punishment_id: punishmentId,
-      });
-      if (!PunishmentResult || PunishmentResult.length === 0) {
-        return interaction.reply({
-          content: "No punishment was found under that identificaiton string.",
-          flags: MessageFlags.Ephemeral,
-        });
-      } else {
-        const embed = new EmbedBuilder()
-          .setAuthor({
-            name: `Search requested by @${interaction.user.username}`,
-            iconURL: interaction.user.displayAvatarURL(),
-          })
-          .setTitle("Departmental Punishment")
-          .setImage(
-            "https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&"
-          )
-          .setColor(0xec3935)
-          .setDescription(
-            `A departmental punishment has been **found**, addressed to <@${PunishmentResult.punishment_staffMember}>. Details have been provided below.`
-          )
-          .addFields(
+      const punishmentUser = interaction.options.getUser("punishment-user");
+      await interaction.reply({ content: `${search} **Fetching** punishment records...`, flags: MessageFlags.Ephemeral })
+      const Punishments = await CrabPunishment.find({ guildId: interaction.guild.id, punishment_staffMember: punishmentUser.id }).limit(10).sort({ _id: -1 })
+      let Embeds = []
+      if (!Punishments.length) {
+        return await interaction.editReply({ content: `${x} I could not find any punishments registered to that user.`, flags: MessageFlags.Ephemeral })
+      }
+      for (const Punishment of Punishments) {
+        const Issuer = await interaction.client.users.fetch(Punishment.punishment_issuedBy)
+        const User = await interaction.client.users.fetch(Punishment.punishment_staffMember)
+        const DateIssued = Punishment.punishment_date
+        const PunishmentEmbed = new EmbedBuilder()
+        .setAuthor({
+          name: `Issued by @${Issuer.username}`,
+          iconURL: Issuer.displayAvatarURL(),
+        })
+        .setImage(
+          "https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&"
+        )
+        .setTitle("Departmental Punishment")
+        .setColor(0xec3935)
+        .setDescription(
+          `A departmental punishment has been issued to ${User}. Details have been provided by the issuing supervisor below.`
+        )
+        .addFields(
+          {
+            name: "Punishment Type",
+            value: `${Punishment.punishment_type}`,
+          },
+          {
+            name: "Punishment Reason",
+            value: `${Punishment.punishment_reason}`,
+          },
+          {
+            name: "Punishment Notes",
+            value: `${Punishment.punishment_notes}`,
+          }
+        )
+        .setFooter({
+          text: `Punishment ID: ${Punishment.punishment_id} || Powered by Crab`,
+        })
+
+        if (!Date) {
+          Embeds.push(PunishmentEmbed)
+        } else {
+          PunishmentEmbed.addFields(
             {
-              name: "Punishment Type",
-              value: `${PunishmentResult.punishment_type}`,
-            },
-            {
-              name: "Punishment Reason",
-              value: `${PunishmentResult.punishment_reason}`,
-            },
-            {
-              name: "Punishment Notes",
-              value: `${PunishmentResult.punishment_notes}`,
-            },
-            {
-              name: "Punishment Issuer",
-              value: `<@${PunishmentResult.punishment_issuedBy}>`,
+              name: "Punishment Issued:",
+              value: `<t:${Math.floor(DateIssued / 1000)}:D>`
             }
           )
-          .setFooter({
-            text: `Punishment ID: ${punishmentId} || Powered by Crab`,
-          });
-        interaction.reply({
-          content: "A punishment log has been located and is displayed below.",
-          embeds: [embed],
-          flags: MessageFlags.Ephemeral,
-        });
+          Embeds.push(PunishmentEmbed)
+        }
+
       }
+      return interaction.editReply({ content: `${check} **Successfully** fetched the records!`, embeds: Embeds, flags: MessageFlags.Ephemeral })
+      // ! ADD A DROPDOWN MENU TO SELECT WHICH ONE TO REMOVE (IF ADDING A VOID FEATURE) -- OR -- SHOW ONE RECORD PER PAGE
     }
     if (subcommand === "void") {
       if (
@@ -227,30 +249,32 @@ module.exports = {
       ) {
         return interaction.reply({
           content:
-            "<:crab_x:1409708189896671357> **Insufficient** permissions.",
+            `${x} **Insufficient** permissions.`,
         });
       }
-      const punishmentId = interaction.options.getString("punishment-id");
-      const punishmentRecord = await CrabPunishment.findOneAndDelete({
-        punishment_id: punishmentId,
-      });
-      try {
-        if (punishmentRecord) {
-          interaction.reply({
-            content: `The punishment record has been found and deleted.\n-# Punishment ID: ${inlineCode(
-              punishmentId
-            )}`,
-            flags: MessageFlags.Ephemeral,
-          });
-        } else {
-          interaction.reply({
-            content: "No punishment record with that ID was found.",
-            flags: MessageFlags.Ephemeral,
-          });
+        const PunishmentId = interaction.options.getString("punishment-id")
+        await interaction.reply({ content: `${search} **Fetching** the punishment...` })
+        const response = await interaction.fetchReply();
+        const Punishment = await CrabPunishment.findOne({ guildId: interaction.guild.id, punishment_id: PunishmentId })
+        if (!Punishment) {
+          return await interaction.editReply({ content: `${x} I was unable to locate a punishment with that id, please double check the ID and try again.` })
         }
-      } catch (error) {
-        console.error(error);
-      }
+        const tempId = Math.floor(100000 + Math.random() * 900000).toString();
+        punishmentMap.set(tempId, PunishmentId);
+        const confirmDelete = new ButtonBuilder()
+        .setCustomId(`crab_button-confirm_delete:${response.id}:${interaction.user.id}:${tempId}`)
+        .setEmoji(check)
+        .setLabel("Confirm Delete")
+        .setStyle(ButtonStyle.Danger)
+         const cancelDelete = new ButtonBuilder()
+        .setCustomId(`crab_button-cancel_delete:${response.id}:${interaction.user.id}`)
+        .setEmoji(x)
+        .setLabel("Cancel Delete")
+        .setStyle(ButtonStyle.Secondary)
+
+        const confirmationRow = new ActionRowBuilder().addComponents(confirmDelete, cancelDelete)
+        await interaction.editReply({ content: `${check} I was able to locate a punishment with this id string, would you like to proceed and void the report?\n-# This action is **irreversible**.`, components: [confirmationRow] })
     }
   },
+  punishmentMap
 };

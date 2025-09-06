@@ -1,6 +1,8 @@
 const { EmbedBuilder, inlineCode, codeBlock } = require("discord.js");
 const CrabGuildExclusion = require("../schemas/CrabGuildExclusion");
 const CrabUserExclusion = require("../schemas/CrabUserExclusion");
+const { errorLogs, onCallRole } = require("../../config.json");
+const { shield, x } = require("../../emojis.json")
 module.exports = {
   event: "interactionCreate",
   once: false,
@@ -13,7 +15,7 @@ module.exports = {
     });
     if (GuildExluded) {
       interaction.reply(
-        "<:crab_shield:1349197477198168249> This guild has been excluded from this service, the bot will now leave the guild."
+        `${shield} This guild has been excluded from this service, the bot will now leave the guild.`
       );
       const user = await guild.fetchOwner();
       const ExclusionEmbed = new EmbedBuilder()
@@ -24,93 +26,114 @@ module.exports = {
         .setFooter({ text: "Crab Legal Affairs Team" })
         .setTitle("Crab Exclusion Notice")
         .setTimestamp();
+      const serverButton = new ButtonBuilder()
+        .setCustomId("crab-button_server-name-disabled")
+        .setDisabled(true)
+        .setStyle(ButtonStyle.Secondary)
+        .setLabel(`Official Notice from Tropical Systems`);
+      const row = new ActionRowBuilder().addComponents(serverButton);
       try {
-        await user.send({ embeds: [ExclusionEmbed] });
+        await user.send({ embeds: [ExclusionEmbed], components: [row] });
       } catch (error) {
-        return
+        return;
       }
       client.guilds.cache.get(interaction.guild.id).leave();
       return;
     } else if (UserExcluded) {
       return interaction.reply(
-        "<:crab_shield:1349197477198168249> You have been excluded from this service and cannot run any commands."
+        `${shield} You have been excluded from this service and cannot run any commands.`
       );
     }
     try {
       if (interaction.isAutocomplete()) {
-          const command = client.slashCommands.get(interaction.commandName);
-          if (!command || typeof command.autocomplete !== "function") return;
-  
-          await command.autocomplete(interaction, client);
+        const command = client.slashCommands.get(interaction.commandName);
+        if (!command || typeof command.autocomplete !== "function") return;
+
+        await command.autocomplete(interaction, client);
       }
       if (interaction.isCommand()) {
-          const Command = client.slashCommands.get(interaction.commandName);
-          if (!Command) {
-            interaction.reply({
-              content: "This command could not be found!",
-              flags: ["Ephemeral"],
-            });
-            return;
-          }
-          await Command.execute(interaction, client);
+        const Command = client.slashCommands.get(interaction.commandName);
+        if (!Command) {
+          interaction.reply({
+            content: "This command could not be found!",
+            flags: ["Ephemeral"],
+          });
+          return;
+        }
+        await Command.execute(interaction, client);
       } else if (interaction.isButton()) {
-          const Button = client.buttons.get(interaction.customId);
-          const UserButton = [...client.userButtons.values()].find((b) =>
-            interaction.customId.startsWith(b.customIdPrefix)
-          );
-  
-          if (!Button && !UserButton) {
-            return interaction.reply({
-              content: "This button could not be found!",
-              flags: ["Ephemeral"],
-            });
-          }
-  
-          if (Button) {
-            await Button.execute(interaction, client);
-          } else if (UserButton) {
-            await UserButton.execute(interaction, client);
-          }
+        const Button = client.buttons.get(interaction.customId);
+        const UserButton = [...client.userButtons.values()].find((b) =>
+          interaction.customId.startsWith(b.customIdPrefix)
+        );
+
+        if (!Button && !UserButton) {
+          return interaction.reply({
+            content: "This button could not be found!",
+            flags: ["Ephemeral"],
+          });
+        }
+
+        if (Button) {
+          await Button.execute(interaction, client);
+        } else if (UserButton) {
+          await UserButton.execute(interaction, client);
+        }
       } else if (interaction.isAnySelectMenu()) {
-          const SelectMenu =
-            client.selectMenus.get(interaction.values[0]) ||
-            client.selectMenus.get(interaction.customId);
-          const UserSelectMenu = [...client.userSMs.values()].find((sm) =>
-            interaction.customId.startsWith(sm.customIdPrefix)
-          );
-          if (!SelectMenu && !UserSelectMenu) {
-            interaction.reply({
-              content: "This select menu could not be found!",
-              flags: ["Ephemeral"],
-            });
-            return;
-          }
-          if (SelectMenu) {
-            await SelectMenu.execute(interaction, client);
-          } else if (UserSelectMenu) {
-            await UserSelectMenu.execute(interaction, client);
-          }
+        const SelectMenu =
+          client.selectMenus.get(interaction.values[0]) ||
+          client.selectMenus.get(interaction.customId);
+        const UserSelectMenu = [...client.userSMs.values()].find((sm) =>
+          interaction.customId.startsWith(sm.customIdPrefix)
+        );
+        if (!SelectMenu && !UserSelectMenu) {
+          interaction.reply({
+            content: "This select menu could not be found!",
+            flags: ["Ephemeral"],
+          });
+          return;
+        }
+        if (SelectMenu) {
+          await SelectMenu.execute(interaction, client);
+        } else if (UserSelectMenu) {
+          await UserSelectMenu.execute(interaction, client);
+        }
       } else if (interaction.isModalSubmit()) {
-          const Modal = client.modals.get(interaction.customId);
-          const typeModals = [...client.typeModals.values()].find((tm) =>
-            interaction.customId.startsWith(tm.customIdPrefix)
-          );
-          if (!Modal && !typeModals) {
-            interaction.reply({
-              content: "This select menu could not be found!",
-              flags: ["Ephemeral"],
-            });
-            return;
-          }
-          if (Modal) {
-            await Modal.execute(interaction, client);
-          } else if (typeModals) {
-            await typeModals.execute(interaction, client);
-          }
+        const Modal = client.modals.get(interaction.customId);
+        const typeModals = [...client.typeModals.values()].find((tm) =>
+          interaction.customId.startsWith(tm.customIdPrefix)
+        );
+        if (!Modal && !typeModals) {
+          interaction.reply({
+            content: "This select menu could not be found!",
+            flags: ["Ephemeral"],
+          });
+          return;
+        }
+        if (Modal) {
+          await Modal.execute(interaction, client);
+        } else if (typeModals) {
+          await typeModals.execute(interaction, client);
+        }
       } else return;
     } catch (error) {
-      const logChannel = "1398876136938799176";
-      const channel = await client.channels.fetch(logChannel);
+      const channel = await client.channels.fetch(errorLogs);
+      const guildName = interaction.guild?.name || "DM or Unknown Guild";
+      const guildId = interaction.guild?.id || "N/A";
+      const username = interaction.user?.username || "Unknown User";
+      const userId = interaction.user?.id || "N/A";
+
+      const safeError =
+        (error instanceof Error ? error.message : String(error)) ||
+        "Unknown error";
+      const safeErrorTrunc = safeError.slice(0, 1024);
+
+      // slice stack BEFORE wrapping in codeBlock
+      const safeStackRaw = (error.stack || "No stack trace available")
+        .toString()
+        .slice(0, 1000);
+      const safeStack = codeBlock(safeStackRaw);
+
       const ErrorEmbed = new EmbedBuilder()
         .setTitle("Error Report")
         .setColor(0xec3935)
@@ -121,37 +144,33 @@ module.exports = {
         .addFields(
           {
             name: "Guild Information",
-            value: `${interaction.guild.name} :: ${inlineCode(
-              interaction.guild.id
-            )}`,
+            value: `${guildName} :: ${inlineCode(guildId)}`,
           },
           {
             name: "User Information",
-            value: `${interaction.user.username} :: ${inlineCode(
-              interaction.user.id
-            )}`,
+            value: `${username} :: ${inlineCode(userId)}`,
           },
           {
             name: "Error Log",
-            value: `${error}`,
+            value: safeErrorTrunc,
           },
           {
             name: "Error Stack",
-            value: `${codeBlock(error.stack)}`,
+            value: safeStack,
           }
         );
       await channel.send({
         embeds: [ErrorEmbed],
-        content: "<@&1404203220695257241>",
+        content: `<@&${onCallRole}>`,
       });
-      interaction.channel.send({
-        content: "There was an error while trying to execute this command! The issue has been reported to [Tropical Systems](<https://discord.gg/8XScx8MNfE>).",
+      interaction.editReply({
+        content:
+          `${x} There was an error while trying to execute this command! The issue has been reported to [Tropical Systems](<https://discord.gg/8XScx8MNfE>).`,
         flags: ["Ephemeral"],
       });
       console.log(
         `[ SYSTEM ][ INTERACTION ERROR ] There was an error while executing an interaction!\nError Stack: ${error.stack}`
       );
     }
-    
   },
 };

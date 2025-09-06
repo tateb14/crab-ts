@@ -25,6 +25,10 @@ const CrabPunishment = new Schema({
     type: String,
     required: true,
   },
+  punishment_date: {
+    type: Date,
+    required: true
+  },
   guildId: {
     type: String,
     required: true,

@@ -1,6 +1,7 @@
 const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, MessageFlags } = require("discord.js")
 const CrabConfig = require("../../schemas/CrabConfig")
 const GuildReport = require("../../schemas/GuildReport")
+const { check } = require("../../../emojis.json")
 module.exports = {
   customId: "crab-modal_fire-report",
   execute: async (interaction) => {
@@ -34,7 +35,7 @@ module.exports = {
     .setCustomId("crab-button_review-report")
     .setLabel("Mark as Reviewed")
     .setStyle(ButtonStyle.Success)
-    .setEmoji('<:crab_check:1396636457690726410>')
+    .setEmoji(check)
 
     const row = new ActionRowBuilder().addComponents(ReviewButton)
     const channel = await interaction.guild.channels.fetch(GuildConfig.records_Logs)

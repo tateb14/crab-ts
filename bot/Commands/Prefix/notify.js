@@ -1,6 +1,7 @@
 const { EmbedBuilder, inlineCode, ButtonBuilder, ButtonStyle, ActionRowBuilder, MessageFlags, Guild, codeBlock } = require("discord.js")
 const detectIdType = require("../../Functions/detectIdType")
 const CrabBetaServer = require("../../schemas/CrabBetaServers")
+const { check } = require("../../../emojis.json")
 module.exports = {
   command: "notify",
   execute: async (message, client) => {
@@ -16,7 +17,7 @@ module.exports = {
     let duplicateDMCount = 0
     const alreadyDMd = new Set();
     if (BetaServers.length === 0) {
-     return response.edit(`<:crab_check:1409695243816669316> Successfully sent message to ${inlineCode(count)}/${inlineCode(BetaServers.length)} owners.`)
+     return response.edit(`${check} Successfully sent message to ${inlineCode(count)}/${inlineCode(BetaServers.length)} owners.`)
     }
     for (const Server of BetaServers) {
       const Owner = Server.ownerId
@@ -34,6 +35,6 @@ module.exports = {
       }
     }
 
-    await response.edit(`<:crab_check:1409695243816669316> Successfully sent message to ${inlineCode(count)}/${inlineCode(BetaServers.length)} owners. I skipped ${inlineCode(duplicateDMCount)} owners due to duplicates.`)
+    await response.edit(`${check} Successfully sent message to ${inlineCode(count)}/${inlineCode(BetaServers.length)} owners. I skipped ${inlineCode(duplicateDMCount)} owners due to duplicates.`)
 }
 }

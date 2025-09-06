@@ -11,6 +11,7 @@ const CrabConfig = require("../../schemas/CrabConfig");
 const CrabRecord = require("../../schemas/GuildRecord");
 const searchRobloxUsers = require("../../Functions/searchRobloxUsernames")
 const randomString = require("../../Functions/randomId")
+const { check, x, search } = require("../../../emojis.json")
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("record")
@@ -351,23 +352,32 @@ module.exports = {
             flags: MessageFlags.Ephemeral,
           });
           }
-          const recordId = interaction.options.getString("record-id")
-          const record = await CrabRecord.findOneAndDelete({ id: recordId })
-          try {
-            if (record) {
-              interaction.reply({ content: `The record has been found and deleted.\n-# Record ID: ${inlineCode(recordId)}`, flags: MessageFlags.Ephemeral })
-            } else {
-              interaction.reply({ content: "No record with that ID was found. ", flags: MessageFlags.Ephemeral })
-            }
-          } catch (error) {
-            console.error(error)
-          }
+        const RecordId = interaction.options.getString("record-id")
+        await interaction.reply({ content: `${search} **Fetching** the record...` })
+        const response = await interaction.fetchReply();
+        const Record = await CrabRecord.findOne({ guildId: interaction.guild.id, id: RecordId })
+        if (!Record) {
+          return await interaction.editReply({ content: `${x} I was unable to locate a record with that id, please double check the ID and try again.` })
+        }
+        const confirmDelete = new ButtonBuilder()
+        .setCustomId(`crab_button-confirm_delete:${response.id}:${interaction.user.id}:${RecordId}`)
+        .setEmoji(check)
+        .setLabel("Confirm Delete")
+        .setStyle(ButtonStyle.Danger)
+         const cancelDelete = new ButtonBuilder()
+        .setCustomId(`crab_button-cancel_delete:${response.id}:${interaction.user.id}`)
+        .setEmoji(x)
+        .setLabel("Cancel Delete")
+        .setStyle(ButtonStyle.Secondary)
+
+        const confirmationRow = new ActionRowBuilder().addComponents(confirmDelete, cancelDelete)
+        await interaction.editReply({ content: `${check} I was able to locate a record with this id string, would you like to proceed and void the report?\n-# This action is **irreversible**.`, components: [confirmationRow] })
         }
     }
   },
   async autocomplete(interaction, client) {
     const focused = interaction.options.getFocused();
-    const results = await searchRobloxUsers(focused); // Your search function
+    const results = await searchRobloxUsers(focused);
     await interaction.respond(
       results.map(user => ({
         name: user.name,

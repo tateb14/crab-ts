@@ -17,10 +17,16 @@ module.exports = {
       const user = await interaction.guild.members.fetch(Record.issuedBy);
       const DenyEmbed = EmbedBuilder.from(embed)
       DenyEmbed.setColor(0xec3935)
+      const serverButton = new ButtonBuilder()
+        .setCustomId("crab-button_server-name-disabled")
+        .setDisabled(true)
+        .setStyle(ButtonStyle.Secondary)
+        .setLabel(`Sent from ${interaction.guild.name}`)
+      const row = new ActionRowBuilder().addComponents(serverButton)
       interaction.update({ content: `This record has been denied by ${interaction.user}`, embeds: [DenyEmbed], components: [] })
       if (user) {
         try {
-          await user.send(`**Record ID:** ${inlineCode(Record.id)} has been denied by ${interaction.user}`);
+          await user.send({ content: `**Record ID:** ${inlineCode(Record.id)} has been denied by ${interaction.user}`, components: [row]});
         } catch (err) {
           return interaction.followUp({ content: "I could not DM this user.", flags: MessageFlags.Ephemeral })
         }

@@ -1,4 +1,5 @@
 const { EmbedBuilder, inlineCode, ButtonBuilder, ButtonStyle, ActionRowBuilder, MessageFlags } = require("discord.js")
+const { lock_pass } = require("../../../emojis.json")
 module.exports = {
   command: "exclude",
   execute: async (message, client) => {
@@ -15,7 +16,7 @@ module.exports = {
 
     const AccessButton = new ButtonBuilder()
     .setCustomId(`crab-exclude_access-code:${message.author.id}`)
-    .setEmoji("<:crab_lock_pass:1349197473339670559>")
+    .setEmoji(lock_pass)
     .setLabel("Enter Access Code")
     .setStyle(ButtonStyle.Danger)
 

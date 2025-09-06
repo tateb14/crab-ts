@@ -2,6 +2,7 @@ const { MessageFlags, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder
 const ShiftLog = require('../../schemas/ShiftLog')
 const humanizeDuration = require('humanize-duration')
 const responses = require("../../Functions/responses")
+const { clock_add, clock_minus, clock_x } = require("../../../emojis.json")
 module.exports = {
   customIdPrefix: 'crab-sm_shift-admin-options',
   execute: async (interaction) => {
@@ -39,17 +40,17 @@ module.exports = {
     )
     const AddTime = new ButtonBuilder()
     .setCustomId(`crab-button_shift-add-time:${shiftId}:${interaction.message.id}`)
-    .setEmoji("<:crab_clockadd:1402657630777769995>")
+    .setEmoji(clock_add)
     .setLabel("Add Time")
     .setStyle(ButtonStyle.Success)
     const RemoveTime = new ButtonBuilder()
     .setCustomId(`crab-button_shift-subtract-time:${shiftId}:${interaction.message.id}`)
-    .setEmoji("<:crab_clockminus:1402658075902480494>")
+    .setEmoji(cock_minus)
     .setLabel("Subtract Time")
     .setStyle(ButtonStyle.Secondary)
     const DeleteShift = new ButtonBuilder()
     .setCustomId(`crab-button_shift-delete:${shiftId}:${interaction.message.id}:${interaction.user.id}`)
-    .setEmoji("<:crab_clockx:1402658429323051220>")
+    .setEmoji(clock_x)
     .setLabel("Delete Shift")
     .setStyle(ButtonStyle.Danger)
     const row1 = new ActionRowBuilder().addComponents(AddTime, RemoveTime, DeleteShift)

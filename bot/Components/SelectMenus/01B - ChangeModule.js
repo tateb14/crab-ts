@@ -1,5 +1,6 @@
 const { EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, MessageFlags } = require('discord.js')
 const CrabConfig = require("../../schemas/CrabConfig")
+const { officer, fire_truck, traffic_light } = require("../../../emojis.json")
 module.exports = {
   customId: 'crab-sm_change',
   execute: async (interaction) => {
@@ -16,15 +17,15 @@ module.exports = {
         .setPlaceholder("Configure Department Types")
         .addOptions(
           new StringSelectMenuOptionBuilder()
-            .setEmoji("<:crab_officer:1349197478720831599>")
+            .setEmoji(officer)
             .setLabel("Law Enforcement")
             .setValue("crab-sm_le"),
           new StringSelectMenuOptionBuilder()
-            .setEmoji("<:crab_firetruck:1349197479664685168>")
+            .setEmoji(fire_truck)
             .setLabel("Fire and Medical")
             .setValue("crab-sm_fd-med"),
           new StringSelectMenuOptionBuilder()
-            .setEmoji("<:crab_traffic_light:1349197475310866534> ")
+            .setEmoji(traffic_light)
             .setLabel("Department of Transportation")
             .setValue("crab-sm_dot")
         );
