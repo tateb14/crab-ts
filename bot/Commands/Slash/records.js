@@ -146,8 +146,7 @@ module.exports = {
           const charges = interaction.options.getString("charges");
           const armed = interaction.options.getString("armed") || "N/A";
           const dangerous = interaction.options.getString("dangerous") || "N/A";
-          const mentallyIll =
-            interaction.options.getString("mentally-ill") || "N/A";
+          const mentallyIll = interaction.options.getString("mentally-ill") || "N/A";
           if ((recordType !== "Vehicle BOLO" && recordType !== "Suspect BOLO")) {
             const embed = new EmbedBuilder()
               .setAuthor({

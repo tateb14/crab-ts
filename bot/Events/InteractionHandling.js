@@ -1,8 +1,8 @@
-const { EmbedBuilder, inlineCode, codeBlock } = require("discord.js");
+const { EmbedBuilder, inlineCode, codeBlock, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
 const CrabGuildExclusion = require("../schemas/CrabGuildExclusion");
 const CrabUserExclusion = require("../schemas/CrabUserExclusion");
 const { errorLogs, onCallRole } = require("../../config.json");
-const { shield, x } = require("../../emojis.json")
+const { shield, x, alert } = require("../../emojis.json")
 module.exports = {
   event: "interactionCreate",
   once: false,
@@ -134,7 +134,7 @@ module.exports = {
         .slice(0, 1000);
       const safeStack = codeBlock(safeStackRaw);
 
-      const ErrorEmbed = new EmbedBuilder()
+      const ErrorReportEmbed = new EmbedBuilder()
         .setTitle("Error Report")
         .setColor(0xec3935)
         .setTimestamp()
@@ -159,15 +159,35 @@ module.exports = {
             value: safeStack,
           }
         );
+        
+      const ErrorEmbed = new EmbedBuilder()
+      .setTitle(`${alert} System Error`)
+      .setDescription(`An unexpected error has occurred in our system.\n\n> **__Things to know__**:\n> - Our team is actively working to fix this issue.\n> - Our team has been notified of this issue.\n> - We will fix this issue as soon as possible.\n\nIf you need any more assistance, please click the button below.`)
+      .setColor(0xec3935)
+      .setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68bdf649&is=68bca4c9&hm=1c472a5ea35bacfff66d91e0357a5b3c46b90d9c0b611ed463e4ecc1a9468c1d&")
+      .setTimestamp()
+
+      const link = new ButtonBuilder()
+      .setLabel("Join Tropical Systems")
+      .setURL("https://discord.gg/tropicalsys")
+      .setStyle(ButtonStyle.Link)
+
+      const row = new ActionRowBuilder().addComponents(link)
       await channel.send({
-        embeds: [ErrorEmbed],
+        embeds: [ErrorReportEmbed],
         content: `<@&${onCallRole}>`,
       });
-      interaction.editReply({
-        content:
-          `${x} There was an error while trying to execute this command! The issue has been reported to [Tropical Systems](<https://discord.gg/8XScx8MNfE>).`,
-        flags: ["Ephemeral"],
+      if (!interaction.replied || !interaction.defered) {
+      await interaction.reply({
+        embeds: [ErrorEmbed],
+        components: [row]
       });
+      } else {
+        await interaction.editReply({
+        embeds: [ErrorEmbed],
+        components: [row]
+      });
+      }
       console.log(
         `[ SYSTEM ][ INTERACTION ERROR ] There was an error while executing an interaction!\nError Stack: ${error.stack}`
       );
