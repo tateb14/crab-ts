@@ -45,7 +45,7 @@ module.exports = {
     .setStyle(ButtonStyle.Success)
     const RemoveTime = new ButtonBuilder()
     .setCustomId(`crab-button_shift-subtract-time:${shiftId}:${interaction.message.id}`)
-    .setEmoji(cock_minus)
+    .setEmoji(clock_minus)
     .setLabel("Subtract Time")
     .setStyle(ButtonStyle.Secondary)
     const DeleteShift = new ButtonBuilder()

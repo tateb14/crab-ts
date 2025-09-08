@@ -13,6 +13,7 @@ module.exports = {
       .setStyle(TextInputStyle.Paragraph)
       .setRequired(true)
       .setMinLength(100)
+      .setMaxLength(1020)
     const row = new ActionRowBuilder().addComponents(Description)
     modal.addComponents(row)
 
