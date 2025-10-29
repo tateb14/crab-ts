@@ -4,6 +4,12 @@ import * as fs from "fs";
 import * as path from "path";
 import * as chalk from "chalk";
 import { SlashCommand } from "./Types/slash-command-interface";
+import * as config from "../config.json";
+import { ModalInterface } from "./Types/modal-interface";
+import { SelectMenuInterface } from "./Types/menu-interface";
+import { ButtonInterface } from "./Types/button-interface";
+
+const clientEnviroment = config.client.enviroment;
 const client = new Client({
   intents: [
     IntentsBitField.Flags.GuildMessages,
@@ -13,21 +19,23 @@ const client = new Client({
   ],
 });
 
-// Define client
+//? Define client
 declare module "discord.js" {
   interface Client {
     slashCommands: Map<string, SlashCommand>;
-    buttons: Map<string, Function>;
-    menus: Map<string, Function>;
-    modals: Map<string, Function>;
+    buttons: Map<string, ButtonInterface>;
+    selectMenus: Map<string, SelectMenuInterface>;
+    modals: Map<string, ModalInterface>;
+    prefixCommands: Map<string, Function>;
   }
 }
-// Define maps
+//? Define maps
 client.slashCommands = new Map();
 client.buttons = new Map();
-client.menus = new Map();
+client.selectMenus = new Map();
 client.modals = new Map();
-// Load handlers
+client.prefixCommands = new Map();
+//? Load handlers
 const handlersPath = path.join(__dirname, "Handlers");
 const handlers = fs
   .readdirSync(handlersPath)
@@ -46,11 +54,33 @@ for (const handler of handlers) {
   }
 }
 
-if (!process.env.TOKEN) {
+if (clientEnviroment === "beta") {
+  if (!process.env.BETA_TOKEN) {
+    console.error(
+      chalk.red.bold("[TS-AUTH-ERR] ") + "🦀 Missing beta authentication token."
+    );
+    process.exit(1);
+  }
+  client.login(process.env.BETA_TOKEN);
+} else if (clientEnviroment === "qa" || clientEnviroment === "staging") {
+  if (!process.env.QA_STG_TOKEN) {
+    console.error(
+      chalk.red.bold("[TS-AUTH-ERR] ") + "🦀 Missing qa/staging authentication token."
+    );
+    process.exit(1);
+  }
+  client.login(process.env.QA_STG_TOKEN);
+} else if (clientEnviroment === "production") {
+  if (!process.env.PROD_TOKEN) {
+    console.error(
+      chalk.red.bold("[TS-AUTH-ERR] ") + "🦀 Missing production authentication token."
+    );
+    process.exit(1);
+  }
+  client.login(process.env.PROD_TOKEN);
+} else {
   console.error(
-    chalk.red.bold("[TS-AUTH-ERR] ") +
-      "🦀 Missing Discord bot token."
+    chalk.red.bold("[TS-CORE-ERR] ") + "🍉 The enviroment was not configured correctly."
   );
   process.exit(1);
 }
-client.login(process.env.TOKEN);
