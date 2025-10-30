@@ -73,7 +73,7 @@ export default async function (client: Client) {
         `🐚 Successfully registered all ${clientEnviroment} (/) commands.`
     );
 
-    if (skipped.length >= 1) {
+    if (skipped.length > 0) {
       console.warn(
         chalk.yellow.bold("[TS-CMD-WARN] ") +
           `🪼 Skipped ${skipped.length} invalid command(s): ${skipped.join(", ")}`

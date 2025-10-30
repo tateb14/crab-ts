@@ -8,6 +8,7 @@ import * as config from "../config.json";
 import { ModalInterface } from "./Types/modal-interface";
 import { SelectMenuInterface } from "./Types/menu-interface";
 import { ButtonInterface } from "./Types/button-interface";
+import { PrefixCommand } from "./Types/prefix-command-interface";
 
 const clientEnviroment = config.client.enviroment;
 const client = new Client({
@@ -26,7 +27,7 @@ declare module "discord.js" {
     buttons: Map<string, ButtonInterface>;
     selectMenus: Map<string, SelectMenuInterface>;
     modals: Map<string, ModalInterface>;
-    prefixCommands: Map<string, Function>;
+    prefixCommands: Map<string, PrefixCommand>;
   }
 }
 //? Define maps

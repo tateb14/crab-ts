@@ -9,7 +9,7 @@
         "skipLibCheck": true,
         "strictNullChecks": true,
         "resolveJsonModule": true,
-        "rootDir": "bot",
+        "rootDir": "Application",
         "outDir": "dist"
     },
     "exclude": ["node_modules"]

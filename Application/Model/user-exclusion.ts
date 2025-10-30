@@ -7,6 +7,6 @@ const userExclusionSchema = new mongoose.Schema<UserExclusionInterface>({
   crab_Proof: { type: String, required: true },
   issuedBy: { type: String, required: true },
 })
-const userExclusion = mongoose.model("Guild-Exclusions", userExclusionSchema);
+const userExclusion = mongoose.model("User-Exclusions", userExclusionSchema);
 
 export default userExclusion

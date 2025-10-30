@@ -16,6 +16,7 @@ import {
 import * as config from "../../config.json";
 import { alert } from "../../emojis.json";
 import * as chalk from "chalk";
+import { fetchGuildChannel } from "./fetch-channel-handler";
 export async function handleInteractionError(
   client: Client,
   interaction:
@@ -26,7 +27,11 @@ export async function handleInteractionError(
   error: unknown
 ) {
   const err = error instanceof Error ? error : new Error(String(error));
-  const channel = await client.channels.fetch(config.logging.errorLogs) as TextChannel;
+  const guild = interaction.guild
+  const channelId = config.logging.errorLogs
+  const channel = await fetchGuildChannel(client, guild!, channelId)
+
+  if (!channel) return;
 
   const guildName = interaction.guild?.name || "DM or Unknown Guild";
   const guildId = interaction.guild?.id || "N/A";
@@ -34,7 +39,7 @@ export async function handleInteractionError(
   const userId = interaction.user?.id || "N/A";
 
   const safeError = err.message;
-  const safeErrorTrunc = safeError.slice(0, 1024);
+  const safeErrorTrunc = safeError.slice(0, 1000);
   const safeStackRaw = (err.stack || "No stack trace available").slice(0, 1000);
   const safeStack = codeBlock(safeStackRaw);
 
@@ -66,7 +71,7 @@ export async function handleInteractionError(
 
   const link = new ButtonBuilder()
     .setLabel("Join Tropical Systems")
-    .setURL("https://discord.gg/tropicalsys")
+    .setURL("https://discord.gg/8XScx8MNfE")
     .setStyle(ButtonStyle.Link);
 
   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(link);
@@ -95,7 +100,12 @@ export async function handleMessageError(
   error: unknown
 ) {
   const err = error instanceof Error ? error : new Error(String(error));
-  const channel = await client.channels.fetch(config.logging.errorLogs) as TextChannel;
+
+  const guild = message.guild
+  const channelId = config.logging.errorLogs
+  const channel = await fetchGuildChannel(client, guild!, channelId)
+
+  if (!channel) return;
 
   const guildName = message.guild?.name || "DM or Unknown Guild";
   const guildId = message.guild?.id || "N/A";
