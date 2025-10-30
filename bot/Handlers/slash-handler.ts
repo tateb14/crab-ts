@@ -7,9 +7,9 @@ import * as config from "../../config.json";
 import "dotenv/config";
 
 export default async function (client: Client) {
-  const clientEnviroment = config.client.enviroment
+  const clientEnviroment = config.client.enviroment;
   let skipped: string[] = [];
-  let rest
+  let rest;
   if (clientEnviroment === "beta") {
     if (!process.env.BETA_TOKEN) {
       console.error(

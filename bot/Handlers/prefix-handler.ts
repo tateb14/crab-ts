@@ -2,7 +2,7 @@ import { Client } from "discord.js";
 import * as fs from "fs";
 import * as path from "path";
 
-module.exports = (client: Client) => {
+export default async function (client: Client) {
   const prefixPath = path.join(__dirname, '..', 'Commands', 'Prefix');
   const prefixFiles = fs.readdirSync(prefixPath).filter((file) => file.endsWith(".ts") || file.endsWith(".js"));
 
