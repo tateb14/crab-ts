@@ -2,9 +2,9 @@
   "name": "crab",
   "version": "1.0.0",
   "description": "",
-  "main": "bot/bot.js",
+  "main": "Application/bot.js",
   "scripts": {
-    "dev": "tsx watch bot/bot.ts",
+    "dev": "tsx watch Application/bot.ts",
     "build": "tsc",
     "start": "node ."
   },
