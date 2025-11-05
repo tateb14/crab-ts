@@ -21,7 +21,7 @@ module.exports = {
       if (clientEnviroment !== "production") {
         //? Check URI
         if (!process.env.MONGO_URI_DEV) {
-          console.error(
+          throw new Error(
             chalk.red.bold("[TS-DB-ERR] ") +
               "🪨 Development database connection failed."
           );
@@ -36,7 +36,7 @@ module.exports = {
       } else {
         //? Check URI
         if (!process.env.MONGODB_URI_PROD) {
-          console.error(
+          throw new Error(
             chalk.red.bold("[TS-DB-ERR] ") +
               "🪨 Production database connection failed."
           );
@@ -55,11 +55,9 @@ module.exports = {
           `🌴 ${client.user!.username} (${config.client.enviroment}) is online!`
       );
     } catch (error) {
-      console.error(
+      throw new Error(
         chalk.red.bold("[TS-CORE-ERR] ") +
-          "🪸 Failed to initialize core modules."
-      );
-      process.exit(1);
+          "🪸 Failed to initialize core modules." + error);
     }
   },
 };

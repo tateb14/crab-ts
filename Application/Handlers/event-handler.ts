@@ -24,11 +24,8 @@ module.exports = (client: Client) => {
         );
       }
     } catch (error) {
-      console.error(
-        chalk.red.bold("[TS-EVENT-ERR] ") +
-          `🪸 Failed to load event: ${chalk.yellow(eventFile)}`
-      );
-      console.error(error);
+      throw new Error(
+        chalk.red.bold("[TS-EVENT-ERR] ") + `🪸 Failed to load event: ${chalk.yellow(eventFile)}` + error);
     }
   }
   console.log(
