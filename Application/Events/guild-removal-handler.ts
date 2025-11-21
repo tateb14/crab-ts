@@ -10,7 +10,7 @@ import * as config from "../../config.json";
 import crabConfig from "../Models/crab-config";
 import { fetchGuildChannel } from "../Functions/fetch-channel-handler";
 
-export default {
+module.exports = {
   event: "guildDelete",
   once: false,
   execute: async (client: Client, guild: Guild) => {

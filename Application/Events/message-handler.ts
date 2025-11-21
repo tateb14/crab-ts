@@ -2,7 +2,7 @@ import { Client, Message } from "discord.js"
 import { handleMessageError } from "../Functions/error-handler";
 import { guildExclusionCheckMessage, userExclusionCheckMessage } from "../Functions/exclusion-handler";
 import crabConfig from "../Models/crab-config";
-export default {
+module.exports = {
   event: "messageCreate",
   once: false,
   execute: async (client: Client, message: Message) => {
