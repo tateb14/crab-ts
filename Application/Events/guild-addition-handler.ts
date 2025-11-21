@@ -3,7 +3,7 @@ import * as config from "../../config.json"
 import { guildExclusionCheck } from "../Functions/exclusion-handler";
 import { fetchGuildChannel } from "../Functions/fetch-channel-handler";
 import crabConfig from "../Models/crab-config";
-export default {
+module.exports = {
   event: "guildCreate",
   once: false,
   execute: async (client: Client, guild: Guild) => {

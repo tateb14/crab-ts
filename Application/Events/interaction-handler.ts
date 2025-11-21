@@ -2,7 +2,7 @@ import { Client, MessageFlags } from "discord.js";
 import { handleInteractionError } from "../Functions/error-handler";
 import { guildExclusionCheckInteraction, userExclusionCheckInteraction } from "../Functions/exclusion-handler";
 import { x } from "../../emojis.json"
-export default {
+module.exports = {
   event: "interactionCreate",
   once: false,
   execute: async (client: Client, interaction: any) => {
