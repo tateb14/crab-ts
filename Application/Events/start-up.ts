@@ -3,7 +3,7 @@ import * as mongoose from "mongoose";
 import "dotenv/config";
 import * as config from "../../config.json";
 import { Client } from "discord.js";
-module.exports = {
+export default {
   event: "clientReady",
   once: true,
   execute: async (client: Client) => {
@@ -25,7 +25,6 @@ module.exports = {
             chalk.red.bold("[TS-DB-ERR] ") +
               "🪨 Development database connection failed."
           );
-          process.exit(1);
         }
         //? Connect to DB
         await mongoose.connect(process.env.MONGO_URI_DEV);
@@ -40,7 +39,6 @@ module.exports = {
             chalk.red.bold("[TS-DB-ERR] ") +
               "🪨 Production database connection failed."
           );
-          process.exit(1);
         }
         //? Connect to DB
         await mongoose.connect(process.env.MONGODB_URI_PROD);

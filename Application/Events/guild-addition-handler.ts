@@ -2,8 +2,8 @@ import { EmbedBuilder, Client, Guild } from "discord.js";
 import * as config from "../../config.json"
 import { guildExclusionCheck } from "../Functions/exclusion-handler";
 import { fetchGuildChannel } from "../Functions/fetch-channel-handler";
-import crabConfig from "../Model/crab-config";
-module.exports = {
+import crabConfig from "../Models/crab-config";
+export default {
   event: "guildCreate",
   once: false,
   execute: async (client: Client, guild: Guild) => {

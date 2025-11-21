@@ -7,10 +7,10 @@ import {
   inlineCode,
 } from "discord.js";
 import * as config from "../../config.json";
-import crabConfig from "../Model/crab-config";
+import crabConfig from "../Models/crab-config";
 import { fetchGuildChannel } from "../Functions/fetch-channel-handler";
 
-module.exports = {
+export default {
   event: "guildDelete",
   once: false,
   execute: async (client: Client, guild: Guild) => {
