@@ -7,7 +7,6 @@ module.exports = {
     event: "clientReady",
     once: true,
     execute: async (client: Client) => {
-        console.log("Hi")
         try {
             const clientEnviroment = config.client.enviroment;
             console.log(
