@@ -8,8 +8,8 @@ import {
   Message,
   User,
 } from "discord.js";
-import guildExclusion from "../Model/guild-exclusion";
-import userExclusion from "../Model/user-exclusion";
+import guildExclusion from "../Models/guild-exclusion";
+import userExclusion from "../Models/user-exclusion";
 import { shield } from "../../emojis.json"
 
 export async function guildExclusionCheckInteraction(client: Client, interaction: any) {
@@ -108,14 +108,20 @@ export async function guildExclusionCheck(client: Client, guild: Guild) {
   const exclusionEmbed = new EmbedBuilder()
     .setColor(0xec3935)
     .setDescription(
-      "This message is in regards of the recent exclusion from the service of **Crab**.\n\nTo clarify, an exclusion from our service comes very rarely and is only applied if a server has broken our terms of service or violated a major rule. Exclusions are not appealable, but they can be removed if an Executive Board member choses to.\n\nThe details of your exclusion are confidential and secure to only Crab staff members. If you wish to inquiry about the exclusion, please see our [support](https://discord.gg/8XScx8MNfE)."
+      `This message is in regards of the recent exclusion from the service of **Crab**.
+      \n
+      \n
+      To clarify, an exclusion from our service comes very rarely and is only applied if a server has broken our terms of service or violated a major rule. Exclusions are not appealable, but they can be removed if an Executive Board member choses to.
+      \n
+      \n
+      The details of your exclusion are confidential and secure to only Crab staff members. If you wish to inquiry about the exclusion, please see our [support](https://discord.gg/8XScx8MNfE).`
     )
     .setFooter({ text: "Crab Legal Affairs Team" })
     .setTitle("Crab Exclusion Notice")
     .setTimestamp();
 
   const serverButton = new ButtonBuilder()
-    .setCustomId("crab-button_server-name-disabled")
+    .setCustomId("crab_button-server_name_disabled")
     .setDisabled(true)
     .setStyle(ButtonStyle.Secondary)
     .setLabel(`Official Notice from Tropical Systems`);

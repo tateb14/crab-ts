@@ -57,31 +57,30 @@ for (const handler of handlers) {
 
 if (clientEnviroment === "beta") {
   if (!process.env.BETA_TOKEN) {
-    console.error(
+    throw new Error(
       chalk.red.bold("[TS-AUTH-ERR] ") + "🦀 Missing beta authentication token."
     );
-    process.exit(1);
   }
   client.login(process.env.BETA_TOKEN);
 } else if (clientEnviroment === "qa" || clientEnviroment === "staging") {
   if (!process.env.QA_STG_TOKEN) {
-    console.error(
-      chalk.red.bold("[TS-AUTH-ERR] ") + "🦀 Missing qa/staging authentication token."
+    throw new Error(
+      chalk.red.bold("[TS-AUTH-ERR] ") +
+        "🦀 Missing qa/staging authentication token."
     );
-    process.exit(1);
   }
   client.login(process.env.QA_STG_TOKEN);
 } else if (clientEnviroment === "production") {
   if (!process.env.PROD_TOKEN) {
-    console.error(
-      chalk.red.bold("[TS-AUTH-ERR] ") + "🦀 Missing production authentication token."
+    throw new Error(
+      chalk.red.bold("[TS-AUTH-ERR] ") +
+        "🦀 Missing production authentication token."
     );
-    process.exit(1);
   }
   client.login(process.env.PROD_TOKEN);
 } else {
-  console.error(
-    chalk.red.bold("[TS-CORE-ERR] ") + "🍉 The enviroment was not configured correctly."
+  throw new Error(
+    chalk.red.bold("[TS-CORE-ERR] ") +
+      "🍉 The enviroment was not configured correctly."
   );
-  process.exit(1);
 }
