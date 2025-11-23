@@ -1,13 +1,12 @@
-import * as chalk from "chalk";
+import chalk from "chalk";
 import * as mongoose from "mongoose";
 import "dotenv/config";
 import * as config from "../../config.json";
 import { Client } from "discord.js";
-module.exports = {
+export default {
     event: "clientReady",
     once: true,
     execute: async (client: Client) => {
-        console.log("Hi")
         try {
             const clientEnviroment = config.client.enviroment;
             console.log(
@@ -28,7 +27,7 @@ module.exports = {
                     );
                 }
                 //? Connect to DB
-                
+
                 await mongoose.connect(process.env.MONGO_URI_DEV);
                 console.log(
                     chalk.green.bold("[TS-DB-SUCCESS] ") +

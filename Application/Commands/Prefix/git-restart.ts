@@ -1,26 +1,22 @@
 import { Message } from "discord.js";
 import { exec } from "child_process";
 import simpleGit from "simple-git";
-import * as chalk from "chalk";
+import chalk from "chalk";
 import * as emojis from "../../../emojis.json";
 import * as config from "../../../config.json";
 export default {
-    command: "c-restart",
+    command: "sysrestart",
     execute: async (message: Message) => {
         const git = simpleGit();
         const authorizedRoles = ["1265766750994043022", "1337250124530847876"];
         const authorizedGuild = config.guilds["ts-main"];
+        const guild = message.guild
+        const member = message.member
+        if (!guild) return;
+        if (!member) return;
 
-        if (!message.guild) return;
-        if (!message.member) return;
-
-        if (message.guild.id !== authorizedGuild) return;
-        if (
-            !authorizedRoles.some((roleId) =>
-                message.member!.roles.cache.has(roleId)
-            )
-        )
-            return;
+        if (guild.id !== authorizedGuild) return;
+        if (!member.roles.cache.hasAny(...authorizedRoles)) return;
 
         const respone = await message.reply(
             "Pulling the latest commits from GitHub"

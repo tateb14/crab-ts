@@ -1,165 +1,180 @@
 import {
-  Client,
-  ChatInputCommandInteraction,
-  ButtonInteraction,
-  ModalSubmitInteraction,
-  StringSelectMenuInteraction,
-  EmbedBuilder,
-  codeBlock,
-  inlineCode,
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  TextChannel,
-  Message,
+    Client,
+    ChatInputCommandInteraction,
+    ButtonInteraction,
+    ModalSubmitInteraction,
+    StringSelectMenuInteraction,
+    EmbedBuilder,
+    codeBlock,
+    inlineCode,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    TextChannel,
+    Message,
 } from "discord.js";
 import * as config from "../../config.json";
 import { alert } from "../../emojis.json";
-import * as chalk from "chalk";
-import { fetchGuildChannel } from "./fetch-channel-handler";
+import chalk from "chalk";
+import { fetchGuildChannel } from "./fetch-channel-handler"
 export async function handleInteractionError(
-  client: Client,
-  interaction:
-    | ChatInputCommandInteraction
-    | ButtonInteraction
-    | ModalSubmitInteraction
-    | StringSelectMenuInteraction,
-  error: unknown
+    client: Client,
+    interaction:
+        | ChatInputCommandInteraction
+        | ButtonInteraction
+        | ModalSubmitInteraction
+        | StringSelectMenuInteraction,
+    error: unknown
 ) {
-  const err = error instanceof Error ? error : new Error(String(error));
-  const guild = interaction.guild
-  const channelId = config.logging.errorLogs
-  const channel = await fetchGuildChannel(client, guild!, channelId)
+    const err = error instanceof Error ? error : new Error(String(error));
+    const guild = interaction.guild;
+    const channelId = config.logging.errorLogs;
+    const channel = await fetchGuildChannel(client, guild!, channelId);
 
-  if (!channel) return;
+    if (!channel) return;
 
-  const guildName = interaction.guild?.name || "DM or Unknown Guild";
-  const guildId = interaction.guild?.id || "N/A";
-  const username = interaction.user?.username || "Unknown User";
-  const userId = interaction.user?.id || "N/A";
+    const guildName = interaction.guild?.name || "DM or Unknown Guild";
+    const guildId = interaction.guild?.id || "N/A";
+    const username = interaction.user?.username || "Unknown User";
+    const userId = interaction.user?.id || "N/A";
 
-  const safeError = err.message;
-  const safeErrorTrunc = safeError.slice(0, 1000);
-  const safeStackRaw = (err.stack || "No stack trace available").slice(0, 1000);
-  const safeStack = codeBlock(safeStackRaw);
-
-  const errorReportEmbed = new EmbedBuilder()
-    .setTitle("Error Report")
-    .setColor(0xec3935)
-    .setTimestamp()
-    .setDescription(`An error occurred while handling: ${getInteractionInfo(interaction)}`)
-    .addFields(
-      {
-        name: "Guild Information",
-        value: `${guildName} :: ${inlineCode(guildId)}`,
-      },
-      {
-        name: "User Information",
-        value: `${username} :: ${inlineCode(userId)}`,
-      },
-      { name: "Error Log", value: safeErrorTrunc },
-      { name: "Error Stack", value: safeStack }
+    const safeError = err.message;
+    const safeErrorTrunc = safeError.slice(0, 1000);
+    const safeStackRaw = (err.stack || "No stack trace available").slice(
+        0,
+        1000
     );
+    const safeStack = codeBlock(safeStackRaw);
 
-  const errorEmbed = new EmbedBuilder()
-    .setTitle(`${alert} System Error`)
-    .setDescription(
-      `An unexpected error has occurred in our system.\n> Our team has been notified and is working on it.`
-    )
-    .setColor(0xec3935)
-    .setTimestamp();
+    const errorReportEmbed = new EmbedBuilder()
+        .setTitle("Error Report")
+        .setColor(0xec3935)
+        .setTimestamp()
+        .setDescription(
+            `An error occurred while handling: ${getInteractionInfo(
+                interaction
+            )}`
+        )
+        .addFields(
+            {
+                name: "Guild Information",
+                value: `${guildName} :: ${inlineCode(guildId)}`,
+            },
+            {
+                name: "User Information",
+                value: `${username} :: ${inlineCode(userId)}`,
+            },
+            { name: "Error Log", value: safeErrorTrunc },
+            { name: "Error Stack", value: safeStack }
+        );
 
-  const link = new ButtonBuilder()
-    .setLabel("Join Tropical Systems")
-    .setURL("https://discord.gg/8XScx8MNfE")
-    .setStyle(ButtonStyle.Link);
+    const errorEmbed = new EmbedBuilder()
+        .setTitle(`${alert} System Error`)
+        .setDescription(
+            `An unexpected error has occurred in our system.\n> Our team has been notified and is working on it.`
+        )
+        .setColor(0xec3935)
+        .setTimestamp();
 
-  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(link);
+    const link = new ButtonBuilder()
+        .setLabel("Join Tropical Systems")
+        .setURL("https://discord.gg/8XScx8MNfE")
+        .setStyle(ButtonStyle.Link);
 
-  await channel.send({
-    embeds: [errorReportEmbed],
-    content: `<@&${config.roles.onCallRole}>`,
-  });
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(link);
 
-  if (!interaction.replied && !(interaction as any).deferred) {
-    await interaction.reply({ embeds: [errorEmbed], components: [row] });
-  } else {
-    await interaction.editReply({ embeds: [errorEmbed], components: [row] });
-  }
+    await channel.send({
+        embeds: [errorReportEmbed],
+        content: `<@&${config.roles.onCallRole}>`,
+    });
 
-  console.log(
-    chalk.red.bold("[TS-INTERACTION-ERR] ") +
-    `🪸 There was an error while executing an interaction:\n` +
-    chalk.gray(err.stack)
-  );
+    if (!interaction.replied && !(interaction as any).deferred) {
+        await interaction.reply({ embeds: [errorEmbed], components: [row] });
+    } else {
+        await interaction.editReply({
+            embeds: [errorEmbed],
+            components: [row],
+        });
+    }
+
+    console.log(
+        chalk.red.bold("[TS-INTERACTION-ERR] ") +
+            `🪸 There was an error while executing an interaction:\n` +
+            chalk.gray(err.stack)
+    );
 }
 
 export async function handleMessageError(
-  client: Client,
-  message: Message,
-  error: unknown
+    client: Client,
+    message: Message,
+    error: unknown
 ) {
-  const err = error instanceof Error ? error : new Error(String(error));
+    const err = error instanceof Error ? error : new Error(String(error));
 
-  const guild = message.guild
-  const channelId = config.logging.errorLogs
-  const channel = await fetchGuildChannel(client, guild!, channelId)
+    const guild = message.guild;
+    const channelId = config.logging.errorLogs;
+    const channel = await fetchGuildChannel(client, guild!, channelId);
 
-  if (!channel) return;
+    if (!channel) return;
 
-  const guildName = message.guild?.name || "DM or Unknown Guild";
-  const guildId = message.guild?.id || "N/A";
-  const username = message.author?.username || "Unknown User";
-  const userId = message.author?.id || "N/A";
+    const guildName = message.guild?.name || "DM or Unknown Guild";
+    const guildId = message.guild?.id || "N/A";
+    const username = message.author?.username || "Unknown User";
+    const userId = message.author?.id || "N/A";
 
-  const safeError = err.message;
-  const safeErrorTrunc = safeError.slice(0, 1024);
-  const safeStackRaw = (err.stack || "No stack trace available").slice(0, 1000);
-  const safeStack = codeBlock(safeStackRaw);
-
-  const errorReportEmbed = new EmbedBuilder()
-    .setTitle("Error Report")
-    .setColor(0xec3935)
-    .setTimestamp()
-    .setDescription(`An error occurred while handling: ${inlineCode(message.content)}`)
-    .addFields(
-      {
-        name: "Guild Information",
-        value: `${guildName} :: ${inlineCode(guildId)}`,
-      },
-      {
-        name: "User Information",
-        value: `${username} :: ${inlineCode(userId)}`,
-      },
-      { name: "Error Log", value: safeErrorTrunc },
-      { name: "Error Stack", value: safeStack }
+    const safeError = err.message;
+    const safeErrorTrunc = safeError.slice(0, 1024);
+    const safeStackRaw = (err.stack || "No stack trace available").slice(
+        0,
+        1000
     );
+    const safeStack = codeBlock(safeStackRaw);
 
-  const errorEmbed = new EmbedBuilder()
-    .setTitle(`${alert} System Error`)
-    .setDescription(
-      `An unexpected error has occurred in our system.\n> Our team has been notified and is working on it.`
-    )
-    .setColor(0xec3935)
-    .setTimestamp();
+    const errorReportEmbed = new EmbedBuilder()
+        .setTitle("Error Report")
+        .setColor(0xec3935)
+        .setTimestamp()
+        .setDescription(
+            `An error occurred while handling: ${inlineCode(message.content)}`
+        )
+        .addFields(
+            {
+                name: "Guild Information",
+                value: `${guildName} :: ${inlineCode(guildId)}`,
+            },
+            {
+                name: "User Information",
+                value: `${username} :: ${inlineCode(userId)}`,
+            },
+            { name: "Error Log", value: safeErrorTrunc },
+            { name: "Error Stack", value: safeStack }
+        );
 
-  const link = new ButtonBuilder()
-    .setLabel("Join Tropical Systems")
-    .setURL("https://discord.gg/tropicalsys")
-    .setStyle(ButtonStyle.Link);
+    const errorEmbed = new EmbedBuilder()
+        .setTitle(`${alert} System Error`)
+        .setDescription(
+            `An unexpected error has occurred in our system.\n> Our team has been notified and is working on it.`
+        )
+        .setColor(0xec3935)
+        .setTimestamp();
 
-  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(link);
+    const link = new ButtonBuilder()
+        .setLabel("Join Tropical Systems")
+        .setURL("https://discord.gg/tropicalsys")
+        .setStyle(ButtonStyle.Link);
 
-  await channel.send({
-    embeds: [errorReportEmbed],
-    content: `<@&${config.roles.onCallRole}>`,
-  });
-  
-  await message.reply({ embeds: [errorEmbed], components: [row] });
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(link);
 
-  console.log(
-    chalk.red.bold("[TS-MESSAGE-ERR] ") +
-    `🪸 There was an error while executing a prefix command:\n` +
-    chalk.gray(err.stack)
-  );
+    await channel.send({
+        embeds: [errorReportEmbed],
+        content: `<@&${config.roles.onCallRole}>`,
+    });
+
+    await message.reply({ embeds: [errorEmbed], components: [row] });
+
+    console.log(
+        chalk.red.bold("[TS-MESSAGE-ERR] ") +
+            `🪸 There was an error while executing a prefix command:\n` +
+            chalk.gray(err.stack)
+    );
 }
