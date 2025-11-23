@@ -22,7 +22,7 @@ export default {
         const authorizedGuild = "1348623820331679744";
 
         if (!message.guild) return;
-        if (message.guild.id !== "1348623820331679744") return;
+        if (message.guild.id !== authorizedGuild) return;
         if (!authorizedUsers.includes(message.author.id)) return;
 
         const args = message.content.trim().split(/ +/);

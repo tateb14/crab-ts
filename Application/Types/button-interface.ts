@@ -1,6 +1,6 @@
 import { ButtonInteraction } from "discord.js";
 
 export interface ButtonInterface {
-  customId: string;
-  execute: (interaction: ButtonInteraction) => Promise<void>;
+    customId: string;
+    execute: (interaction: ButtonInteraction) => Promise<void>;
 }
