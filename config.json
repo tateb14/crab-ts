@@ -1,19 +1,20 @@
 { 
   "client": {
     "_comments": "Enviroment Options --> 'production', 'staging', 'qa', 'beta'",
-    "clientId": "1412133872048541738",
+    "clientId": "1441259395844542505",
     "enviroment": "beta" 
   },
 
   "guilds": {
     "ts-main": "1265766606555054142",
-    "tate-beta": "1348623820331679744"
+    "tate-beta": "1348623820331679744",
+    "gage-beta": "1441250345044152401"
   },
   
   "logging": {
-    "errorLogs": "1441562192154595459",
-    "joinLogs": "1278524978840600687",
-    "leaveLogs": "1342947016552091699",
+    "errorLogs": "1441261488374546535",
+    "joinLogs": "1441261523157647360",
+    "leaveLogs": "1441261552165453915",
     "tropicalSystemsId": "1265766606555054142"
   },
 
