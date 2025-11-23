@@ -2,7 +2,7 @@ import { Client, IntentsBitField } from "discord.js";
 import "dotenv/config";
 import * as fs from "fs";
 import * as path from "path";
-import * as chalk from "chalk";
+import chalk from "chalk";
 import { fileURLToPath } from "url";
 import { SlashCommand } from "./Types/slash-command-interface";
 import * as config from "../config.json";
