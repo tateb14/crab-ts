@@ -39,7 +39,7 @@ export default async (client: Client) => {
                 "../Components/Menus",
                 selectMenuFile
             );
-            const selectMenuFileData = require(selectMenuFilePath);
+            const selectMenuFileData = await import(selectMenuFilePath);
             client.selectMenus.set(
                 selectMenuFileData.customId,
                 selectMenuFileData
@@ -52,7 +52,7 @@ export default async (client: Client) => {
                 "../Components/Buttons",
                 buttonsFile
             );
-            const buttonFile = require(buttonsFilePath);
+            const buttonFile = await import(buttonsFilePath);
 
             client.buttons.set(buttonFile.customId, buttonFile);
         }
@@ -63,7 +63,7 @@ export default async (client: Client) => {
                 "../Components/Modals",
                 modalsFile
             );
-            const modalFile = require(modalsFilePath);
+            const modalFile = await import(modalsFilePath);
 
             client.modals.set(modalFile.customId, modalFile);
         }
