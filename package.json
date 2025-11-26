@@ -1,6 +1,6 @@
 {
   "name": "crab",
-  "version": "1.0.0",
+  "version": "0.2.1",
   "description": "",
   "main": "Application/bot.js",
   "scripts": {
