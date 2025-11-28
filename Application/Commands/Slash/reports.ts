@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, MessageFlags, ButtonBuilder, ButtonStyle, inlineCode, ChatInputCommandInteraction, GuildMember } from "discord.js";
+import { SlashCommandBuilder, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, MessageFlags, ButtonBuilder, ButtonStyle, inlineCode, ChatInputCommandInteraction, GuildMember, AttachmentBuilder } from "discord.js";
 import crabConfig from "../../Models/crab-config";
 import guildReport from "../../Models/guild-report";
 import crabCustomReport from "../../Models/crab-custom-report";
@@ -32,6 +32,11 @@ export default {
 
         if (!guild || !member) return;
 
+        //? Embed footer banner attachment initialization
+        const embedFooter = new AttachmentBuilder("Images/footer-banner.png", {
+            name: "embed-footer-banner.png",
+        });
+
         //? get the subcommand
         const subcommand = interaction.options.getSubcommand();
         const guildConfig = await crabConfig.findOne({
@@ -61,7 +66,7 @@ export default {
 
         if (subcommand === "create") {
             //? define base embed and string select menu
-            const embed = new EmbedBuilder().setColor(0xec3935).setFooter({ text: "Powered by Crab" }).setTitle("Report Panel").setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&");
+            const embed = new EmbedBuilder().setColor(0xec3935).setFooter({ text: "Powered by Crab" }).setTitle("Report Panel").setImage("attachment://embed-footer-banner.png");
             let reportSelectMenu = new StringSelectMenuBuilder();
 
             if (departmentType === "leo") {
@@ -150,6 +155,7 @@ export default {
                 embeds: [embed],
                 components: [row],
                 flags: MessageFlags.Ephemeral,
+                files: [embedFooter],
             });
         } else if (subcommand === "search") {
             //? get command data
@@ -164,93 +170,90 @@ export default {
                     content: `${emojis.x}, **@${user!.username}** has not yet made a report.`,
                 });
             }
+            let reportEmbeds: object[] = []; // * define the reportsEmbed array
+            for (const report of userReports) {
+                // * for each report the user has made, it will add that report to the array.
+                // ? get the report id
+                const reportId = report.id;
+                let reportName: string[] = []; // ? define the report name string fix
+                const embed = new EmbedBuilder(); // * define the embed
+                // ? fetch description and reviewers
+                const reportDescription = report.description;
+                const reportReviewer = report.reviewedBy;
 
+                if (report.reportType === "custom") {
+                    // * if its a custom report, do the following:
+                    const customReportInformation = await crabCustomReport.findOne({
+                        guildId: interaction.guild.id,
+                        crab_ReportId: report.custom_reportId,
+                    });
 
-            try {
-                let reportEmbeds: object[] = []; // * define the reportsEmbed array
-                for (const report of userReports) { // * for each report the user has made, it will add that report to the array.
-                    // ? get the report id
-                    const reportId = report.id;
-                    let reportName: string[] = []; // ? define the report name string fix
-                    const embed = new EmbedBuilder(); // * define the embed
-                    // ? fetch description and reviewers
-                    const reportDescription = report.description;
-                    const reportReviewer = report.reviewedBy;
-
-                    if (report.reportType === "custom") { // * if its a custom report, do the following:
-                        const customReportInformation = await crabCustomReport.findOne({
-                            guildId: interaction.guild.id,
-                            crab_ReportId: report.custom_reportId,
-                        });
-
-                        if (!customReportInformation) {
-                            return interaction.reply({ content: `${emojis.x}, **@${interaction.user.username}**, this custom report type was not found.\n-# This action was aborted.` });
-                        }
-
-                        if (customReportInformation.crab_ReportName.endsWith(END_REPORT_NAMES)) {
-                            reportName.push(customReportInformation.crab_ReportName);
-                        } else {
-                            reportName.push(customReportInformation.crab_ReportName, END_REPORT_NAMES);
-                            reportName.join(" ");
-                        }
-
-                        if (report.custom_field1 !== null) {
-                            embed.addFields({
-                                name: `${customReportInformation.crab_ReportField1Label}:`,
-                                value: `${report.custom_field1}`,
-                            });
-                        }
-                        if (report.custom_field2 !== null) {
-                            embed.addFields({
-                                name: `${customReportInformation.crab_ReportField2Label}:`,
-                                value: `${report.custom_field2}`,
-                            });
-                        }
-                        if (report.custom_field3 !== null) {
-                            embed.addFields({
-                                name: `${customReportInformation.crab_ReportField3Label}:`,
-                                value: `${report.custom_field3}`,
-                            });
-                        }
-                        if (reportReviewer !== null) {
-                            embed.addFields({
-                                name: `Report Reviewer:`,
-                                value: `<@${reportReviewer}>`,
-                            });
-                        }
-                    } else {
-                        if (!report.reportType.endsWith(END_REPORT_NAMES)) {
-                            reportName.push(report.reportType, END_REPORT_NAMES);
-                            reportName.join(" ");
-                        }
-
-                        if (reportReviewer !== null) {
-                            embed.addFields({
-                                name: "Reviewed by:",
-                                value: `<@${reportReviewer}>`,
-                            });
-                        }
+                    if (!customReportInformation) {
+                        return interaction.reply({ content: `${emojis.x}, **@${interaction.user.username}**, this custom report type was not found.\n-# This action was aborted.` });
                     }
-                    embed
-                        .setColor(0xec3935)
-                        .setFooter({ text: `Report ID: ${reportId}` })
-                        .setDescription(`Below are details of the **${reportName}** submitted by <@${report.issuedBy}>.`)
-                        .setImage("https://cdn.discordapp.com/attachments/1265767289924354111/1409647765188907291/CrabBanner-EmbedFooter-RedBG.png?ex=68ae2449&is=68acd2c9&hm=643546e45cccda97a49ab46b06c08471d89efbd76f2043d57d0db22cf5a1f657&")
-                        .setTitle(`${reportName}`)
-                        .addFields({
-                            name: `Report Description`,
-                            value: `${reportDescription}`,
-                        });
 
-                    reportEmbeds.push(embed);
+                    if (customReportInformation.crab_ReportName.endsWith(END_REPORT_NAMES)) {
+                        reportName.push(customReportInformation.crab_ReportName);
+                    } else {
+                        reportName.push(customReportInformation.crab_ReportName, END_REPORT_NAMES);
+                        reportName.join(" ");
+                    }
+
+                    if (report.custom_field1 !== null) {
+                        embed.addFields({
+                            name: `${customReportInformation.crab_ReportField1Label}:`,
+                            value: `${report.custom_field1}`,
+                        });
+                    }
+                    if (report.custom_field2 !== null) {
+                        embed.addFields({
+                            name: `${customReportInformation.crab_ReportField2Label}:`,
+                            value: `${report.custom_field2}`,
+                        });
+                    }
+                    if (report.custom_field3 !== null) {
+                        embed.addFields({
+                            name: `${customReportInformation.crab_ReportField3Label}:`,
+                            value: `${report.custom_field3}`,
+                        });
+                    }
+                    if (reportReviewer !== null) {
+                        embed.addFields({
+                            name: `Report Reviewer:`,
+                            value: `<@${reportReviewer}>`,
+                        });
+                    }
+                } else {
+                    if (!report.reportType.endsWith(END_REPORT_NAMES)) {
+                        reportName.push(report.reportType, END_REPORT_NAMES);
+                        reportName.join(" ");
+                    }
+
+                    if (reportReviewer !== null) {
+                        embed.addFields({
+                            name: "Reviewed by:",
+                            value: `<@${reportReviewer}>`,
+                        });
+                    }
                 }
-                await interaction.reply({
-                    embeds: reportEmbeds,
-                    flags: MessageFlags.Ephemeral,
-                });
-            } catch (error) {
-                // ! Need to check if error is handled by handler.
+                embed
+                    .setColor(0xec3935)
+                    .setFooter({ text: `Report ID: ${reportId}` })
+                    .setDescription(`Below are details of the **${reportName}** submitted by <@${report.issuedBy}>.`)
+                    .setImage("attachment://embed-footer-banner.png")
+                    .setTitle(`${reportName}`)
+                    .addFields({
+                        name: `Report Description`,
+                        value: `${reportDescription}`,
+                    });
+
+                reportEmbeds.push(embed);
             }
+            await interaction.reply({
+                embeds: reportEmbeds,
+                flags: MessageFlags.Ephemeral,
+                files: [embedFooter],
+            });
         } else if (subcommand === "void") {
             const reportId = interaction.options.getString("report-id");
             await interaction.reply({
