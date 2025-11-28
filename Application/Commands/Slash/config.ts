@@ -44,7 +44,7 @@ export default {
             embed.setDescription(
                 `**Crab** is an easy to use management bot for your department! We allow our users to easily customize **Crab** to ensure the most flexibility with all situations!\n
                 To begin, you will need to set the type of department you are using **Crab** for:\n
-                - **Configure Department Type**: Select one of the options (Law Enforcement, Fire and Medical, and Department of Transportation.)\n
+                - **Configure Department Type**: Select one of the options (Law Enforcement, Fire and Medical, or Department of Transportation.)\n
                 -# You can change the department type in the next step if needed.`
             );
             selectMenu
