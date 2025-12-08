@@ -36,7 +36,7 @@ export default {
                         });
                         return;
                     }
-                    await slashCommand.execute(interaction);
+                    await slashCommand.execute(interaction, client);
                     break;
                 case interaction.isButton():
                     let button = client.buttons.get(interaction.customId);
