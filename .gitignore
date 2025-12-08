@@ -4,5 +4,3 @@ node_modules
 *.DS_STORE
 dist
 .DS_Store
-*.prettierrc
-Application/Commands

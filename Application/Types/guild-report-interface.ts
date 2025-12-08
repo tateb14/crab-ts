@@ -9,4 +9,8 @@ export interface GuildReportInterface extends Document {
     dateIssued: Date;
     messageId: string;
     guildId: string;
+    custom_field1: string;
+    custom_field2: string;
+    custom_field3: string;
+    custom_reportId: string;
 }

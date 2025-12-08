@@ -20,12 +20,12 @@ export default async (client: Client) => {
             const eventData = eventModule.default ?? eventModule;
             try {
                 if (eventData.once) {
-                    client.once(eventModule.event, (...args) =>
-                        eventModule.execute(client, ...args)
+                    client.once(eventData.event, (...args) =>
+                        eventData.execute(client, ...args)
                     );
                 } else {
-                    client.on(eventModule.event, (...args) =>
-                        eventModule.execute(client, ...args)
+                    client.on(eventData.event, (...args) =>
+                        eventData.execute(client, ...args)
                     );
                 }
             } catch (error) {

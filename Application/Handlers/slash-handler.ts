@@ -57,7 +57,7 @@ export default async function (client: Client) {
     try {
         for (const file of commandsFolder) {
             const filePath = path.join(slashCommandPath, file);
-            const fileImport = require(filePath);
+            const fileImport = await import(filePath);
             const command = fileImport.default ?? fileImport;
             const commandData = command.data?.toJSON?.();
             if ("data" in command && "execute" in command) {
