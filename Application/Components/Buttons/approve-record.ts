@@ -7,7 +7,7 @@ import * as emojis from "../../../emojis.json";
 export default {
     customId: "crab-button_record-approve",
     execute: async (interaction: ButtonInteraction, client: Client) => {
-        const guild = interaction.guild as Guild
+        const guild = interaction.guild as Guild;
         const member = interaction.member as GuildMember;
         const user = interaction.user as User;
         if (!guild || !member || !user || user.bot) return;
@@ -33,7 +33,7 @@ export default {
         const record = await guildRecord.findOneAndUpdate({ messageId: interaction.message.id }, { $set: { reviewedBy: interaction.user.id } }, { new: true });
 
         if (!record) {
-            return interaction.reply({ content: `${emojis.x}, **@${user.username}**, no record was found with this id string, please input a different id.`, flags: MessageFlags.Ephemeral });
+            return interaction.reply({ content: `${emojis.x}, **@${user.username}**, no record was found with this id string, please resend the record.`, flags: MessageFlags.Ephemeral });
         }
 
         const embed = interaction.message.embeds[0];

@@ -1,4 +1,4 @@
-import { Client, MessageFlags } from "discord.js";
+import { ButtonInteraction, Client, MessageFlags } from "discord.js";
 import { handleInteractionError } from "../Functions/error-handler";
 import {
     guildExclusionCheckInteraction,
