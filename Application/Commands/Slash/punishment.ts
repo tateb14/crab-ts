@@ -2,7 +2,7 @@ import { SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRo
 import crabPunishment from "../../Models/crab-punishment";
 import crabConfig from "../../Models/crab-config";
 import { generateDatabaseIdString } from "../../Functions/randomId";
-const punishmentMap = new Map();
+export const punishmentMap = new Map();
 import * as emojis from "../../../emojis.json";
 export default {
     data: new SlashCommandBuilder()
@@ -300,5 +300,5 @@ export default {
             });
         }
     },
-    punishmentMap,
 };
+
