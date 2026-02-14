@@ -6,7 +6,7 @@ import {
     TextChannel,
     inlineCode,
 } from "discord.js";
-import * as config from "../../config.json";
+import { config } from '../config';
 import crabConfig from "../Models/crab-config";
 import { fetchGuildChannel } from "../Functions/fetch-channel-handler";
 

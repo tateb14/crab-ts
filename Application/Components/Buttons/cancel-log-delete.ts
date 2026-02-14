@@ -1,5 +1,5 @@
 import { EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, MessageFlags, ButtonInteraction } from "discord.js";
-import * as emojis from "../../../emojis.json";
+import { emojis } from '../../config';
 import safeEdit from "../../Functions/safe-edit";
 
 module.exports = {

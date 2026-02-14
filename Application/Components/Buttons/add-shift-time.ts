@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ButtonInteraction, Guild, GuildMember, MessageFlags, ModalBuilder, TextInputBuilder, TextInputStyle, User } from "discord.js";
 import crabConfig from "../../Models/crab-config";
-import * as emojis from "../../../emojis.json";
+import { emojis } from '../../config';
 export default {
     customId: "crab-button_shift-add-time",
     execute: async (interaction: ButtonInteraction) => {

@@ -3,7 +3,7 @@ import crabPunishment from "../../Models/crab-punishment";
 import crabConfig from "../../Models/crab-config";
 import { generateDatabaseIdString } from "../../Functions/randomId";
 export const punishmentMap = new Map();
-import * as emojis from "../../../emojis.json";
+import { emojis } from '../../config';
 export default {
     data: new SlashCommandBuilder()
         .setName("punishment")

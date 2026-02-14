@@ -1,6 +1,6 @@
 import { EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, inlineCode, ButtonInteraction, GuildMember, MessageFlags } from "discord.js";
 import crabConfig from "../../Models/crab-config";
-import * as emojis from "../../../emojis.json";
+import { emojis } from '../../config';
 
 export default {
     customId: "crab-button_back",

@@ -1,6 +1,6 @@
 import { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, MessageFlags, ModalSubmitInteraction } from "discord.js";
-require("dotenv").config();
-import * as emojis from "../../../emojis.json";
+import 'dotenv/config';
+import { emojis } from '../../config';
 export default {
     customId: "crab-modal_access-code-form",
     execute: async (interaction: ModalSubmitInteraction) => {

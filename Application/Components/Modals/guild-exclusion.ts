@@ -1,6 +1,6 @@
 import { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, MessageFlags, ModalSubmitInteraction, TextChannel, AttachmentBuilder } from "discord.js";
 import guildExclusion from "../../Models/guild-exclusion";
-import * as emojis from "../../../emojis.json";
+import { emojis } from '../../config';
 export default {
     customId: "crab-modal_guild-exclude",
     execute: async (interaction: ModalSubmitInteraction) => {

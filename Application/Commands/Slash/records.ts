@@ -2,7 +2,7 @@ import { SlashCommandBuilder, EmbedBuilder, MessageFlags, ButtonBuilder, ButtonS
 import crabConfig from "../../Models/crab-config";
 import guildRecord from "../../Models/guild-record";
 import { generateDatabaseIdString } from "../../Functions/randomId";
-import * as emojis from "../../../emojis.json";
+import { emojis } from '../../config';
 import searchRobloxUsers from "../../Functions/search-roblox-username";
 
 module.exports = {
@@ -162,7 +162,7 @@ module.exports = {
             }).sort({ _id: -1 }).limit(10);
             if (!suspectRecords || suspectRecords.length === 0) {
                 return interaction.reply({
-                    content: "No record was found under that suspect's username.",
+                    content: `${emojis.x} No record was found under that suspect's username.`,
                     flags: MessageFlags.Ephemeral,
                 });
             } else {

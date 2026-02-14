@@ -3,7 +3,7 @@ import { REST, Routes } from "discord.js";
 import * as fs from "fs";
 import * as path from "path";
 import chalk from "chalk";
-import * as config from "../../config.json";
+import { config } from '../config';
 import "dotenv/config";
 import { fileURLToPath } from "url";
 
@@ -12,7 +12,7 @@ export default async function (client: Client) {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
     const clientEnviroment = config.client.enviroment;
-
+    let clientId: string
     let skipped: string[] = [];
     let rest;
     if (clientEnviroment === "beta") {
@@ -22,6 +22,7 @@ export default async function (client: Client) {
                     "🦀 Missing beta authentication token."
             );
         }
+        clientId = config.client.betaClientId
         rest = new REST({ version: "10" }).setToken(process.env.BETA_TOKEN);
     } else if (clientEnviroment === "qa" || clientEnviroment === "staging") {
         if (!process.env.QA_STG_TOKEN) {
@@ -30,6 +31,7 @@ export default async function (client: Client) {
                     "🦀 Missing qa/staging authentication token."
             );
         }
+        clientId = config.client.qaStgClientId
         rest = new REST({ version: "10" }).setToken(process.env.QA_STG_TOKEN);
     } else if (clientEnviroment === "production") {
         if (!process.env.PROD_TOKEN) {
@@ -38,6 +40,7 @@ export default async function (client: Client) {
                     "🦀 Missing production authentication token."
             );
         }
+        clientId = config.client.prodClientId
         rest = new REST({ version: "10" }).setToken(process.env.PROD_TOKEN);
     } else {
         throw new Error(
@@ -68,7 +71,7 @@ export default async function (client: Client) {
             }
         }
 
-        await rest.put(Routes.applicationCommands(config.client.clientId), {
+        await rest.put(Routes.applicationCommands(clientId), {
             body: commands,
         });
         console.log(

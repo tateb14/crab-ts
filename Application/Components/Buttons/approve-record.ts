@@ -2,7 +2,7 @@ import { EmbedBuilder, inlineCode, ButtonBuilder, ButtonStyle, ActionRowBuilder,
 
 import crabConfig from "../../Models/crab-config";
 import guildRecord from "../../Models/guild-record";
-import * as emojis from "../../../emojis.json";
+import { emojis } from '../../config';
 
 export default {
     customId: "crab-button_record-approve",

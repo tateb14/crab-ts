@@ -1,7 +1,7 @@
 import { ActionRowBuilder, EmbedBuilder, MessageFlags, StringSelectMenuBuilder, inlineCode, StringSelectMenuOptionBuilder, ButtonInteraction, Client, Guild, User, GuildMember } from "discord.js";
 import shiftLog from "../../Models/shift-log";
 import * as humanizeDuration from "humanize-duration";
-import * as emojis from "../../../emojis.json";
+import { emojis } from '../../config';
 export default {
     customId: "crab-button_shift-delete-confirm",
     execute: async (interaction: ButtonInteraction, client: Client) => {

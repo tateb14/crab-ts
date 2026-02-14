@@ -5,7 +5,7 @@ import {
     ActionRowBuilder,
     Message,
 } from "discord.js";
-import * as emojis from "../../../emojis.json";
+import { emojis } from '../../config';
 export default {
     command: "exclude",
     execute: async (message: Message) => {

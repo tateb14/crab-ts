@@ -1,5 +1,5 @@
 import { EmbedBuilder, Client, Guild } from "discord.js";
-import * as config from "../../config.json";
+import { config } from '../config';
 import { guildExclusionCheck } from "../Functions/exclusion-handler";
 import { fetchGuildChannel } from "../Functions/fetch-channel-handler";
 import crabConfig from "../Models/crab-config";

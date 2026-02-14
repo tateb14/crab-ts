@@ -4,7 +4,7 @@ import {
     guildExclusionCheckInteraction,
     userExclusionCheckInteraction,
 } from "../Functions/exclusion-handler";
-import { x } from "../../emojis.json";
+import { emojis, config } from '../config';
 export default {
     event: "interactionCreate",
     once: false,

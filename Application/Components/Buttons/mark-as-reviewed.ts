@@ -1,7 +1,7 @@
 import { EmbedBuilder, inlineCode, ButtonBuilder, ButtonStyle, ActionRowBuilder, MessageFlags, ButtonInteraction, Client, Guild, User, GuildMember, Embed, APIActionRowComponent, APIButtonComponent } from "discord.js";
 import crabConfig from "../../Models/crab-config";
 import guildReport from "../../Models/guild-report";
-import * as emojis from "../../../emojis.json";
+import { emojis } from '../../config';
 export default {
     customId: "crab-button_review-report",
     execute: async (interaction: ButtonInteraction, client: Client) => {

@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import * as mongoose from "mongoose";
 import "dotenv/config";
-import * as config from "../../config.json";
+import { config } from '../config';
 import { Client } from "discord.js";
 export default {
     event: "clientReady",

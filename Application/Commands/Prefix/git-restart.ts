@@ -2,8 +2,8 @@ import { Message } from "discord.js";
 import { exec } from "child_process";
 import simpleGit from "simple-git";
 import chalk from "chalk";
-import * as emojis from "../../../emojis.json";
-import * as config from "../../../config.json";
+import { emojis } from '../../config';
+import { config } from '../../config';
 export default {
     command: "sysrestart",
     execute: async (message: Message) => {

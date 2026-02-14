@@ -1,8 +1,5 @@
 import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, Client, AttachmentBuilder } from "discord.js";
-import * as emojis from "../../../emojis.json";
-
-import * as staffRoles from "../../../staff-roles.json";
-import * as config from "../../../config.json";
+import { config, emojis } from '../../config';
 
 export default {
     data: new SlashCommandBuilder()
@@ -32,9 +29,9 @@ export default {
         // ? Try to fetch member in support server
         let staffMember;
         try {
-            const supportGuild = await client.guilds.cache.get(config.guilds["ts-main"]);
+            const supportGuild = await client.guilds.cache.get(config.guilds.tsMain);
             if (!supportGuild) {
-                console.warn(`Support guild ${config.guilds["ts-main"]} not found. Is the bot in that server?`);
+                console.warn(`Support guild ${config.guilds.tsMain} not found. Is the bot in that server?`);
                 staffMember = null;
             }
             staffMember = await supportGuild!.members.fetch(user.id);
@@ -118,9 +115,9 @@ export default {
                 "Staff member roles:",
                 staffMember.roles.cache.map((r) => `${r.name} (${r.id})`)
             );
-            console.log("Staff roles config:", Object.keys(staffRoles));
+            console.log("Staff roles config:", Object.keys(config.teamRoles));
 
-            const match = Object.entries(staffRoles).find(([roleId]) => staffMember.roles.cache.has(roleId));
+            const match = Object.entries(config.teamRoles).find(([roleId]) => staffMember.roles.cache.has(roleId));
 
             if (match) {
                 const [roleId, data] = match;

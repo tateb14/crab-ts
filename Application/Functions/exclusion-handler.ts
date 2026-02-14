@@ -10,7 +10,7 @@ import {
 } from "discord.js";
 import guildExclusion from "../Models/guild-exclusion";
 import userExclusion from "../Models/user-exclusion";
-import { shield } from "../../emojis.json";
+import { emojis, config } from '../config';
 
 export async function guildExclusionCheckInteraction(
     client: Client,

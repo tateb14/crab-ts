@@ -3,7 +3,7 @@ import { Client } from "discord.js";
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
-import * as config from "../../config.json";
+import { config } from '../config';
 
 export default async (client: Client) => {
     const clientEnviroment = config.client.enviroment;

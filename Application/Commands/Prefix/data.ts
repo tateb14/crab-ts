@@ -1,6 +1,6 @@
 import { EmbedBuilder, Message, Client, Guild, User } from "discord.js";
 import { detectIdType } from "../../Functions/detect-id-type";
-import * as emoji from "../../../emojis.json";
+import * as emoji from '../../config';
 export default {
     command: "data",
     aliases: ["d"],

@@ -4,7 +4,7 @@ import guildRecord from "../../Models/guild-record";
 import guildReport from "../../Models/guild-report";
 import crabPunishment from "../../Models/crab-punishment";
 import { punishmentMap } from "../../Commands/Slash/punishment";
-import * as emojis from "../../../emojis.json";
+import { emojis } from '../../config';
 import crabCustomReport from "../../Models/crab-custom-report";
 import safeEdit from "../../Functions/safe-edit";
 

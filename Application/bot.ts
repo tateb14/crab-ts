@@ -5,7 +5,7 @@ import * as path from "path";
 import chalk from "chalk";
 import { fileURLToPath } from "url";
 import { SlashCommand } from "./Types/slash-command-interface";
-import * as config from "../config.json";
+import { config } from "./config"
 import { ModalInterface } from "./Types/modal-interface";
 import { SelectMenuInterface } from "./Types/menu-interface";
 import { ButtonInterface } from "./Types/button-interface";

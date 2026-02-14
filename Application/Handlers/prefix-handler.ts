@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
-import * as config from "../../config.json";
+import { config } from '../config';
 export default async function (client: Client) {
     const clientEnviroment = config.client.enviroment
     try {

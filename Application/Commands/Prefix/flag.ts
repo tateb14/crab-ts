@@ -8,7 +8,7 @@ import {
     Client,
 } from "discord.js";
 import * as userFlags from "../../Models/crab-user-flags";
-import * as emojis from "../../../emojis.json";
+import { emojis } from '../../config';
 export default {
     command: "flag",
     aliases: ["f"],

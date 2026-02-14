@@ -18,7 +18,7 @@ import {
 import crabPromotion from "../../Models/crab-promotion";
 import crabConfig from "../../Models/crab-config";
 import { generateDatabaseIdString } from "../../Functions/randomId";
-import * as emojis from "../../../emojis.json";
+import { emojis } from '../../config';
 export default {
     data: new SlashCommandBuilder()
         .setName("promotion")

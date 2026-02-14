@@ -2,7 +2,7 @@ import { SlashCommandBuilder, EmbedBuilder, StringSelectMenuBuilder, StringSelec
 import crabConfig from "../../Models/crab-config";
 import guildReport from "../../Models/guild-report";
 import crabCustomReport from "../../Models/crab-custom-report";
-import * as emojis from "../../../emojis.json";
+import { emojis } from '../../config';
 
 export default {
     data: new SlashCommandBuilder()

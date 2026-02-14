@@ -13,8 +13,8 @@ import {
     TextChannel,
     Message,
 } from "discord.js";
-import * as config from "../../config.json";
-import { alert } from "../../emojis.json";
+import { config } from '../config';
+import { emojis, config } from '../config';
 import chalk from "chalk";
 import { fetchGuildChannel } from "./fetch-channel-handler"
 export async function handleInteractionError(

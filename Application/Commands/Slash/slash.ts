@@ -5,7 +5,7 @@ import shiftLog from "../../Models/shift-log";
 import * as humanizeDuration from "humanize-duration";
 import { generateDatabaseIdString } from "../../Functions/randomId";
 import capitalizeFirstLetter from "../../Functions/capitalize-first-letter";
-import * as emojis from "../../../emojis.json";
+import { emojis } from '../../config';
 
 export default {
     data: new SlashCommandBuilder()
