@@ -1,4 +1,4 @@
-import { EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuInteraction } from 'discord.js'
+import { EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuInteraction, AttachmentBuilder } from 'discord.js'
 import crabConfig from '../../../Models/crab-config'
 import { emojis } from '../../../config'
 
@@ -8,6 +8,12 @@ export default {
     const embed = interaction.message.embeds[0]
     const configEmbed = EmbedBuilder.from(embed)
     configEmbed.setDescription(`You have selected the **Department of Transportation** department type.\n\nNow, you will configure the modules for the **Department of Transportation** commands. The **Department of Transportation** type will allow the following modules to be used:\n* **${emojis.lock_pass} Configure Permissions**\n  * Specifiy your department personnel access roles.\n* **${emojis.clock} Shift Logging**\n  * Easily log your department personnel's shifts with our shift logging system!\n* **${emojis.flag} Reports**\n  * Easily log your reports like: tow reports, scene reports, repair logs, and more!\n* **${emojis.trending_up} Promotions, Demotions, and Infractions**\n  * Easily promote, demote, or infract your department personnel with our customizable staff management system!\n* **${emojis.repeat} Change Module**\n  * Switch the module from **Department of Transportation** to **Law Enforcement** or **Fire and Medical** easily!`)
+    
+    const embedFooter = new AttachmentBuilder("Images/footer-banner.png", {
+      name: "embed-footer-banner.png"
+    })
+    
+    configEmbed.setImage("attachment://embed-footer-banner.png")
     
     const dotSelect = new StringSelectMenuBuilder()
       .setCustomId('crab-sm_dot-plugins')
@@ -43,6 +49,6 @@ export default {
       { upsert: true, new: true }
     )
     
-    await interaction.update({ embeds: [configEmbed], components: [row] })
+    await interaction.update({ embeds: [configEmbed], components: [row], files: [embedFooter] })
   }
 }

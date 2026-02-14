@@ -1,75 +1,62 @@
 import chalk from "chalk";
 import { Client } from "discord.js";
-import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import { config } from '../config';
+import { getAllFiles } from "../Functions/get-all-files";
 
 export default async (client: Client) => {
     const clientEnviroment = config.client.enviroment;
     //? Define __dirname and __filename
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
+    
     const selectMenuPath = path.join(__dirname, "..", "Components", "Menus");
-    const selectMenusFolder = fs
-        .readdirSync(selectMenuPath)
-        .filter(
-            (command) => command.endsWith(".ts") || command.endsWith(".js")
-        );
     const buttonPath = path.join(__dirname, "..", "Components", "Buttons");
-    const buttonsFolder = fs
-        .readdirSync(buttonPath)
-        .filter(
-            (command) => command.endsWith(".ts") || command.endsWith(".js")
-        );
     const modalPath = path.join(__dirname, "..", "Components", "Modals");
-    const modalsFolder = fs
-        .readdirSync(modalPath)
-        .filter(
-            (command) => command.endsWith(".ts") || command.endsWith(".js")
-        );
+
+    const selectMenuFiles = getAllFiles(selectMenuPath);
+    const buttonFiles = getAllFiles(buttonPath);
+    const modalFiles = getAllFiles(modalPath);
 
     client.buttons = new Map();
     client.selectMenus = new Map();
     client.modals = new Map();
+    
     try {
-        for (const selectMenuFile of selectMenusFolder) {
-            const selectMenuFilePath = path.join(
-                __dirname,
-                "../Components/Menus",
-                selectMenuFile
-            );
-            const selectMenuFileData = await import(selectMenuFilePath);
-            client.selectMenus.set(
-                selectMenuFileData.customId,
-                selectMenuFileData
-            );
+        for (const selectMenuFilePath of selectMenuFiles) {
+            const selectMenuModule = await import(selectMenuFilePath);
+            const selectMenuFileData = selectMenuModule.default;
+            
+            if (selectMenuFileData && selectMenuFileData.customId) {
+                client.selectMenus.set(
+                    selectMenuFileData.customId,
+                    selectMenuFileData
+                );
+            }
         }
 
-        for (const buttonsFile of buttonsFolder) {
-            const buttonsFilePath = path.join(
-                __dirname,
-                "../Components/Buttons",
-                buttonsFile
-            );
-            const buttonFile = await import(buttonsFilePath);
+        for (const buttonFilePath of buttonFiles) {
+            const buttonModule = await import(buttonFilePath);
+            const buttonFile = buttonModule.default;
 
-            client.buttons.set(buttonFile.customId, buttonFile);
+            if (buttonFile && buttonFile.customId) {
+                client.buttons.set(buttonFile.customId, buttonFile);
+            }
         }
 
-        for (const modalsFile of modalsFolder) {
-            const modalsFilePath = path.join(
-                __dirname,
-                "../Components/Modals",
-                modalsFile
-            );
-            const modalFile = await import(modalsFilePath);
+        for (const modalFilePath of modalFiles) {
+            const modalModule = await import(modalFilePath);
+            const modalFile = modalModule.default;
 
-            client.modals.set(modalFile.customId, modalFile);
+            if (modalFile && modalFile.customId) {
+                client.modals.set(modalFile.customId, modalFile);
+            }
         }
+        
         console.log(
             chalk.green.bold("[TS-HANDLER-SUCCESS] ") +
-                `🐚 Successfully registered all components.`
+                `🐚 Successfully registered ${client.selectMenus.size} select menus, ${client.buttons.size} buttons, and ${client.modals.size} modals.`
         );
     } catch (error) {
         throw new Error(

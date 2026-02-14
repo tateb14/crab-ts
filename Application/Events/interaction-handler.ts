@@ -31,7 +31,7 @@ export default {
                     );
                     if (!slashCommand) {
                         interaction.reply({
-                            content: `${x} I could not find this command, please contact Tropical Systems.`,
+                            content: `${emojis.x} I could not find this command, please contact Tropical Systems.`,
                             flags: MessageFlags.Ephemeral,
                         });
                         return;
@@ -47,7 +47,7 @@ export default {
                     }
                     if (!button) {
                         return interaction.reply({
-                            content: `${x} I could not find this button, please contact Tropical Systems.`,
+                            content: `${emojis.x} I could not find this button, please contact Tropical Systems.`,
                             flags: MessageFlags.Ephemeral,
                         });
                     }
@@ -64,7 +64,7 @@ export default {
                     }
                     if (!selectMenu) {
                         interaction.reply({
-                            content: `${x} I could not find this select menu, please contact Tropical Systems.`,
+                            content: `${emojis.x} I could not find this select menu, please contact Tropical Systems.`,
                             flags: MessageFlags.Ephemeral,
                         });
                         return;
@@ -80,7 +80,7 @@ export default {
                     }
                     if (!modal) {
                         interaction.reply({
-                            content: `${x} I could not find this modal, please contact Tropical Systems.`,
+                            content: `${emojis.x} I could not find this modal, please contact Tropical Systems.`,
                             flags: MessageFlags.Ephemeral,
                         });
                         return;
