@@ -1,4 +1,4 @@
-import { EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, MessageFlags, StringSelectMenuInteraction } from "discord.js";
+import { EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, MessageFlags, StringSelectMenuInteraction, AttachmentBuilder } from 'discord.js';
 import crabConfig from "../../../Models/crab-config";
 import { emojis } from '../../../config'
 export default {

@@ -9,7 +9,7 @@ export default {
     execute: async (message: Message) => {
         const git = simpleGit();
         const authorizedRoles = ["1265766750994043022", "1337250124530847876"];
-        const authorizedGuild = config.guilds["ts-main"];
+        const authorizedGuild = config.guilds.tsMain;
         const guild = message.guild
         const member = message.member
         if (!guild) return;

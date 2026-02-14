@@ -59,7 +59,7 @@ export async function userExclusionCheckInteraction(
     });
     if (!userExcluded) return;
     return interaction.reply(
-        `${shield} You have been excluded from this service and cannot run any commands.`
+        `${emojis.shield} You have been excluded from this service and cannot run any commands.`
     );
 }
 
@@ -110,7 +110,7 @@ export async function userExclusionCheckMessage(
     });
     if (!userExcluded) return;
     return message.reply(
-        `${shield} You have been excluded from this service and cannot run any commands.`
+        `${emojis.shield} You have been excluded from this service and cannot run any commands.`
     );
 }
 

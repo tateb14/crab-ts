@@ -1,6 +1,6 @@
 import { EmbedBuilder, Message, Client, Guild, User } from "discord.js";
 import { detectIdType } from "../../Functions/detect-id-type";
-import * as emoji from '../../config';
+import { emojis } from "../../config";
 export default {
     command: "data",
     aliases: ["d"],
@@ -33,7 +33,7 @@ export default {
             message.reply({ embeds: [embed] });
         } else {
             message.reply(
-                `${emoji.x} This is not a valid user/guild id, please try again with a valid id.`
+                `${emojis.x} This is not a valid user/guild id, please try again with a valid id.`
             );
         }
     },

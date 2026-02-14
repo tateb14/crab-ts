@@ -14,7 +14,6 @@ import {
     Message,
 } from "discord.js";
 import { config } from '../config';
-import { emojis, config } from '../config';
 import chalk from "chalk";
 import { fetchGuildChannel } from "./fetch-channel-handler"
 export async function handleInteractionError(

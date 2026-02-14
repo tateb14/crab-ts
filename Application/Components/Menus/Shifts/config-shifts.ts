@@ -1,4 +1,4 @@
-import { EmbedBuilder, RoleSelectMenuBuilder, ChannelSelectMenuBuilder, ActionRowBuilder, ChannelType, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, StringSelectMenuInteraction } from 'discord.js'
+import { EmbedBuilder, RoleSelectMenuBuilder, ChannelSelectMenuBuilder, ActionRowBuilder, ChannelType, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, StringSelectMenuInteraction, AttachmentBuilder } from 'discord.js'
 import { emojis } from '../../../config'
 
 export default {
@@ -6,6 +6,12 @@ export default {
   execute: async (interaction: StringSelectMenuInteraction) => {
     const embed = interaction.message.embeds[0]
     const configEmbed = EmbedBuilder.from(embed)
+    
+    const embedFooter = new AttachmentBuilder("Images/footer-banner.png", {
+      name: "embed-footer-banner.png"
+    })
+    
+    configEmbed.setImage("attachment://embed-footer-banner.png")
     configEmbed.setDescription(`You are now configuring the **shifts** module of Crab! Below you will find the configuration you will set:\n* **Shift Logging**\n  * Select the channel you wish to log your shifts in.\n* **On-Duty Role**\n  * Select the role you wish to set as the on duty role assigned to personnel on duty.\n* **On-Break Role**\n  * Select the role you wish to set as the on break role assigned to personnel on break.\n* **Shift Types**\n  * Select the shift types that best align with your server.\n-# If you need to clear the select menu options below, go to a different channel and then return to this one.`)
     
     const shiftLogChannelSelect = new ChannelSelectMenuBuilder()
@@ -55,6 +61,6 @@ export default {
     // const row4 = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(shiftTypesMenu)
     const row5 = new ActionRowBuilder<ButtonBuilder>().addComponents(backButton)
     
-    await interaction.update({ embeds: [configEmbed], components: [row1, row2, row3, row5] })
+    await interaction.update({ embeds: [configEmbed], components: [row1, row2, row3, row5], files: [embedFooter] })
   }
 }
